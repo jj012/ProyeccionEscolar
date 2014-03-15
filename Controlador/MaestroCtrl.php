@@ -2,8 +2,14 @@
     /**
 	 * @author Jesus Alberto Ley Ayon
 	 *  @since 
+	 *
+	 * Documentation for MaestroCtrl.php in this class we put methods for any case that would involve Teachers,because the controller was passed here,
+	 * so we will add just methods for teachers. there it is a switch that gets the actions and acts according to the action.
 	 * 
+	 *  
 	 */
+	 
+	 
     class MaestroCtrl{
     	public $model;
 		
@@ -78,24 +84,49 @@
 						break;
 						case 'evaluacion':
 							if(isset($_POST['actividad'])){
-								$evaluacion = $this->validaActividad($_POST['actividad']);
+								$actividad = $this->validaActividad($_POST['actividad']);
 							} else{
-								$evaluacion = false;
+								$actividad = false;
 							}
 							if(isset($_POST['porcentaje'])){
 								$porcentaje = $this->validaPorcentaje($_POST['porcentaje']);
 							} else{
 								$porcentaje = false;
 							}
-							$status = $this -> insertaEvaluacion($evaluacion,$porcentaje);
+							///para las hojas extras de evaluacion
+							if(isset($_POST['actividad']['hojaextra'])){
+								$hoja = $this->validaHoja($_POST['hoja']);
+								if(isset($_POST['subactividad'])){
+									$subactividad = $this->validaActividad($_POST['porcentaje']);
+								} else{
+									$subactividad = false;
+								}
+								if(isset($_POST['subporcentaje'])){
+									$subporcentaje = $this->validaPorcentaje($subporcentaje);
+								} else{
+									$subporcentaje = false;
+								}
+								$datosevaluacion=array($actividad,$porcentaje,$subactividad,$subporcentaje);
+								$status = $this -> insertaEvaluacionExtra($datosevaluacion);
+								if ($status) {
+									include('Vista/insertaEvaluacion.php');
+								} else {
+									include('Vista/errorEvaluacion.php');
+								}
+									
+							} else{
+								$hoja = false;
+							}
+							$datosevaluacion = array($actividad,$porcentaje);
+							$status = $this -> insertaEvaluacion($datosevaluacion);
 							if ($status) {
 								include('Vista/insertaEvaluacion.php');
 							} else {
 								include('Vista/errorEvaluacion.php');
 							}
-							
+								
 						break;
-							
+						
 						case 'altaalumnos':
 							 if(isset($_POST['codigo'])){
 							 	$codigo = $this->validaCodigo($_POST['codigo']);							 		
@@ -113,11 +144,26 @@
 							if(isset($_POST['calificacion'])){
 								$calificacion = $this -> validaCalificacion($_POST['calificacion']);
 							}
+							else {
+								$calificacion = false;
+							}
+							if(isset($_POST['asistencia'])){
+								$asistencia = $this ->validaAsistencia($_POST['asistencia']);
+							}
+							else {
+								$asistencia = false;
+							}
 							$status = $this -> insertarCalificacion($calificacion);
 							if ($status) {
 								include('Vista/insertaCalificacion.php');
 							} else{
 								include('Vista/errorCalificacion.php');
+							}
+							$status= $this -> insertarAsistencia($asistencia);
+							if($status){
+								include('Vista/insertaAsistencia.php');
+							} else{
+								include('Vista/errorAsistencia.php');
 							}
 						break;
 					}	
@@ -175,7 +221,13 @@
 				return false;
 		}
 		public function validaPorcentaje($porcentaje){
-			if (preg_match("/[0-100]/", $porcentaje))
+			if (preg_match("/(100)|[0-9]{2}/", $porcentaje))
+				return true;
+			else 
+				return false;
+		}
+		public function validaCalificacion($calificacion){
+			if(preg_match("/(10|[0-9])[.][0-9]{1}/",$calificacion))
 				return true;
 			else 
 				return false;

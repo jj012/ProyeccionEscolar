@@ -23,5 +23,19 @@
 			//Access to the database and look for the code in alumn table if it was found, return the info in a array
 			return true;//in this case we assume it was found and return a true
 		}
+		
+		function insertaEvaluacion($actividad,$porcentaje){//in case it just evaluates the activity 
+			return true;	
+		}
+		
+		function insertaEvaluacionExtra($actividad,$porcentaje,$subactividad,$subporcentaje){//in case the teacher needs an extra page for evaluation
+			return true;
+		}
+		function insertaCalificacion($calificacion){
+			return true;
+		}
+		function insertaAsistencia($asistencia){
+			return true;
+		}
     }
 ?>
