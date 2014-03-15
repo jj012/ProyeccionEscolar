@@ -26,6 +26,12 @@
 			return true; //For the first advance we suppose to think that the data is correct and can been inserted
 						 //The next advance we return a false and we call a sql_command to verify if the data can be inserted or not.
 		}
+		///Modificacion de Jesus
+		function consultar($codigo){
+			return true;//For the first advance we suppose that the data is correct and can access to the database
+						
+		}
+		///
 	 }
 	 
 ?>

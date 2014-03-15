@@ -15,6 +15,7 @@
 		public function ejecutar(){
 			if(isset($_POST['accion'])){
 				if(preg_match("/[A-Za-z]+/", $_POST['accion'])){ //Validates the action is alphabetic
+				echo'validacion correcta';
 					switch($_POST['accion']){
 						case 'alta':
 						if(isset($_POST['nombre']))
@@ -28,8 +29,7 @@
 						if(isset($_POST['codigo']))
 							$codigo = $this->validaCodigo($_POST['codigo']);
 						else
-							$codigo = false;
-						
+							$codigo = false;						
 						if(isset($_POST['carrera']))
 							$carrera = $this->validaCarrera($_POST['carrera']);
 						else
@@ -97,6 +97,19 @@
 						else
 							echo "Como quieres que muestre un grupo sino me dices cual :/ </br>"; //No mando nada
 						break;
+						//Modificacion de Jesus
+						case 'consultar':
+							///aqui se consultan las calificaciones y asistencias
+							if(isset($_POST['codigo']) && isset($_POST['password'])){
+								$codigoCorrecto = $this->verificaCodigo($_POST['codigo']);
+								$passwordCorrecto = $this->validaPassword($_POST['password']);
+								if($codigoCorrecto && $passwordCorrecto){
+									include('Vista/calificacionesAlumno.php');
+								}
+							}
+							
+						break;
+						////////////
 					}
 				}
 				else
@@ -108,7 +121,7 @@
 	}
 	
 	public function validaNombre($cadena){ //Function to validate the syntax of name
-		return preg_match("/^[A-Za-z\s\ \'\u00e1\u00e9\u00ed\u00f3\u00fa\u00c1\u00c9\u00cd\u00d3\u00da\u00f1\u00d1\u00FC\u00DC]+/", $cadena);
+		return preg_match("/^[a-zA-Z ñÑáéíóúâêîôûàèìòùäëïöü]+/", $cadena);
 	}
 	
 	public function validaCorreo($correo){//Function to validate the syntax of email
@@ -171,10 +184,22 @@
 		else
 			return false;
 	}
-	
+	///Modificacion Jesus
+	public function validaPassword($password){ // this function validates any character as a password with a lenght between 8 and 50 characters
+		if(preg_match("/.{8,50}/"))
+		return true;
+		else 
+			return false;
+	}
+	///
 	public function limpiaSQL($datos){//We are gonna clear the string of commands like INSERT, TABLES, DELETE, ETC before we give to the database
 		$inserta = '/([I|i][N|n][S|s][E|e][R|r][T|t])/';
-		$tablas = '/([T|t][A|a][
+		$tablas = '/([T|t][A|a][B|b][L|l][E|e][S|s]/';
+			
+		
+		
+		
+		
 	}
 }
 ?>
