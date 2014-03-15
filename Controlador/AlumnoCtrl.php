@@ -46,13 +46,17 @@
 							$url = $this->validaURL($_POST['celular']);
 						else
 							$url = false;
-					
+						if(isset($_POST['equipo']))
+							$equipo = $this->validaEquipo($_POST['equipo']);
+						else
+							$equipo = false;
+						
 						$status = $this->verificaExistencia(array('nombre' => $nombre, 'correo' => $correo, 'carrera' => $carrera, 'codigo' => $codigo)); //We verify that the info exists
 						if($status){//To enter this block first the info need to be correct
 							$status = $this->opcionalesCorrectos(array('url' => $url, 'git' => $git, 'celular' => $celular, 'equipo' => $equipo));
 							if($status){
 								$datosAlumno = array('nombre'=>$nombre, 'correo'=> $correo, 'carrera' => $carrera, 'codigo' => $codigo, 'url' => $url, 'git'=> $git, 'celular' => $celular);
-								$this->limpiaSQL($datosAlumno);
+								$datosAlumno = $this->limpiaSQL($datosAlumno);
 								$status = $this->model->insertaAlumno($datosAlumno);
 								if($status){//On this part the query of insert in the database is done correctly
 									include('Vista/insercionAlumno.php');
@@ -74,6 +78,7 @@
 						}
 						
 						break;
+						
 						case 'listar':
 						//Check if there a group
 						if(isset($_POST['grupo'])){
@@ -120,36 +125,80 @@
 				echo "No se que quieres que haga :/ </br>";
 	}
 	
+	public function limpiaSQL($variables){//Posibility to use with the other controllers because is more standard this function
+		foreach($variables as $llave => $valor){
+			if(is_string($valor)){
+				$valor = ltrim($valor);
+				$valor = rtrim($valor);
+				$variables[$llave] = $valor;
+			}
+		}//Look this wonderful code :D we are gonna to use to another controllers to clean the values.
+		
+		return $variables;
+	}
+	
 	public function validaNombre($cadena){ //Function to validate the syntax of name
+
 		return preg_match("/^[a-zA-Z ñÑáéíóúâêîôûàèìòùäëïöü]+/", $cadena);
+
+		$cadena = ltrim($cadena);
+		$cadena = rtrim($cadena);//We clean the name first
+		if(preg_match("/^[A-Za-z\s\ \'\x{00e1}\x{00e}\x{00ed}\x{00f3}\x{00fa}\x{00c1}\x{00c9}\x{00cd}\x{00d3}\x{00da}\x{00f1}\x{00d1}\x{00FC}\x{00DC}]+/", $cadena)){
+			return true;
+		}
+		else
+			return -1;
+		
+
 	}
 	
 	public function validaCorreo($correo){//Function to validate the syntax of email
-			return preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/", $correo);
+		$correo = ltrim($correo);
+		$correo = rtrim($correo);//We clean the email first
+		if(preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/", $correo))
+			return true;
+		else
+			return -1;
 	}
 	
 	public function validaCodigo($codigo){ //Function to validate the code with a lenght of 9 numbers
-		return preg_match("/^[A-Za-z]?[0-9]{9}/", $codigo);
+		$codigo = ltrim($codigo);
+		$codigo = rtrim($codigo);//We clean the code first
+		if(preg_match("/^[A-Za-z]?[0-9]{9}/", $codigo))
+			return true;
+		else
+			return -1;
 	}
 	
-	public function validaCarrera($carrera){//Function to validate the career start with Licenciatura or Ingenieria en with the name of career
-		return preg_match("/[0-9]{2}/", $carrera);
+	public function validaCarrera($carrera){//Function to validate the career with a number of one or two digits
+		$carrera = ltrim($carrera);
+		$carrera = rtrim($carrera);//We clean the career first
+		if(preg_match("/[0-9]{1,2}/", $carrera))
+			return true;
+		else
+			return -1;
 	}
 	public function validaURL($url){//Function to validate the url if is corrrect or dont (This function it isnt oblirate
-		if(preg_match("/^([http|https]?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/", $url))
+		$url = ltrim($url);
+		$url = rtrim($url);//We clean the url first
+		if(preg_match("/^((http|https):\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/", $url))
 			return true;
 		else
 			return -1;//If there dont url that means false, but if there an url and its bad then the insertion it gonna be bad.
 	}
 	
 	public function validaGitHub($git){//Function to validate the acoount of Github
-		if(preg_match("/^[A-Za-z\ \'\u00e1\u00e9\u00ed\u00f3\u00fa\u00c1\u00c9\u00cd\u00d3\u00da\u00f1\u00d1\u00FC\u00DC]+/", $git))
+		$git = ltrim($git);
+		$git = rtrim($git);//We clean the account of git first
+		if(preg_match("/^[A-Za-z\ \'\x{00e1}\x{00e}\x{00ed}\x{00f3}\x{00fa}\x{00c1}\x{00c9}\x{00cd}\x{00d3}\x{00da}\x{00f1}\x{00d1}\x{00FC}\x{00DC}]+/", $git))
 			return true;
 		else
 			return -1; //If there dont git that means false, but if there an git and its bad then the insertion it gonna be bad.
 	}
 	
 	public function validaCelular($numero){//Function to validate the syntax of the number of cellphone
+		$numero = ltrim($numero);
+		$numero = rtrim($numero);//We clean the number first
 		if(preg_match("/^(1-9)[0-9]{7}+/", $numero))//It's 7 because we need the first number is great of 0
 			return true;
 		else
@@ -157,14 +206,16 @@
 	}
 	
 	public function validaEquipo($equipo){//Function to validate the name of tean, a team can been an alphabeticnumber
-		if(preg_match("/^[A-Za-z0-9\ \'\u00e1\u00e9\u00ed\u00f3\u00fa\u00c1\u00c9\u00cd\u00d3\u00da\u00f1\u00d1\u00FC\u00DC]+/", $equipo))
+		$equipo = ltrim($equipo);
+		$equipo = rtrim($equipo);//We clean the name first
+		if(preg_match("/^[A-Za-z0-9\ \'\x{00e1}\x{00e}\x{00ed}\x{00f3}\x{00fa}\x{00c1}\x{00c9}\x{00cd}\x{00d3}\x{00da}\x{00f1}\x{00d1}\x{00FC}\x{00DC}]+/", $equipo))
 			return true;
 		else
 			return -1;//If there dont team that means false, but if there a team and its bad then the insertion it gonna be bad.
 	}
 	
 	public function verificaExistencia($datosObligados){//On this function we return true if the requiremnts are there, if dont we return false
-		if($datosObligados['nombre'] !== false && $datosObligados['correo'] !== false && $datosObligados['carrera'] !== false  && $datosObligados['codigo'] !== false){
+		if($datosObligados['nombre'] === true && $datosObligados['correo'] === true && $datosObligados['carrera'] === false  && $datosObligados['codigo'] === true){
 			return true;
 		}
 		else
@@ -176,7 +227,7 @@
 			return true;
 		else
 			return false;
-	}
+	}//The data is not obligatored but if is there and it's bad then we need to give an error
 	
 	public function verificaGrupo($grupo){
 		if(preg_match("/[A-Za-z]+[0-9]+\-D[0-9]+/",$grupo))
@@ -184,6 +235,7 @@
 		else
 			return false;
 	}
+
 	///Modificacion Jesus
 	public function validaPassword($password){ // this function validates any character as a password with a lenght between 8 and 50 characters
 		if(preg_match("/.{8,50}/"))
@@ -192,14 +244,5 @@
 			return false;
 	}
 	///
-	public function limpiaSQL($datos){//We are gonna clear the string of commands like INSERT, TABLES, DELETE, ETC before we give to the database
-		$inserta = '/([I|i][N|n][S|s][E|e][R|r][T|t])/';
-		$tablas = '/([T|t][A|a][B|b][L|l][E|e][S|s]/';
-			
-		
-		
-		
-		
-	}
 }
 ?>
