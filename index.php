@@ -33,6 +33,9 @@
 					require('Controlador/MaestroCtrl.php');
 					$controlador = new MaestroCtrl();
 					break;
+				case 'login'://Controller for Login
+					require('Controlador/LoginCtrl.php');
+					$controlador = new LoginCtrl();
 				case 'admin':
 					require('Controlador/AdminCtrl.php');
 					$controlador = new AdminCtrl();
