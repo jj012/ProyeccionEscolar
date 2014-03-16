@@ -1,12 +1,22 @@
 <?php
 	/**
-	  * @author: J. Rizo Orozco
-	  * @since: 27/Feb/2014
-	  * Practice for validate a string with a regular expression
-	  */
+	 * @author: J. Rizo Orozco & Jesus Alberto Ley Ayón
+	 * @since: 27/Feb/2014
+	 * @version Alpha
+	 * Project J&J ProyeccionEscolar
+	 * In this project we are going to make a Online Qualifications Systems for some school 
+	 * trying to cover the most important task that concerns teachers, admins and students
+	 * the URL for the index.php is (when we get the web page up in the server) 
+	 * www.proyeccionescolar.co.nf/index.php?usuario='alumno'&accion='alta' 
+	 * 
+	 * @param usuario This describes to where the controller is passed to, there are 3 users 'alumno' 'maestro' 'admin'
+	 * @param accion This describes what action is taking depends on each user
+	 * if theres no valid user or actions, appears a error message
+	 */
 	 //$_POST['ctrl']='alumno';
-	 $_POST['acccion']='listar';
+	 /*
 	 $_POST['usuario'] ='alumno';
+	 $_POST['acccion']='listar';
 	 $_POST['grupo']='CC001';
 	 $_POST['ord']='1';
 	 $_POST['nombre']='Jesus Alberto Ley Ayon';
@@ -16,13 +26,13 @@
 	 $_POST['url']='https://bewtenue.net/index.php';
 	 $_POST['git']='bewtenue123';
 	 $_POST['celular']='3313845969';
-	 $_POST['equipo'] = 'J&J';
+	 $_POST['equipo'] = 'J&J';*/
 	 
 	  
 	  
 	  
 	  if(isset($_POST['usuario'])){//Check if in POST exists the user
-		if(preg_match("/[A-Za-z]+/",$_POST['usuario'])){ // The string must bee alphabetic
+		if(preg_match("/[A-Za-z]+/",$_POST['usuario'])){ // The string must be alphabetic
 			switch($_POST['usuario']){
 				case 'alumno':
 					require('Controlador/AlumnoCtrl.php');

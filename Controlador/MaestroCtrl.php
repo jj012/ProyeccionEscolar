@@ -1,12 +1,50 @@
 <?php
     /**
-	 * @author Jesus Alberto Ley Ayon
+	 * @author J. Rizo Orozco & Jesus Alberto Ley Ayón
 	 *  @since 
 	 *
 	 * Documentation for MaestroCtrl.php in this class we put methods for any case that would involve Teachers,because the controller was passed here,
 	 * so we will add just methods for teachers. there it is a switch that gets the actions and acts according to the action.
 	 * 
-	 *  
+	 * CASE CAPTURARCURSO
+	 * In the 'capturarcurso' action we validate the incoming data for the new course and send to @see nuevoCurso() 
+	 * @param nombrecurso its the name of the new course
+	 * @param seccion it the code for the group of 'seccion'
+	 * @param nrc its a number that the students use to get in the group
+	 * @param academia its the name of the academy of the course
+	 * @param dias represent the days of the week of the course
+	 * @param horas it the time in hours of the class
+	 * @param horario represent the schedule of the class
+	 * 
+	 * CASE CLONARCURSO
+	 * in the 'clonarcurso' action we recieve  and validate the data of an existing course and then duplicate its characteristics without students
+	 * @param clonarcurso its the name of the course 
+	 *
+	 * CASE EVALUACION
+	 * here we receive and validate the data of the activity and the percentage they represent in the course also the teacher can add an extra page
+	 * where he can add to a any activity wich represent a evaluation of a part of the activity representing percentage of the whole activity of
+	 * evaluation
+	 * OBLIGATORY
+	 * @param actividad the name of the activity of the course
+	 * @param porcentaje the value of the activity in the course 
+	 * @param hojaextra if the teacher needs an extra page
+	 * OPTIONAL 
+	 * @param subactividad the name of the subactivity
+	 * @param subporcentaje the value of the subactivity as part of an activity
+	 * 
+	 * 
+	 * CASE ALTAALUMNOS
+	 * here the teacher put the code of the student so he can be in the course imparted by his teacher and get evaluated
+	 * @param codigo the code of the student that wants to get in the course
+	 * 
+	 * CASE CAPTURACALIFICACION
+	 * here the teacher inputs the qualification to the students D= supossedly according to how they evaluate cruel reality u.u also the teacher can
+	 * put the assistance to the students
+	 * @param calificacion the obtained qualification of the student
+	 * @param assistencia the assistance of the student
+	 * 
+	 * the validations through regular expresions are below in the code in think its better to agroup them in another file
+	 * 
 	 */
 	 
 	 
@@ -170,64 +208,64 @@
 				}
 			}
     	}
-		public function validaNombreCurso($nombrecurso){
+		public function validaNombreCurso($nombrecurso){ //here we validate the syntaxis of the name of the course 
 			if (preg_match("/^[a-zA-Z ñÑáéíóúâêîôûàèìòùäëïöü]+/", $nombrecurso))
 				return true;
 			else 
 				return false;
 		}
-		public function validaSeccion($seccion){
+		public function validaSeccion($seccion){//function to validate the name of the section
 			if(preg_match("/[A-Za-z]+[0-9]+\-D[0-9]+/",$seccion))
 				return true;
 			else
 				return false;
 		}
-		public function validaNrc($nrc){
+		public function validaNrc($nrc){//function to validate the nrc of the especific group
 			if(preg_match("/0[0-9]{4}/",$nrc))
 				return true;
 			else 
 				return false;
 		}
-		public function validaAcademia($academia){
+		public function validaAcademia($academia){//function to validate the syntaxis of the name of the academy
 			if (preg_match("/^[a-zA-Z ñÑáéíóúâêîôûàèìòùäëïöü]+/", $academia))
 				return true;
 			else 
 				return false;
 		}
-		public function validaDias($dias){
+		public function validaDias($dias){//function to validate the days of the class
 			if(preg_match("/[1-6]/",$dias))
 				return true;
 			else 
 				return false;
 			
 		}
-		public function validaHoras($horas){
+		public function validaHoras($horas){//function to validate the hours of the class from 1 to 4
 			if(preg_match("/[1-4]/",$horas))
 				return true;
 			else
 				return false;
 		}
-		public function validaHorario($horario){
+		public function validaHorario($horario){//function to validate the schedule of the class
 			if(preg_match("/[0-2][0-9]{3}/",$horario))
 				return true;
 			else
 				return false;
 		}
 		
-		public function validaActividad($actividad){
+		public function validaActividad($actividad){//function to validate the activity of evaluation
 			if (preg_match("/^[a-zA-Z ñÑáéíóúâêîôûàèìòùäëïöü]+/", $actividad))
 				return true;
 			else 
 				return false;
 		}
-		public function validaPorcentaje($porcentaje){
+		public function validaPorcentaje($porcentaje){//function to validate the percentage of the activity
 			if (preg_match("/(100)|[0-9]{2}/", $porcentaje))
 				return true;
 			else 
 				return false;
 		}
-		public function validaCalificacion($calificacion){
-			if(preg_match("/(10|[0-9])[.][0-9]{1}/",$calificacion))
+		public function validaCalificacion($calificacion){//function to validate the qualification 0-10 and 1 decimal also accepts SD and NP
+			if(preg_match("/10|([0-9][.][0-9]{1})|DS|NP/",$calificacion))
 				return true;
 			else 
 				return false;

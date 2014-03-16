@@ -2,6 +2,65 @@
 	/**
 	* @author Javier Rizo Orozco
 	* Controller of Alumno to verify which action take it.
+	 * Possible cases 'alta','listar','consultar'
+	 * 
+	 * CASE ALTA 
+	 * in the 'alta' action we get the data from the student,then we verify the data and then send it to the @see insertaAlumno(), if the 'alta' 
+	 * was succesful then we show a view confirming it else we show an error 
+	 * these are obligatory
+	 * @param nombre the student name
+	 * @param correo the student e-mail
+	 * @param codigo the student code
+	 * @param carrera the career of the student
+	 * these are optional
+	 * @param url the site of the student
+	 * @param git the Git account of the student
+	 * @param celular the student cel phone
+	 * @param equipo the name of the student team
+	 * 	www.proyeccionescolar.co.nf/index.php?usuario='alumno'&accion='alta'&nombre=''&correo=''&codigo=''&carrera=''&url=''&git=''&celular=''&equipo=''
+	 * 
+	 * CASE LISTAR
+	 * in the 'listar' action we get the data of the group of the student verify it and send to @see listar(), if the group was founded returns an array
+	 * with the info of the group else we show an error
+	 * @param grupo the group for listing
+	 * 
+	 * 
+	 * CASE CONSULTAR
+	 * in the 'consultar' action we get the data code and password for a student and send it to @see consulta(), if the student was found returns 
+	 * the student qualification else we show an error
+	 * @param codigoconsulta the code for the query
+	 * @param password the password of the student
+	 * 
+	 * 
+	 * we also manage functions to validate data through regular expresions and a cleaning function for SQL they are documented down
+	 * 
+	 * public function limpiaSQL($variables) @param $variables you put the array you are going to clean
+	
+	public function validaNombre($cadena)
+	
+	public function validaCorreo($correo)
+	
+	public function validaCodigo($codigo)
+	 
+	public function validaCarrera($carrera)
+	 
+	public function validaURL($url)
+	
+	public function validaGitHub($git)
+	
+	public function validaCelular($numero)
+	
+	public function validaEquipo($equipo)
+	
+	public function verificaExistencia($datosObligados)
+	
+	public function opcionalesCorrectos($datosOpcionales)
+	
+	public function verificaGrupo($grupo)
+		
+	public function validaPassword($password)
+	
+	 * 
 	**/
 	class AlumnoCtrl{
 		public $model;
@@ -105,14 +164,23 @@
 						//Modificacion de Jesus
 						case 'consultar':
 							///aqui se consultan las calificaciones y asistencias
-							if(isset($_POST['codigo']) && isset($_POST['password'])){
-								$codigoCorrecto = $this->verificaCodigo($_POST['codigo']);
-								$passwordCorrecto = $this->validaPassword($_POST['password']);
-								if($codigoCorrecto && $passwordCorrecto){
-									include('Vista/calificacionesAlumno.php');
-								}
+							if(isset($_POST['codigo'])){
+								$codigoConsulta = $this->verificaCodigo($_POST['codigo']);
+							} else{
+								$codigoConsulta = false;
+							}
+							if(isset($_POST['password'])){
+								$password = $this->validaPassword($_POST['password']);
+							} else{
+								$password = false;
 							}
 							
+							$status = $this->consulta($codigoConsulta,$password);
+								if($status){
+									include('Vista/calificacionesAlumno.php');
+								} else{
+									include('Vista/errorConsulta.php');
+								}
 						break;
 						////////////
 					}
@@ -229,20 +297,21 @@
 			return false;
 	}//The data is not obligatored but if is there and it's bad then we need to give an error
 	
-	public function verificaGrupo($grupo){
+	public function verificaGrupo($grupo){// We return true if the group is correct
 		if(preg_match("/[A-Za-z]+[0-9]+\-D[0-9]+/",$grupo))
 			return true;
 		else
 			return false;
 	}
 
-	///Modificacion Jesus
+	
 	public function validaPassword($password){ // this function validates any character as a password with a lenght between 8 and 50 characters
 		if(preg_match("/.{8,50}/"))
 		return true;
 		else 
 			return false;
 	}
+	// since now any password requires a letter, a number, a special char, a char in another language and a sudoku
 	///
 }
 ?>

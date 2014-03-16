@@ -1,6 +1,6 @@
 <?php
     /**
-	 * @author Jesus Alberto Ley Ayon
+	 * @author J. Rizo Orozco & Jesus Alberto Ley AyónJesus Alberto Ley Ayon
 	 *  @since 
 	 * 
 	 */
