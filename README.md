@@ -27,16 +27,19 @@ Al crear un ciclo escolar el administrador debe indicar los días no efectivos d
 
 ========================================================================================================================
 Los cursos
+
 El profesor podrá capturar sus cursos y seleccionar el ciclo escolar al que aplicarán, de un curso se captura el nombre, la sección, el NRC, la academia a la que pertenece, los días de clase, la cantidad de horas por cada día y los horarios de cada día.
 
 ========================================================================================================================
 Clonar cursos
+
 La clonación de un curso es la creación de un nuevo curso para un nuevo ciclo escolar con las mismas caracteristicas que un curso previo, pero sin los datos de alumnos, asistencias ni calificaciones.
 Forma de Evaluación
 Un profesor dará de alta la evaluación de un curso indicando la actividad y el porcentaje que representará para la calificación final.
 
 ========================================================================================================================
 Hojas extras de evaluación
+
 Un profesor puede requerir hojas extras de evaluación continua, donde captura por ejemplo la calificación individual de cada práctica, donde el promedio podría ser la calificación de uno de los rubros que se tienen en la configuración de la evaluación.
 Un profesor puede tener como máximo la cantidad de hojas extras de evaluación igual a la cantidad de rubros en la configuración de la evaluación.
 Al estar capturando la configuración de la evaluación el profesor deberá indicar si ese rubro requiere una hoja de evaluación y cuantas columnas requiere.
@@ -44,14 +47,29 @@ Todas las hojas de evaluación obtendrán la calificación final por medio de "p
 
 ========================================================================================================================
 Calificaciones
+
 Las calificaciones se deben capturar de la manera que usted considere mas adecuada, pensando siempre en la facilidad para el profesor, y se debe validar calificaciones numéricas sobre 10 aceptando 1 decimal. Se permite también la nomenclatura NP y SD las cuales son interpretadas como 0 para los cálculos.
 
 ========================================================================================================================
 Asistencias
+
 La tabla de asistencias de un curso debe aparecer con asistencias por default, y se debe poder cambiar a falta uno por uno de los alumnos, o seleccionar varios alumnos por medio de un chechkbox y elegir la opción de poner falta.
 La lista de asistencias debe contabilizar los días de clase y en base a esto obtener porcentajes de asitencia individuales así como porcentaje de asistencia grupal.
-
 ========================================================================================================================
 Los alumnos
+
 Los alumnos pueden ingresar al sistema por medio de su código y una contraseña, y tendrán acceso a sus calificaciones y su registro de asistencias.
 No podrán ver calificaciones de otros compañeros, pero si, calificaciones de todos los cursos en los que esten registrados.
+
+========================================================================================================================
+Requests
+
+Los requests son hechos con POST. Para poder usar POST debera usar un plugin para su navegador si no lo tiene y declarar las variables que vaya requiriendo el controlador.
+
+Sitio de prueba
+
+www.proyeccionescolar.co.nf/index.php
+
+
+
+
