@@ -10,10 +10,15 @@
 			//Create the conection to the database
 		}
 		
-		function connect($p, $codigo){
+		function connect($datos){
 		
 		
 			return true;//We are return a true for this time
+		}
+		
+		function modifica($datos){
+			
+			return true;//We are gonna return a true for this time
 		}
 	 }
 	 
