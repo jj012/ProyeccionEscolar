@@ -11,6 +11,7 @@ Los profesores requieren llevar un registro de sus alumnos para el control de as
     El profesor da de alta alumnos a un curso
     El profesor captura calificaciones de alumnos y/o asistencias
     Los alumnos pueden revisar sus calificaciones en línea y sus asistencias
+    
 ========================================================================================================================
 La lista de alumnos
 
@@ -33,28 +34,35 @@ El profesor podrá capturar sus cursos y seleccionar el ciclo escolar al que apl
 ========================================================================================================================
 Clonar cursos
 
-La clonación de un curso es la creación de un nuevo curso para un nuevo ciclo escolar con las mismas caracteristicas que un curso previo, pero sin los datos de alumnos, asistencias ni calificaciones.
+Se podran clonar un cursos como un nuevo curso con un nuevo ciclo escolar, obteniendo las mismas caracteristicas que su curso gemelo, pero sin los datos de sus alumnos, asistencias ni calificaciones.
+
+========================================================================================================================
 Forma de Evaluación
 Un profesor dará de alta la evaluación de un curso indicando la actividad y el porcentaje que representará para la calificación final.
 
 ========================================================================================================================
 Hojas extras de evaluación
 
-Un profesor puede requerir hojas extras de evaluación continua, donde captura por ejemplo la calificación individual de cada práctica, donde el promedio podría ser la calificación de uno de los rubros que se tienen en la configuración de la evaluación.
+Un profesor puede requerir hojas extras de evaluación continua, donde captura por ejemplo la calificación individual de cada práctica, donde el promedio podría ser la calificación de uno de los rubros que se tienen establecidos en la configuración de la evaluación.
+
 Un profesor puede tener como máximo la cantidad de hojas extras de evaluación igual a la cantidad de rubros en la configuración de la evaluación.
+
 Al estar capturando la configuración de la evaluación el profesor deberá indicar si ese rubro requiere una hoja de evaluación y cuantas columnas requiere.
+
 Todas las hojas de evaluación obtendrán la calificación final por medio de "promedio" y esta calificación se asignará al rubo que le corresponde en la hoja de evaluación continua.
 
 ========================================================================================================================
 Calificaciones
 
-Las calificaciones se deben capturar de la manera que usted considere mas adecuada, pensando siempre en la facilidad para el profesor, y se debe validar calificaciones numéricas sobre 10 aceptando 1 decimal. Se permite también la nomenclatura NP y SD las cuales son interpretadas como 0 para los cálculos.
+Las calificaciones se deben capturar en forma numérica sobre 10 aceptando 1 decimal. Se permite también la nomenclatura NP y SD las cuales seran interpretados como 0 para los cálculos.
 
 ========================================================================================================================
 Asistencias
 
-La tabla de asistencias de un curso debe aparecer con asistencias por default, y se debe poder cambiar a falta uno por uno de los alumnos, o seleccionar varios alumnos por medio de un chechkbox y elegir la opción de poner falta.
-La lista de asistencias debe contabilizar los días de clase y en base a esto obtener porcentajes de asitencia individuales así como porcentaje de asistencia grupal.
+La tabla de asistencias de un curso aparecera con asistencias por default, y se debe poder cambiar a falta uno por uno de los alumnos, o seleccionar varios alumnos por medio de un chechkbox y elegir la opción de poner falta.
+
+La lista de asistencias contabilizara los días de clase y en base a esto obtener porcentajes de asitencia individuales así como porcentaje de asistencia grupal.
+
 ========================================================================================================================
 Los alumnos
 
@@ -70,6 +78,24 @@ Sitio de prueba
 
 www.proyeccionescolar.co.nf/index.php
 
+========================================================================================================================
+Alcances Realizados
+>>>>Esqueleto funcional para cada modulo, incluyendo modelos para futura entrega y vistas.
+>>>>Uso temporal de php para realizar unas vistas. Para futuras actualizaciones esto cambiara para preparar un mejor frontend
+>>>>Validaciones y reutilizacion de codigo
 
+========================================================================================================================
+Funcionalidad
 
+La funcionalidad para cada modulo y sus parametros son descritos en sus controladores, incluyendo casos de prueba y 
+variables a usar por POST
+
+========================================================================================================================
+Planeacion
+
+Esqueleto del MVC               |  16 de marzo (Por concluir)
+Base de Datos                   |  4 abril
+Sesiones  y mejora del Login    |  18 abril
+Frontend                        |  23 mayo
+Generación y uso de Documentos  |  6 junio
 
