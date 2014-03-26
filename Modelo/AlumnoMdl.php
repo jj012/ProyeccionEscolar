@@ -7,14 +7,34 @@
 	 * the methods here are invoked through @see AlumnoCtrl.php
 	 * 
 	 */
-	 class AlumnoModel{
+	 class AlumnoModel extends CtrlEstandar{
 	 	public $conexion;
 		
 		function __construct(){
 			//Create the conection to the database
+			require("dbconfig.inc");
+			$bd_driver = new mysqli("localhost","root","1234",bd);
+			if($bd_driver->connect_errno){
+				die("No se pudo conectar porque {$bd_driver->connect_error}");
+			}
 		}
 		
-		function listar($grupo){ //Consult the group, return the array with the group and status with true, if dont then only return the array with status false
+		function listar(){
+			$miQuery = "SELECT * FROM ALUMNO";
+			$result = $this->bd_driver->query($miQuery);
+			
+			
+			//Buscar error antes de extraer
+			
+			//Realiza todo :_:
+			$todo[] = array();
+			while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+				$todo[] = $a;
+			return $todo;
+		
+		}
+		
+		/**function listar($grupo){ //Consult the group, return the array with the group and status with true, if dont then only return the array with status false
 			if($grupo == "CC403-D05")
 				$lista =  array('status'=>true, "Juanito", "Fulanito", "Pepito", "Marianita", "Carlos");
 			else if($grupo == "i4214-D04")
@@ -22,7 +42,7 @@
 			else
 				$lista = array('status'=>false);
 				return $lista;
-		}
+		}*//
 		
 		function insertaAlumno($datosAlumno){//Function to call a query and INSERT into the database
 		

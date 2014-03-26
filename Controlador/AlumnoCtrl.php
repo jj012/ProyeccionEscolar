@@ -62,7 +62,8 @@
 	
 	 * 
 	**/
-	class AlumnoCtrl{
+	require_once("CtrlEstandar.php");
+	class AlumnoCtrl extends CtrlEstandar{
 		public $model;
 		
 		public function __construct(){//Charge the model Alumno

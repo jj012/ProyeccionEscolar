@@ -18,8 +18,12 @@
 		}
 	}
 
-	function incorrecto(){
+	function incorrecto(){//Function with the message "Contraseña incorrecta" if doesn't match with the password of the database
 		echo "Contraseña incorrecta </br>";
+	}
+	
+	function faltaAccion(){//Function to show the message of the lack of the action
+		echo "Falto la accion por realizar </br>";
 	}
 
 ?>

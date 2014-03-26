@@ -28,9 +28,12 @@
 	 $_POST['celular']='3313845969';
 	 $_POST['equipo'] = 'J&J';*/
 	 
-	  
-	  
-	  
+	 if (!isset($_SESSION)){ //We ask first of the session 
+		session_start();
+		$_POST['usuario'] = 'login';
+		$_POST['accionL'] = 'login';
+	}
+	 	  
 	  if(isset($_POST['usuario'])){//Check if in POST exists the user
 		if(preg_match("/[A-Za-z]+/",$_POST['usuario'])){ // The string must be alphabetic
 			switch($_POST['usuario']){
@@ -46,6 +49,7 @@
 				case 'login'://Controller for Login
 					require('Controlador/LoginCtrl.php');
 					$controlador = new LoginCtrl();
+					break;
 				case 'admin':
 					require('Controlador/AdminCtrl.php');
 					$controlador = new AdminCtrl();

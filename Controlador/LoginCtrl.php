@@ -3,7 +3,10 @@
 	* @author Javier Rizo Orozco
 	* Controller of Login to verify the data and start with a session
 	**/
-	class LoginCtrl{
+	
+	require_once("CtrlEstandar.php");
+	
+	class LoginCtrl extends CtrlEstandar{
 		public $model;
 		
 		public function __construct(){//Charge the model Alumno
@@ -12,64 +15,66 @@
 		}
 		
 		//Search which action take to do it.
-		public function ejecutar(){
-			if(isset($_POST['accion'])){
-				if(preg_match("/[A-Za-z]+/", $_POST['accion'])){ //Validates the action is alphabetic
-					switch($_POST['accion']){
-					case 'logueo':
-						if(isset($_POST['codigo']))
-							$codigo = $this->validaCorreo($_POST['codigo']);
-						else
-							$codigo= false
-						if(isset($_POST['pass']))
-							$p = $this->validaPass($_POST['pass']);
-						else
-							$p = false;
-							if($p && $codigo){
-								$arreglo = limpiaSQL(array($_POST['codigo']));
-								$codigo = $arreglo[0];
-								$p = crypt($_POST['pass']);//We use a hash to encrypt the password
-								$exito = $this->model->connect(array($p, $codigo));
-								if($exito){
-									include('Vista/inicioSesion.php');
-									saludo($codigo);
-								}else{
-									include('Vista/erroresLogueo.php');
-									incorrecto();
-								}
-								
-							
+			function ejecutar(){//This is where run the session
+			if(isset($_POST['accionL']) && preg_match("/[A-Za-z]+/", $_POST['accionL']))
+				switch($_POST['accionL']){
+				case 'login':
+				if(!$this->isLogged()){
+					if(isset($_POST['user']))
+						$codigo = $this->validaCodigo($_POST['user']);
+					else
+						$codigo= false;
+					if(isset($_POST['pass']))
+						$p = $this->validaPass($_POST['pass']);
+					else
+						$p = false;
+					if($p && $codigo){
+						$arreglo = $this->limpiaSQL(array($_POST['user']));
+						$codigo = $arreglo[0];
+						//$p = crypt($_POST['pass']);//We use a hash to encrypt the password
+						if($this->login($codigo, $p)){
+							if($this->esMaestro()){
+								if(isset($_POST['accion']))
+									header("Location: index.php?usuario=maestro&accion={$_POST['accion']}");
+							}
+							else if($this->esAlumno()){
+								if(isset($_POST['accion']))
+									header("Location: index.php?usuario=alumno&accion={$_POST['accion']}");
+							}
+							else if($this->esAdmin()){
+								if(isset($_POST['accion']))
+									header("Location: index.php?usuario=admin&accion={$_POST['accion']}");
 							}
 							else{
 								include('Vista/erroresLogueo.php');
-								errorLogueo($p, $codigo);
+								faltaAccion();
 							}
-							break;
-					case 'cambio':
-						if(isset($_POST['codigo']))
-							$codigo = $this->validaCodigo($_POST['codigo']);
-						else
-							$codigo= false
-						if($codigo){
-							$buscaCorreo = $this->model->connect(array(false, $_POST['codigo']));
-							if($buscaCorreo){
-								enviaCifrado($_POST['codigo']));
-							}	
-							else{
-								echo "No se puede localizar el correo, por favor hable con el admin";
-							}
-						
 						}
-						break;
 					}
+					else{
+						include('Vista/erroresLogueo.php');
+						erroresLogueo($p, $codigo);
+					}
+					break;
 				}
-				else
-					echo "Accion incorrecta </br>";
-			}
-			else
-				echo "No existe accion a ejecutar </br>";
-						
-		}
+				else{
+					//Carga error
+					header("Location: index.php?");
+				}
+				break;
+				
+				case 'logout':
+				if($this->isLogged()){
+					$this->logout();
+				}
+				else{
+					//Cargar Error
+					header("Location: index.php?");
+				}
+				break;
+				}
+	}
+	
 	
 	public function limpiaSQL($variables){//Posibility to use with the other controllers because is more standard this function
 		foreach($variables as $llave => $valor){
@@ -120,10 +125,33 @@
 		}
 		else
 			echo "Las contraseñas no son validas";
-		
-	
-	
 	}
+	
+		function isLogged(){//We verify the user is in the 
+		if(isset($_SESSION['user']))
+			return true;
+		else
+			return false;
+	}
+	
+	function login($id, $cont){
+		$exito = $this->model->connect($id, $cont);
+		if(!$exito['resultado'])
+			return false;
+			
+		$_SESSION['user'] = $id;
+		$_SESSION['tipo'] = $exito['tipo'];
+		$_SESSION['nombre'] = $exito['nombre'];
+		
+		return true;
+	}
+	
+	function logout(){//Destroy the session
+		session_unset();
+		session_destroy();
+		setcookie(session_name(), '', time() - 3600);
+	}
+
 	
 	public function validaPass($p){ //Function to validate the pass with a lenght of 6-20 characters
 		if(preg_match("/^[A-Za-z0-9_\-]{6,20}/", $p))

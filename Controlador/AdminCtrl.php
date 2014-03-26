@@ -10,7 +10,9 @@
 	 * @param ciclo with this syntaxis "yyyy[A|B]" ex. 2014A
 	 * 
 	 */
-    class AdminCtrl{
+	 
+	 require_once("CtrlEstandar.php");
+    class AdminCtrl extends CtrlEstandar{
     	public $model;
 		
 		public function __construct(){//Charge the model Admin
@@ -19,28 +21,32 @@
 		}
 		
 		public function ejecutar(){
-			if(isset($_POST['accion'])){
-				if(preg_match("/[A-Za-z]+/", $_POST['accion'])){
-					switch ($_POST['accion']) {
-						case 'cicloescolar':
-							if(isset($_POST['cicloescolar'])){
-								$ciclo = $this->validaCiclo($_POST['cicloescolar']);
-							} else{
-								$ciclo = false;
-							}
-							$status = $this->nuevoCiclo($ciclo);
-							if($status){
-								include('Vistas/nuevoCiclo.php');
-							} else{
-								include('Vistas/errorCiclo.php');
-							}
-							break;
-						
-						default:
+			if($this->esAdmin())
+				if(isset($_POST['accion'])){
+					if(preg_match("/[A-Za-z]+/", $_POST['accion'])){
+						switch ($_POST['accion']) {
+							case 'cicloescolar':
+								if(isset($_POST['cicloescolar'])){
+									$ciclo = $this->validaCiclo($_POST['cicloescolar']);
+								} else{
+									$ciclo = false;
+								}
+								$status = $this->nuevoCiclo($ciclo);
+								if($status){
+									include('Vistas/nuevoCiclo.php');
+								} else{
+									include('Vistas/errorCiclo.php');
+								}
+								break;
 							
-							break;
+							default:
+								
+								break;
+						}
 					}
 				}
+			else{
+				include('Vistas/errorPermisos.php');
 			}
 		}
 		public function validaCiclo($ciclo){//validating the year and period of the scholar cicle, assuming less than 100 years this will only accept
