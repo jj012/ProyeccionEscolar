@@ -62,3 +62,20 @@
 	function falloInsercion(){ //Message to show the fail to insert on the database the student
 		echo "No se logro insertar el alumno </br>";
 	}
+	
+	function falloControlador($caso){//Data incorrect of doesnt exists to send
+		switch($caso){
+			case 1:
+			echo "Accion no valida";
+			break;
+			
+			case 2:
+			echo "No se que quieres que haga :/ </br>";
+			break;
+			
+			default:
+			echo "Error en el controlador </br>";
+			break;
+		}
+	
+	}

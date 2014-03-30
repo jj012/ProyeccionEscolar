@@ -64,39 +64,7 @@ abstract class CtrlEstandar{
 	}
 	
 	
-	
-	public function enviaCifrado($codigo){//We are suposed to think that the user acces to here by email
-	  echo "Ingrese la contraseña y una nueva contraseña </br>";
-		if(isset($_POST['pass1']))
-			$p1 = $this->validaPass($_POST['pass1']);
-		else
-			$p1 = false;
-		if(isset($_POST['pass2']))
-			$p2 = $this->validaPass($_POST['pass2']);
-		else
-			$p2 = false;
-		if($p1 && p2){
-			$p1 = $_POST['pass1'];
-			$p2 = $_POST['pass2'];
-			if(strcmp($p1, $p2) == 0){ //Password equal
-			
-				$exito = $this->model->modifica(array(crypt($p1), $codigo));
-				if($exito){
-					include("Vista/cambioPass.php");
-		    }
-			  else
-					echo "No pudo cambiarse las contraseñas, intente de nuevo o hable con el admin </br>";
-			}
-			else
-				echo "Las contraseñas no son iguales </br>";
-		}
-		else
-			echo "Las contraseñas no son validas";
-		
-	
-	
-	}
-	
+
 	public function validaPass($p){ //Function to validate the pass with a lenght of 6-20 characters
 		if(preg_match("/^[A-Za-z0-9_\-]{6,20}/", $p))
 			return true;

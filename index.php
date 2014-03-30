@@ -63,9 +63,13 @@
 				//$ctrlAlumno->ejecutar();
 				$controlador->ejecutar();
 		}
-		else
-			echo "Entrada de usuario no valida";
+		else{
+			include('Vista/erroresIndex.php');
+			errorIndice(1);
+		}
 	  }
-	  else
-	  	echo 'No existe el usuario </br>';
+	  else{
+		include('Vista/erroresIndex.php');
+		errorIndice(2);
+	  }
 ?>

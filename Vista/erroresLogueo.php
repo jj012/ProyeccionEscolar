@@ -25,5 +25,9 @@
 	function faltaAccion(){//Function to show the message of the lack of the action
 		echo "Falto la accion por realizar </br>";
 	}
+	
+	function noLogueado(){//Function to show the message where the user is not logged
+		echo "Usted no esta logueado y no puede entrar a esta parte </br>";
+	}
 
 ?>

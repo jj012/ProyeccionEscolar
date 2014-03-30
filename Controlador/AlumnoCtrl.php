@@ -75,7 +75,6 @@
 		public function ejecutar(){
 			if(isset($_POST['accion'])){
 				if(preg_match("/[A-Za-z]+/", $_POST['accion'])){ //Validates the action is alphabetic
-				echo'validacion correcta';
 					switch($_POST['accion']){
 						case 'alta':
 						if(isset($_POST['nombre']))
@@ -153,14 +152,20 @@
 										sort($grupo);
 									lista($grupo);
 								}
-								else
-									echo "No existe el grupo que consultaste :( </br> "; //No se encontro el grupo
+								else{
+									include('Vista/erroresGrupo.php');
+									sinGrupo();
+								}
 							}
-							else
-								echo "Este grupo no es correcto";
+							else{
+								include('Vista/listadoAlumno.php');
+								grupoIncorrecto();
+							}
 						}
-						else
-							echo "Como quieres que muestre un grupo sino me dices cual :/ </br>"; //No mando nada
+						else{
+							include('Vista/listadoAlumno.php');
+							grupoNulo(); //No mando nada
+						}
 						break;
 						//Modificacion de Jesus
 						case 'consultar':
@@ -186,12 +191,16 @@
 						////////////
 					}
 				}
-				else
-					echo "Accion no valida";
+				else{
+					include('Vista/erroresAlumno.php');
+					falloControlador(1);
+				}
 			
 			}
-			else
-				echo "No se que quieres que haga :/ </br>";
+			else{
+				include('Vista/erroresAlumno.php');
+				falloControlador(2);
+			}
 	}
 	
 	public function limpiaSQL($variables){//Posibility to use with the other controllers because is more standard this function

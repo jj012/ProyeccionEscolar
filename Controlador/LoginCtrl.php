@@ -58,7 +58,8 @@
 					break;
 				}
 				else{
-					//Carga error
+					include('Vista/erroresLogueo.php');
+					noLogueado();
 					header("Location: index.php?");
 				}
 				break;
@@ -68,7 +69,8 @@
 					$this->logout();
 				}
 				else{
-					//Cargar Error
+					include('Vista/erroresLogueo.php');
+					noLogueado();
 					header("Location: index.php?");
 				}
 				break;
@@ -99,7 +101,8 @@
 	}
 	
 	public function enviaCifrado($codigo){//We are suposed to think that the user acces to here by email
-	  echo "Ingrese la contraseña y una nueva contraseña </br>";
+		include("Vista/cambioPass.php");
+		ingreseNuevo();
 		if(isset($_POST['pass1']))
 			$p1 = $this->validaPass($_POST['pass1']);
 		else
@@ -116,15 +119,16 @@
 				$exito = $this->model->modifica(array(crypt($p1), $codigo));
 				if($exito){
 					include("Vista/cambioPass.php");
+					exitoCambio();
 		    }
 			  else
-					echo "No pudo cambiarse las contraseñas, intente de nuevo o hable con el admin </br>";
+					sinCambio();
 			}
 			else
-				echo "Las contraseñas no son iguales </br>";
+				noIguales();
 		}
 		else
-			echo "Las contraseñas no son validas";
+			noValidas();
 	}
 	
 		function isLogged(){//We verify the user is in the 
