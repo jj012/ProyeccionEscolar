@@ -78,8 +78,12 @@
 		}
 		
 
-		function consulta($codigo,$password){
- 		return true;
+		function consulta($datos){
+			if($datos['esEstudiante']){
+				$myQuery = "SELECT * FROM ALUMNO WHERE CODIGO = $_SESSION['user']";
+				$result = $this->bd_driver->query($miQuery);
+				if(
+			}
  		}
  		
  		
@@ -89,7 +93,7 @@
 		}
 		
 		///Modificacion de Jesus
-		function consultar($codigo){
+		function consultaAlumno($codigo){
 
 			return true;//For the first advance we suppose that the data is correct and can access to the database
 						
@@ -98,3 +102,4 @@
 	 }
 	 
 ?>
+0

@@ -18,17 +18,52 @@
 		}
 		
 		function connect($datos){
-			$miQuery = "SELECT * FROM ALUMNO";
+		
+			//First we're going to ask for the students
+			$miQuery = "SELECT NOMBRE FROM ALUMNO WHERE CODIGO = $datos[0] AND CONTRASEÑA = '$datos[1]'";
 			$result = $this->bd_driver->query($miQuery);
 			
+			if($result){
+				$todo[] = array();
+				while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+					$todo[] = $a;
+				$usuario['resultado'] = true;
+				$usuario['tipo'] = "alumno";
+				$usuario['nombre'] = $todo[0];
+			}
+			else{//If not then we're going to ask for the teachers
+				$miQuery = "SELECT NOMBRE FROM MAESTRO WHERE idMaestro = $datos[0] AND CONTRASEÑA = '$datos[1]'";
+				$result = $this->bd_driver->query($miQuery);
+				
+				if($result){
+					$todo[] = array();
+					while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+						$todo[] = $a;
+					$usuario['resultado'] = true;
+					$usuario['tipo'] = "maestro";
+					$usuario['nombre'] = $todo[0];
+				}
+				else{//The user must be an admin
+				
+					$miQuery = "SELECT NOMBRE FROM ADMINISTRADOR WHERE idAdministrador = $datos[0] AND CONTRASEÑA = '$datos[1]'";
+					$result = $this->bd_driver->query($miQuery);
+				
+					if($result){
+						$todo[] = array();
+						while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+							$todo[] = $a;
+						$usuario['resultado'] = true;
+						$usuario['tipo'] = "alumno";
+						$usuario['nombre'] = $todo[0];
+					}
+					else{
+						$usuario['resultado'] = false;
+					}
+				
+				}
 			
-			//Buscar error antes de extraer
-			
-			//Realiza todo :_:
-			$todo[] = array();
-			while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
-				$todo[] = $a;
-			return $todo;
+			}
+			return $usuario;
 		}
 		
 		function modifica($datos){

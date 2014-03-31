@@ -178,24 +178,51 @@
 						break;
 						//Modificacion de Jesus
 						case 'consultar':
-							///aqui se consultan las calificaciones y asistencias
-							if(isset($_POST['codigo'])){
-								$codigoConsulta = $this->verificaCodigo($_POST['codigo']);
-							} else{
-								$codigoConsulta = false;
-							}
-							if(isset($_POST['password'])){
-								$password = $this->validaPassword($_POST['password']);
-							} else{
-								$password = false;
-							}
+						
+						if(preg_match("/[A-Za-z]+/", $_POST['accionC'])){ //Validates the action is alphabetic
+							switch($_POST['accionC']){
 							
-							$status = $this->consulta($codigoConsulta,$password);
-								if($status){
-									include('Vista/calificacionesAlumno.php');
-								} else{
-									include('Vista/errorConsulta.php');
+								case 'datos'://Info from the student
+								if($this->esAlumno()){//This is easy because we already have the student
+									$statusMiCarrera = $this->model->consulta(array('esEstudiante'=>true));
+									if($statusMiCarrera['acepta']){
+									
+									}else{
+										include('Vista/errorConsulta.php');
+										errorConsulta($statusMiCarrera);
+									}
 								}
+								else{
+								
+								}
+								break;
+								
+								case 'calificaciones'://Grades from the student
+								///aqui se consultan las calificaciones y asistencias
+								if(isset($_POST['codigo'])){
+									$codigoConsulta = $this->verificaCodigo($_POST['codigo']);
+								} else{
+									$codigoConsulta = false;
+								}
+								if(isset($_POST['password'])){
+									$password = $this->validaPassword($_POST['password']);
+								} else{
+									$password = false;
+								}
+								
+								$status = $this->model->consulta($codigoConsulta,$password);
+									if($status){
+										include('Vista/calificacionesAlumno.php');
+									} else{
+										include('Vista/errorConsulta.php');
+									}
+								break;
+							}
+						}
+						else{//This is an error
+							include('Vista/erroresAlumno.php');
+							falloControlador(1);
+						}
 						break;
 						////////////
 					}

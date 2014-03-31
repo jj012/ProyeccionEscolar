@@ -139,7 +139,7 @@
 	}
 	
 	function login($id, $cont){
-		$exito = $this->model->connect($id, $cont);
+		$exito = $this->model->connect(array($id, $cont));
 		if(!$exito['resultado'])
 			return false;
 			
