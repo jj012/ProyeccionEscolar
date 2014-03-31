@@ -77,65 +77,74 @@
 				if(preg_match("/[A-Za-z]+/", $_POST['accion'])){ //Validates the action is alphabetic
 					switch($_POST['accion']){
 						case 'alta':
-						if(isset($_POST['nombre']))
-							$nombre = $this->validaNombre($_POST['nombre']);
-						else
-							$nombre = false;
-						if(isset($_POST['correo']))
-							$correo = $this->validaCorreo($_POST['correo']);
-						else
-							$correo = false;
-						if(isset($_POST['codigo']))
-							$codigo = $this->validaCodigo($_POST['codigo']);
-						else
-							$codigo = false;						
-						if(isset($_POST['carrera']))
-							$carrera = $this->validaCarrera($_POST['carrera']);
-						else
-							$carrera = false;
-						if(isset($_POST['url']))
-							$url = $this->validaURL($_POST['url']);
-						else
-							$url = false;
-						if(isset($_POST['git']))
-							$git = $this->validaGitHub($_POST['git']);
-						else
-							$git = false;
-						if(isset($_POST['celular']))
-							$url = $this->validaURL($_POST['celular']);
-						else
-							$url = false;
-						if(isset($_POST['equipo']))
-							$equipo = $this->validaEquipo($_POST['equipo']);
-						else
-							$equipo = false;
-						
-						$status = $this->verificaExistencia(array('nombre' => $nombre, 'correo' => $correo, 'carrera' => $carrera, 'codigo' => $codigo)); //We verify that the info exists
-						if($status){//To enter this block first the info need to be correct
-							$status = $this->opcionalesCorrectos(array('url' => $url, 'git' => $git, 'celular' => $celular, 'equipo' => $equipo));
-							if($status){
-								$datosAlumno = array('nombre'=>$nombre, 'correo'=> $correo, 'carrera' => $carrera, 'codigo' => $codigo, 'url' => $url, 'git'=> $git, 'celular' => $celular);
-								$datosAlumno = $this->limpiaSQL($datosAlumno);
-								$status = $this->model->insertaAlumno($datosAlumno);
-								if($status){//On this part the query of insert in the database is done correctly
-									include('Vista/insercionAlumno.php');
-								
+						if($this->isLogged() && $this->esMaestro()){
+							if(isset($_POST['nombre']))
+								$nombre = $this->validaNombre($_POST['nombre']);
+							else
+								$nombre = false;
+							if(isset($_POST['correo']))
+								$correo = $this->validaCorreo($_POST['correo']);
+							else
+								$correo = false;
+							if(isset($_POST['codigo']))
+								$codigo = $this->validaCodigo($_POST['codigo']);
+							else
+								$codigo = false;						
+							if(isset($_POST['carrera']))
+								$carrera = $this->validaCarrera($_POST['carrera']);
+							else
+								$carrera = false;
+							if(isset($_POST['url']))
+								$url = $this->validaURL($_POST['url']);
+							else
+								$url = false;
+							if(isset($_POST['git']))
+								$git = $this->validaGitHub($_POST['git']);
+							else
+								$git = false;
+							if(isset($_POST['celular']))
+								$url = $this->validaURL($_POST['celular']);
+							else
+								$url = false;
+							if(isset($_POST['equipo']))
+								$equipo = $this->validaEquipo($_POST['equipo']);
+							else
+								$equipo = false;
+							if(isset($_POST['contraseña']))
+								$contraseña = $this->validaPass($_POST['contraseña']);
+							else
+								$contraseña = false;
+							
+							$status = $this->verificaExistencia(array('nombre' => $nombre, 'correo' => $correo, 'carrera' => $carrera, 'codigo' => $codigo, 'contraseña' => $contraseña)); //We verify that the info exists
+							if($status){//To enter this block first the info need to be correct
+								$status = $this->opcionalesCorrectos(array('url' => $url, 'git' => $git, 'celular' => $celular, 'equipo' => $equipo));
+								if($status){
+									$datosAlumno = array('nombre'=>$nombre, 'correo'=> $correo, 'carrera' => $carrera, 'codigo' => $codigo, 'url' => $url, 'git'=> $git, 'celular' => $celular);
+									$datosAlumno = $this->limpiaSQL($datosAlumno);
+									$status = $this->model->insertaAlumno($datosAlumno);
+									if($status[0]){//On this part the query of insert in the database is done correctly
+										include('Vista/insercionAlumno.php');
+									
+									}
+									else{//On this part the query cannot be done of insert
+										include('Vista/erroresAlumno.php');
+										falloInsercion();
+									}
 								}
-								else{//On this part the query cannot be done of insert
+								else{
 									include('Vista/erroresAlumno.php');
-									falloInsercion();
+									falloOpcionales(array('url' => $url, 'git' => $git, 'celular' => $celular, 'equipo' => $equipo));
 								}
 							}
 							else{
 								include('Vista/erroresAlumno.php');
-								falloOpcionales(array('url' => $url, 'git' => $git, 'celular' => $celular, 'equipo' => $equipo));
+								erroresAlta(array('nombre' => $nombre, 'correo'=> $correo, 'carrera' => $carrera, 'codigo' => $codigo, 'contraseña' => $contraseña));
 							}
-						}
+						}//End of ask the user if is a teacher
 						else{
-							include('Vista/erroresAlumno.php');
-							erroresAlta(array('nombre' => $nombre, 'correo'=> $correo, 'carrera' => $carrera, 'codigo' => $codigo));
+							include('Vista/erroresLogueo.php');
+							faltaPermisos();
 						}
-						
 						break;
 						
 						case 'listar':
@@ -293,7 +302,8 @@
 	}
 	
 	public function verificaExistencia($datosObligados){//On this function we return true if the requiremnts are there, if dont we return false
-		if($datosObligados['nombre'] === true && $datosObligados['correo'] === true && $datosObligados['carrera'] === false  && $datosObligados['codigo'] === true){
+		if($datosObligados['nombre'] === true && $datosObligados['correo'] === true && $datosObligados['carrera'] === false  && $datosObligados['codigo'] === true
+		   $datosObligados['contraseña'] === true){
 			return true;
 		}
 		else
