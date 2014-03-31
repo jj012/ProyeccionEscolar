@@ -18,7 +18,12 @@ abstract class CtrlEstandar{
 	
 	abstract function ejecutar();
 
-
+	public function validaPass($p){ //Function to validate the pass with a lenght of 6-20 characters
+		if(preg_match("/^[A-Za-z0-9_\-]{6,20}/", $p))
+			return true;
+		else
+			return -1;
+	}
 	
 	public function limpiaSQL($variables){//Posibility to use with the other controllers because is more standard this function
 		foreach($variables as $llave => $valor){

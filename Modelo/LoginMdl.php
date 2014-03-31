@@ -3,7 +3,9 @@
 	 * @author Javier Rizo Orozco
 	 * Model for the login
 	 */
-	 class LoginModel{
+	 
+	 require("MdlEstandar.php");
+	 class LoginModel extends MdlEstandar{
 	 	public $bd_driver;
 		
 		function __construct(){

@@ -7,13 +7,14 @@
 	 * the methods here are invoked through @see AlumnoCtrl.php
 	 * 
 	 */
-	 class AlumnoModel extends CtrlEstandar{
-	 	public $conexion;
+	|require("MdlEstandar.php");
+	 class AlumnoModel extends MdlEstandar{
+	 	public $bd_driver;
 		
 		function __construct(){
 			//Create the conection to the database
 			require("dbconfig.inc");
-			$bd_driver = new mysqli("localhost","root","1234",bd);
+			$bd_driver = new mysqli($servidor,$usuario,$pass,$bd);
 			if($bd_driver->connect_errno){
 				die("No se pudo conectar porque {$bd_driver->connect_error}");
 			}
@@ -45,10 +46,35 @@
 		}*//
 		
 		function insertaAlumno($datosAlumno){//Function to call a query and INSERT into the database
-		
-		
-			return true; //For the first advance we suppose to think that the data is correct and can been inserted
-						 //The next advance we return a false and we call a sql_command to verify if the data can be inserted or not.
+			$myQuery = "INSERT INTO 'alumno'('codigo', 'nombre', 'carrera', 'correoElectronico', 'celular',
+						'cuentaGit', 'paginaWeb', 'estado', 'contraseña') VALUES ('$datosAlumno['codigo']',
+						'$datosAlumno['nombre']',$datosAlumno['carrera'],'$datosAlumno['correo']'";
+						
+			if($datosAlumno['celular'] !== false)
+				$myQuery .= ",$datosAlumno['celular']";
+			else
+				$myQuery .= ",null";
+			if($datosAlumno['git'] !== false)
+				$myQuery .= ",'$datosAlumno['git']'";
+			else
+				$myQuery .= ",null";
+			if($datosAlumno['url'] !== false)
+				$myQuery .= ",'$datosAlumno['url']'";
+			else
+				$myQuery .= ",null";
+						
+			$myQuery .= ",1, '$datosAlumno['contraseña'])'";
+			
+			$result = $this->bd_driver->query($miQuery);
+			
+			if($result){
+				$alta = array(true, $result);
+			}else{
+				$alta = array(-1,$result); //Regresamos que fue un error y aparte enviamos el mensaje de errir
+			}
+			
+			$this->cierraConexion();
+			return $alta; 
 		}
 		
 

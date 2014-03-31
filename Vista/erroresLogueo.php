@@ -26,8 +26,13 @@
 		echo "Falto la accion por realizar </br>";
 	}
 	
+<<<<<<< HEAD
+	function faltaPermisos(){//Function to show about the lack of priviligies of the user
+		echo "Usted no es un usuario valido </br>";
+=======
 	function noLogueado(){//Function to show the message where the user is not logged
 		echo "Usted no esta logueado y no puede entrar a esta parte </br>";
+>>>>>>> parent of 5c66746... Revert "echos a Vistas"
 	}
 
 ?>

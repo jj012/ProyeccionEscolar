@@ -29,6 +29,12 @@
 		else if($datosAlumno['codigo'] === -1){
 			echo "Codigo incorrecto </br>";
 		}
+		if($datosAlumno['contraseña'] === false){
+			echo "No agrego contraseña </br>";
+		}
+		else if($datosAlumno['contraseña'] === -1){
+			echo "Contraseña invalida </br>";
+		}
 	}
 	
 	function fallos($caso){

@@ -4,7 +4,8 @@
 	 *  @since 
 	 * 
 	 */
-    class MaestroCtrl{
+	require("MdlEstandar.php");
+    class MaestroCtrl extends MdlEstandar{
     	public $conexion;
 		
 		public function __construct(){

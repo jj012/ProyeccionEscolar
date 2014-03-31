@@ -131,7 +131,7 @@
 			noValidas();
 	}
 	
-		function isLogged(){//We verify the user is in the 
+	function isLogged(){//We verify the user is in the 
 		if(isset($_SESSION['user']))
 			return true;
 		else

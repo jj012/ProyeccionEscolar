@@ -4,7 +4,8 @@
 	 *  @since 
 	 * 
 	 */
-    class AdminMdl{
+	 require("MdlEstandar.php");
+    class AdminMdl extends MdlEstandar{
     	public $conexion;
 	
 	public function nuevoCiclo($ciclo){
