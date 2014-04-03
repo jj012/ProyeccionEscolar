@@ -330,7 +330,7 @@
 	
 	public function verificaExistencia($datosObligados){//On this function we return true if the requiremnts are there, if dont we return false
 		if($datosObligados['nombre'] === true && $datosObligados['correo'] === true && $datosObligados['carrera'] === false  && $datosObligados['codigo'] === true
-		   $datosObligados['contraseña'] === true){
+		   && $datosObligados['contraseña'] === true){
 			return true;
 		}
 		else

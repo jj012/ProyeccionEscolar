@@ -1,4 +1,4 @@
-<?php
+﻿<?php
     /**
 	 * @author Javier Rizo Orozco
 	 * Model for the login
@@ -6,24 +6,26 @@
 	 
 	 require("MdlEstandar.php");
 	 class LoginModel extends MdlEstandar{
-	 	public $bd_driver;
 		
 		function __construct(){
 			//Create the conection to the database
 			require("dbconfig.inc");
 			$this->bd_driver = new mysqli($servidor,$usuario,$pass,$bd);
 			if($this->bd_driver->connect_errno){
-				die("No se pudo conectar porque {$bd_driver->connect_error}");
+				die("No se pudo conectar porque {$this->bd_driver->connect_error}");
 			}
+			$this->bd_driver->set_charset("utf8");
 		}
 		
 		function connect($datos){
 		
 			//First we're going to ask for the students
-			$miQuery = "SELECT NOMBRE FROM ALUMNO WHERE CODIGO = $datos[0] AND CONTRASEÑA = '$datos[1]'";
+			$miQuery = "SELECT NOMBRE FROM ALUMNO WHERE CODIGO = '".$datos[0]."' AND CONTRASEÑA = '".$datos[1]."';";
 			$result = $this->bd_driver->query($miQuery);
-			
+			printf("Error message: %s\n", $this->bd_driver->error);
+			var_dump($miQuery);
 			if($result){
+				echo "alfin";
 				$todo[] = array();
 				while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
 					$todo[] = $a;
@@ -63,6 +65,7 @@
 				}
 			
 			}
+			$this->bd_driver->close();
 			return $usuario;
 		}
 		

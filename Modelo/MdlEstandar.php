@@ -2,7 +2,7 @@
 
 	
 	abstract class MdlEstandar{
-		public $bd_driver;
+		private $bd_driver;
 		
 			function __construct(){
 			}

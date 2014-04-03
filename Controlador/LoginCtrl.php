@@ -32,23 +32,8 @@
 						$arreglo = $this->limpiaSQL(array($_POST['user']));
 						$codigo = $arreglo[0];
 						//$p = crypt($_POST['pass']);//We use a hash to encrypt the password
-						if($this->login($codigo, $p)){
-							if($this->esMaestro()){
-								if(isset($_POST['accion']))
-									header("Location: index.php?usuario=maestro&accion={$_POST['accion']}");
-							}
-							else if($this->esAlumno()){
-								if(isset($_POST['accion']))
-									header("Location: index.php?usuario=alumno&accion={$_POST['accion']}");
-							}
-							else if($this->esAdmin()){
-								if(isset($_POST['accion']))
-									header("Location: index.php?usuario=admin&accion={$_POST['accion']}");
-							}
-							else{
-								include('Vista/erroresLogueo.php');
-								faltaAccion();
-							}
+						if($this->login($codigo, $_POST['pass'])){
+							header("Location:index.php?usuario=alumno");
 						}
 					}
 					else{
@@ -142,7 +127,6 @@
 		$exito = $this->model->connect(array($id, $cont));
 		if(!$exito['resultado'])
 			return false;
-			
 		$_SESSION['user'] = $id;
 		$_SESSION['tipo'] = $exito['tipo'];
 		$_SESSION['nombre'] = $exito['nombre'];

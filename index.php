@@ -28,10 +28,9 @@
 	 $_POST['celular']='3313845969';
 	 $_POST['equipo'] = 'J&J';*/
 	 
-	 if (!isset($_SESSION)){ //We ask first of the session 
+	 if (!isset($_SESSION['user'])){ //We ask first of the session 
 		session_start();
-		$_POST['usuario'] = 'login';
-		$_POST['accionL'] = 'login';
+		echo "Hola usuario{$_SESSION['user']}";
 	}
 	 	  
 	  if(isset($_POST['usuario'])){//Check if in POST exists the user

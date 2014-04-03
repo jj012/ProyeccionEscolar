@@ -7,7 +7,7 @@
 	 * the methods here are invoked through @see AlumnoCtrl.php
 	 * 
 	 */
-	|require("MdlEstandar.php");
+	 require("MdlEstandar.php");
 	 class AlumnoModel extends MdlEstandar{
 	 	public $bd_driver;
 		
@@ -43,12 +43,11 @@
 			else
 				$lista = array('status'=>false);
 				return $lista;
-		}*//
+		}*/
 		
 		function insertaAlumno($datosAlumno){//Function to call a query and INSERT into the database
-			$myQuery = "INSERT INTO 'alumno'('codigo', 'nombre', 'carrera', 'correoElectronico', 'celular',
-						'cuentaGit', 'paginaWeb', 'estado', 'contraseña') VALUES ('$datosAlumno['codigo']',
-						'$datosAlumno['nombre']',$datosAlumno['carrera'],'$datosAlumno['correo']'";
+			$myQuery = "INSERT INTO ALUMNO VALUES ('$datosAlumno['codigo']',".
+						"'$datosAlumno['nombre']',$datosAlumno['carrera'],'$datosAlumno['correo']'";
 						
 			if($datosAlumno['celular'] !== false)
 				$myQuery .= ",$datosAlumno['celular']";
