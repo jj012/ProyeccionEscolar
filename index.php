@@ -30,7 +30,6 @@
 	 
 	 if (!isset($_SESSION['user'])){ //We ask first of the session 
 		session_start();
-		echo "Hola usuario{$_SESSION['user']}";
 	}
 	 	  
 	  if(isset($_POST['usuario'])){//Check if in POST exists the user
@@ -53,8 +52,9 @@
 					require('Controlador/AdminCtrl.php');
 					$controlador = new AdminCtrl();
 					break;					
-				default:
-					echo "Usuario invalido </br>";
+				default: //The user still need to login, we can't do anything if he / she is not logged
+					require('Controlador/LoginCtrl.php');
+					$controlador = new LoginCtrl();
 					break;
 			}
 			//if(isset($ctrlAlumno))

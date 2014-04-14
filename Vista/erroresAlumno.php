@@ -85,3 +85,7 @@
 		}
 	
 	}
+	
+	function falloEliminacion($error){
+		echo "No se logro eliminar el alumno por </br> {$error}";
+	}

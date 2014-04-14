@@ -9,14 +9,13 @@
 	 */
 	 require("MdlEstandar.php");
 	 class AlumnoModel extends MdlEstandar{
-	 	public $bd_driver;
 		
 		function __construct(){
 			//Create the conection to the database
 			require("dbconfig.inc");
-			$bd_driver = new mysqli($servidor,$usuario,$pass,$bd);
-			if($bd_driver->connect_errno){
-				die("No se pudo conectar porque {$bd_driver->connect_error}");
+			$this->bd_driver = new mysqli($servidor,$usuario,$pass,$bd);
+			if($this->bd_driver->connect_errno){
+				die("No se pudo conectar porque {$this->bd_driver->connect_error}");
 			}
 		}
 		
@@ -46,23 +45,22 @@
 		}*/
 		
 		function insertaAlumno($datosAlumno){//Function to call a query and INSERT into the database
-			$myQuery = "INSERT INTO ALUMNO VALUES ('$datosAlumno['codigo']',".
-						"'$datosAlumno['nombre']',$datosAlumno['carrera'],'$datosAlumno['correo']'";
-						
+			$miQuery = "INSERT INTO ALUMNO VALUES ('{$datosAlumno['codigo']}',".
+						"'{$datosAlumno['nombre']}',{$datosAlumno['carrera']},'{$datosAlumno['correo']}'";
 			if($datosAlumno['celular'] !== false)
-				$myQuery .= ",$datosAlumno['celular']";
+				$miQuery .= ",{$datosAlumno['celular']}";
 			else
-				$myQuery .= ",null";
+				$miQuery .= ",null";
 			if($datosAlumno['git'] !== false)
-				$myQuery .= ",'$datosAlumno['git']'";
+				$miQuery .= ",'{$datosAlumno['git']}'";
 			else
-				$myQuery .= ",null";
+				$miQuery .= ",null";
 			if($datosAlumno['url'] !== false)
-				$myQuery .= ",'$datosAlumno['url']'";
+				$miQuery .= ",'{$datosAlumno['url']}'";
 			else
-				$myQuery .= ",null";
+				$miQuery .= ",null";
 						
-			$myQuery .= ",1, '$datosAlumno['contraseña'])'";
+			$miQuery .= ",1, '{$datosAlumno['contraseña']}')";
 			
 			$result = $this->bd_driver->query($miQuery);
 			
@@ -72,23 +70,32 @@
 				$alta = array(-1,$result); //Regresamos que fue un error y aparte enviamos el mensaje de errir
 			}
 			
-			$this->cierraConexion();
-			return $alta; 
+			$this->bd_driver->close();
+			return $alta;
 		}
 		
 
 		function consulta($datos){
 			if($datos['esEstudiante']){
-				$myQuery = "SELECT * FROM ALUMNO WHERE CODIGO = $_SESSION['user']";
+				$myQuery = "SELECT * FROM ALUMNO WHERE CODIGO = '{$_SESSION['user']}'";
 				$result = $this->bd_driver->query($miQuery);
-				if(
 			}
  		}
  		
  		
 		function baja($codigo){//Function to call a query with UPDATE into the database
-		
-			return true;//For the first advance we suppose to think that the code is correct and the studen its down
+			$miQuery = "UPDATE ALUMNO SET ESTADO = 0 WHERE CODIGO = '{$codigo}';";
+			
+			$result = $this->bd_driver->query($miQuery);
+			
+			if($result && $this->bd_driver->affected_rows == 1){
+				$baja = array(true, $result);
+			}else{
+				$baja = array(-1,$this->bd_driver->error); //Regresamos que fue un error y aparte enviamos el mensaje de errir
+			}
+			
+			$this->bd_driver->close();
+			return $baja;
 		}
 		
 		///Modificacion de Jesus

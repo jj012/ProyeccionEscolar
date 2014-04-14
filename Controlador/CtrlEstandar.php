@@ -15,8 +15,19 @@ abstract class CtrlEstandar{
 	function __construct(){
 	}
 	
+	function isLogged(){//We verify the user is in the 
+		if(isset($_SESSION['user']))
+			return true;
+		else
+			return false;
+	}
+	
 	
 	abstract function ejecutar();
+	abstract function alta();
+	abstract function baja();
+	abstract function modifica();
+	abstract function consulta();
 
 	public function limpiaSQL($variables){//Posibility to use with the other controllers because is more standard this function
 		foreach($variables as $llave => $valor){

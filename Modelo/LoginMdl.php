@@ -22,10 +22,7 @@
 			//First we're going to ask for the students
 			$miQuery = "SELECT NOMBRE FROM ALUMNO WHERE CODIGO = '".$datos[0]."' AND CONTRASEÑA = '".$datos[1]."';";
 			$result = $this->bd_driver->query($miQuery);
-			printf("Error message: %s\n", $this->bd_driver->error);
-			var_dump($miQuery);
-			if($result){
-				echo "alfin";
+			if($result && $this->bd_driver->affected_rows == 1){
 				$todo[] = array();
 				while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
 					$todo[] = $a;
@@ -34,10 +31,10 @@
 				$usuario['nombre'] = $todo[0];
 			}
 			else{//If not then we're going to ask for the teachers
-				$miQuery = "SELECT NOMBRE FROM MAESTRO WHERE idMaestro = $datos[0] AND CONTRASEÑA = '$datos[1]'";
+				$miQuery = "SELECT NOMBRE FROM MAESTRO WHERE idMaestro = '$datos[0]' AND CONTRASEÑA = '$datos[1]'";
 				$result = $this->bd_driver->query($miQuery);
 				
-				if($result){
+				if($result && $this->bd_driver->affected_rows == 1){
 					$todo[] = array();
 					while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
 						$todo[] = $a;
@@ -47,15 +44,15 @@
 				}
 				else{//The user must be an admin
 				
-					$miQuery = "SELECT NOMBRE FROM ADMINISTRADOR WHERE idAdministrador = $datos[0] AND CONTRASEÑA = '$datos[1]'";
+					$miQuery = "SELECT NOMBRE FROM ADMINISTRADOR WHERE idAdministrador = '$datos[0]' AND CONTRASEÑA = '$datos[1]'";
 					$result = $this->bd_driver->query($miQuery);
 				
-					if($result){
+					if($result  && $this->bd_driver->affected_rows == 1){
 						$todo[] = array();
 						while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
 							$todo[] = $a;
 						$usuario['resultado'] = true;
-						$usuario['tipo'] = "alumno";
+						$usuario['tipo'] = "admin";
 						$usuario['nombre'] = $todo[0];
 					}
 					else{

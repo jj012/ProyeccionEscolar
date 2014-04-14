@@ -16,37 +16,36 @@
 		
 		//Search which action take to do it.
 			function ejecutar(){//This is where run the session
-			if(isset($_POST['accionL']) && preg_match("/[A-Za-z]+/", $_POST['accionL']))
-				switch($_POST['accionL']){
+			if(isset($_POST['accion']) && preg_match("/[A-Za-z]+/", $_POST['accion']))
+				switch($_POST['accion']){
 				case 'login':
-				if(!$this->isLogged()){
-					if(isset($_POST['user']))
-						$codigo = $this->validaCodigo($_POST['user']);
-					else
-						$codigo= false;
-					if(isset($_POST['pass']))
-						$p = $this->validaPass($_POST['pass']);
-					else
-						$p = false;
-					if($p && $codigo){
-						$arreglo = $this->limpiaSQL(array($_POST['user']));
-						$codigo = $arreglo[0];
-						//$p = crypt($_POST['pass']);//We use a hash to encrypt the password
-						if($this->login($codigo, $_POST['pass'])){
-							header("Location:index.php?usuario=alumno");
+					if(!$this->isLogged()){
+						if(isset($_POST['user']))
+							$codigo = $this->validaCodigo($_POST['user']);
+						else
+							$codigo= false;
+						if(isset($_POST['pass']))
+							$p = $this->validaPass($_POST['pass']);
+						else
+							$p = false;
+						if($p && $codigo){
+							$arreglo = $this->limpiaSQL(array($_POST['user']));
+							$codigo = $arreglo[0];
+							//$p = crypt($_POST['pass']);//We use a hash to encrypt the password
+							if($this->login($codigo, $_POST['pass'])){
+								header("Location:index.php");
+							}
 						}
+						else{
+							include('Vista/erroresLogueo.php');
+							erroresLogueo($p, $codigo);
+						}
+						break;
 					}
 					else{
 						include('Vista/erroresLogueo.php');
-						erroresLogueo($p, $codigo);
+						header("Location: index.php");
 					}
-					break;
-				}
-				else{
-					include('Vista/erroresLogueo.php');
-					noLogueado();
-					header("Location: index.php?");
-				}
 				break;
 				
 				case 'logout':
@@ -56,7 +55,7 @@
 				else{
 					include('Vista/erroresLogueo.php');
 					noLogueado();
-					header("Location: index.php?");
+					header("Location: index.php");
 				}
 				break;
 				}

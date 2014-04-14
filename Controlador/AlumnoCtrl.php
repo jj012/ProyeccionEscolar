@@ -77,74 +77,10 @@
 				if(preg_match("/[A-Za-z]+/", $_POST['accion'])){ //Validates the action is alphabetic
 					switch($_POST['accion']){
 						case 'alta':
-						if($this->isLogged() && $this->esMaestro()){
-							if(isset($_POST['nombre']))
-								$nombre = $this->validaNombre($_POST['nombre']);
-							else
-								$nombre = false;
-							if(isset($_POST['correo']))
-								$correo = $this->validaCorreo($_POST['correo']);
-							else
-								$correo = false;
-							if(isset($_POST['codigo']))
-								$codigo = $this->validaCodigo($_POST['codigo']);
-							else
-								$codigo = false;						
-							if(isset($_POST['carrera']))
-								$carrera = $this->validaCarrera($_POST['carrera']);
-							else
-								$carrera = false;
-							if(isset($_POST['url']))
-								$url = $this->validaURL($_POST['url']);
-							else
-								$url = false;
-							if(isset($_POST['git']))
-								$git = $this->validaGitHub($_POST['git']);
-							else
-								$git = false;
-							if(isset($_POST['celular']))
-								$url = $this->validaURL($_POST['celular']);
-							else
-								$url = false;
-							if(isset($_POST['equipo']))
-								$equipo = $this->validaEquipo($_POST['equipo']);
-							else
-								$equipo = false;
-							if(isset($_POST['contraseña']))
-								$contraseña = $this->validaPass($_POST['contraseña']);
-							else
-								$contraseña = false;
-							
-							$status = $this->verificaExistencia(array('nombre' => $nombre, 'correo' => $correo, 'carrera' => $carrera, 'codigo' => $codigo, 'contraseña' => $contraseña)); //We verify that the info exists
-							if($status){//To enter this block first the info need to be correct
-								$status = $this->opcionalesCorrectos(array('url' => $url, 'git' => $git, 'celular' => $celular, 'equipo' => $equipo));
-								if($status){
-									$datosAlumno = array('nombre'=>$nombre, 'correo'=> $correo, 'carrera' => $carrera, 'codigo' => $codigo, 'url' => $url, 'git'=> $git, 'celular' => $celular);
-									$datosAlumno = $this->limpiaSQL($datosAlumno);
-									$status = $this->model->insertaAlumno($datosAlumno);
-									if($status[0]){//On this part the query of insert in the database is done correctly
-										include('Vista/insercionAlumno.php');
-									
-									}
-									else{//On this part the query cannot be done of insert
-										include('Vista/erroresAlumno.php');
-										falloInsercion();
-									}
-								}
-								else{
-									include('Vista/erroresAlumno.php');
-									falloOpcionales(array('url' => $url, 'git' => $git, 'celular' => $celular, 'equipo' => $equipo));
-								}
-							}
-							else{
-								include('Vista/erroresAlumno.php');
-								erroresAlta(array('nombre' => $nombre, 'correo'=> $correo, 'carrera' => $carrera, 'codigo' => $codigo, 'contraseña' => $contraseña));
-							}
-						}//End of ask the user if is a teacher
-						else{
-							include('Vista/erroresLogueo.php');
-							faltaPermisos();
-						}
+							$this->alta();
+						break;
+						case 'baja':
+							$this->baja();
 						break;
 						
 						case 'listar':
@@ -179,20 +115,35 @@
 						//Modificacion de Jesus
 						case 'consultar':
 						
-						if(preg_match("/[A-Za-z]+/", $_POST['accionC'])){ //Validates the action is alphabetic
+						if(preg_match("/[A-Za-z]+/", $_POST['accionC'])){ //Validates the actionC is alphabetic
 							switch($_POST['accionC']){
 							
 								case 'datos'://Info from the student
 								if($this->esAlumno()){//This is easy because we already have the student
 									$statusMiCarrera = $this->model->consulta(array('esEstudiante'=>true));
 									if($statusMiCarrera['acepta']){
-									
+										include('Vista/datosMiCarrera');
+										datos($statusMiCarrera);
 									}else{
 										include('Vista/errorConsulta.php');
 										errorConsulta($statusMiCarrera);
 									}
 								}
-								else{
+								else if($this->esMaestro()){
+									if(isset($_POST['codigoAlumno']))
+										$codigo = $this->verificaCodigo();
+									else
+										$codigo = false;
+										
+									if($codigo){//Id aceppted, now we're going to search on the database
+										
+									}
+									else if($codigo === -1){//The format of id is too bad
+											
+									}
+									else{//There is no id from the student
+									
+									}
 								
 								}
 								break;
@@ -239,6 +190,118 @@
 			}
 	}
 	
+	public function alta(){
+		if($this->isLogged()){
+			if(isset($_POST['nombre']))
+				$nombre = $this->validaNombre($_POST['nombre']);
+			else
+				$nombre = false;
+			if(isset($_POST['correo']))
+				$correo = $this->validaCorreo($_POST['correo']);
+			else
+				$correo = false;
+			if(isset($_POST['codigo']))
+				$codigo = $this->validaCodigo($_POST['codigo']);
+			else
+				$codigo = false;						
+			if(isset($_POST['carrera']))
+				$carrera = $this->validaCarrera($_POST['carrera']);
+			else
+				$carrera = false;
+			if(isset($_POST['url']))
+				$url = $this->validaURL($_POST['url']);
+			else
+				$url = false;
+			if(isset($_POST['git']))
+				$git = $this->validaGitHub($_POST['git']);
+			else
+				$git = false;
+			if(isset($_POST['celular']))
+				$celular = $this->validaURL($_POST['celular']);
+			else
+				$celular = false;
+			if(isset($_POST['contraseña']))
+				$contraseña = $this->validaPass($_POST['contraseña']);
+			else
+				$contraseña = false;
+	
+			$status = $this->verificaExistencia(array('nombre' => $nombre, 'correo' => $correo, 'carrera' => $carrera, 'codigo' => $codigo, 'contraseña' => $contraseña)); //We verify that the info exists
+			if($status){//To enter this block first the info need to be correct
+				$status = $this->opcionalesCorrectos(array('url' => $url, 'git' => $git, 'celular' => $celular));
+				if($status){
+					$datosAlumno = array('nombre'=>$_POST['nombre'], 'correo'=> $_POST['correo'], 'carrera' => $_POST['carrera'], 'codigo' => $_POST['codigo'], 'contraseña' => $_POST['contraseña']);
+					if($url)
+						$datosAlumno['url'] = $_POST['url'];
+					else
+						$datosAlumno['url'] = false;
+					if($git)
+						$datosAlumno['git'] = $_POST['git'];
+					else
+						$datosAlumno['git'] = false;
+					if($celular)
+						$datosAlumno['celular'] = $_POST['celular'];
+					else
+						$datosAlumno['celular'] = false;
+				
+					$datosAlumno = $this->limpiaSQL($datosAlumno);
+					$status = $this->model->insertaAlumno($datosAlumno);
+					if($status[0]){//On this part the query of insert in the database is done correctly
+						include('Vista/insercionAlumno.php');
+				
+					}
+					else{//On this part the query cannot be done of insert
+						include('Vista/erroresAlumno.php');
+						falloInsercion();
+					}
+				}
+				else{
+					include('Vista/erroresAlumno.php');
+					falloOpcionales(array('url' => $url, 'git' => $git, 'celular' => $celular, 'equipo' => $equipo));
+				}
+			}
+			else{
+				include('Vista/erroresAlumno.php');
+				erroresAlta(array('nombre' => $nombre, 'correo'=> $correo, 'carrera' => $carrera, 'codigo' => $codigo, 'contraseña' => $contraseña));
+			}
+		}//End of ask that the user is logged
+		else{
+			include('Vista/erroresLogueo.php');
+			faltaPermisos();
+		}
+	}
+	
+	public function baja(){
+		if($this->isLogged() && $this->esMaestro() || $this->esAdmin()){
+			if(isset($_POST['codigo']))
+				$codigo = $this->validaCodigo($_POST['codigo']);
+			else
+				$codigo = false;
+				
+			if($codigo){
+				$baja = $this->model->baja($_POST['codigo']);
+				if($baja[0]){
+					include('Vista/eliminacionAlumno.php');
+				}
+				else{
+					include('Vista/erroresAlumno.php');
+					falloEliminacion($baja[1]);
+				}
+			}
+			else{
+				include('Vista/erroresAlumno.php');
+				if($codigo === -1)
+					fallos(2);//Code is wrong
+				else
+					fallos(3);//Code doesnt exists
+			}
+			
+		}//End of ask that the user if is a teacher or admin
+		else{
+			include('Vista/erroresLogueo.php');
+			faltaPermisos();
+		}
+	}
+	
 	public function limpiaSQL($variables){//Posibility to use with the other controllers because is more standard this function
 		foreach($variables as $llave => $valor){
 			if(is_string($valor)){
@@ -251,13 +314,18 @@
 		return $variables;
 	}
 	
+	public function modifica(){
+	
+	
+	}
+	
+	public function consulta(){}
+	
 	public function validaNombre($cadena){ //Function to validate the syntax of name
-
-		return preg_match("/^[a-zA-Z ñÑáéíóúâêîôûàèìòùäëïöü]+/", $cadena);
 
 		$cadena = ltrim($cadena);
 		$cadena = rtrim($cadena);//We clean the name first
-		if(preg_match("/^[A-Za-z\s\ \'\x{00e1}\x{00e}\x{00ed}\x{00f3}\x{00fa}\x{00c1}\x{00c9}\x{00cd}\x{00d3}\x{00da}\x{00f1}\x{00d1}\x{00FC}\x{00DC}]+/", $cadena)){
+		if(preg_match("/^[A-Za-z\sñÑáéíóúâêîôûàèìòùäëïöü]+/", $cadena)){
 			return true;
 		}
 		else
@@ -329,7 +397,7 @@
 	}
 	
 	public function verificaExistencia($datosObligados){//On this function we return true if the requiremnts are there, if dont we return false
-		if($datosObligados['nombre'] === true && $datosObligados['correo'] === true && $datosObligados['carrera'] === false  && $datosObligados['codigo'] === true
+		if($datosObligados['nombre'] === true && $datosObligados['correo'] === true && $datosObligados['carrera'] === true && $datosObligados['codigo'] === true
 		   && $datosObligados['contraseña'] === true){
 			return true;
 		}
@@ -338,7 +406,7 @@
 	}
 	
 	public function opcionalesCorrectos($datosOpcionales){// We ask if there any data and its correct, if doesnt correct then we give an error
-		if($datosOpcionales['url'] !== -1 && $datosOpcionales['git'] !== -1 && $datosOpcionales['celular'] !== -1 && $datosOpcionañes['equipo']) 
+		if($datosOpcionales['url'] !== -1 && $datosOpcionales['git'] !== -1 && $datosOpcionales['celular'] !== -1) 
 			return true;
 		else
 			return false;
