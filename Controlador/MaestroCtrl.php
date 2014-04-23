@@ -47,13 +47,13 @@
 	 * 
 	 */
 	 
-	 
-    class MaestroCtrl{
+	 require('CtrlEstandar.php');
+    class MaestroCtrl extends CtrlEstandar{
     	public $model;
 		
 		public function __construct(){//Charge the model Alumno
 			require('Modelo/MaestroMdl.php');
-			$this->model = new MaestroModel();
+			$this->model = new MaestroMdl();
 		}
 		
 		public function ejecutar(){
@@ -178,6 +178,22 @@
 							 
 						break;
 						
+						case 'alta':
+						$this->alta();
+						break;
+						
+						case 'baja':
+						$this->baja();
+						break;
+						
+						case 'modifica':
+						$this->modifica();
+						break;
+						
+						case 'consulta':
+						$this->consulta();
+						break;
+						
 						case 'capturarcalificacion':
 							if(isset($_POST['calificacion'])){
 								$calificacion = $this -> validaCalificacion($_POST['calificacion']);
@@ -208,6 +224,210 @@
 				}
 			}
     	}
+		
+		public function alta(){
+			if($this->esMaestro() || $this->esAdmin()){
+				if(isset($_POST['nombre']))
+					$nombre = $this->validaNombre($_POST['nombre']);
+				else
+					$nombre = false;
+				if(isset($_POST['correo']))
+					$correo = $this->validaCorreo($_POST['correo']);
+				else
+					$correo = false;
+				if(isset($_POST['codigo']))
+					$codigo = $this->validaCodigo($_POST['codigo']);
+				else
+					$codigo = false;						
+				if(isset($_POST['contraseña']))
+					$contraseña = $this->validaPass($_POST['contraseña']);
+				else
+					$contraseña = false;
+			
+				if($nombre === true && $correo === true && $codigo === true && $contraseña === true)
+					$status = true;
+				else
+					$status = false;
+					
+				if($status){
+					$datosMaestro = array('nombre' => $_POST['nombre'], 'correo' => $_POST['correo'], 'codigo' => $_POST['codigo'], 'contraseña' => $_POST['contraseña']);
+					$datosMaestro = $this->limpiaSQL($datosMaestro);
+					$insercion = $this->model->inserta($datosMaestro);
+					if($insercion[0]){
+						include('Vista/insercionMaestro.php');
+					}
+					else{
+						include('Vista/erroresMaestro.php');
+						errorInsercion($insercion[1]);
+					}
+				}else{
+					include('Vista/erroresMaestro.php');
+					errorAlta(array('nombre' => $nombre, 'correo' => $correo, 'codigo' => $codigo, 'contraseña' => $contraseña));
+				
+				}
+			
+			}
+			else{//Wrong rights to give updown a teacher
+				include('Vista/erroresLogueo.php');
+				faltaPermisos();
+			}
+		}
+		public function baja(){
+			if($this->esAdmin()){
+				if(isset($_POST['codigo']))
+					$codigo = $this->validaCodigo($_POST['codigo']);
+				else
+					$codigo = false;
+					
+				if($codigo){
+					$arreglo = $this->limpiaSQL(array('codigo' => $_POST['codigo']));
+					$baja = $this->model->baja($arreglo);
+					
+					if($baja[0]){
+						include('Vista/bajaMaestro.php');
+						
+					}else{
+						include('Vista/erroresMaestro.php');
+						falloBaja($baja[1]);
+					}
+				
+				}else{
+					include('Vista/erroresMaestro.php');
+					errorBaja($codigo);
+				}
+			
+			}else{//Wrong rights to give updown to a teacher
+				include('Vista/erroresLogueo.php');
+				faltaPermisos();
+			}
+		
+		
+		}
+		public function modifica(){
+			if($this->esMaestro() || $this->esAdmin()){
+				if($this->esMaestro()){
+					$codigo = true; //He is logged, and he has an id for his session
+				}else if(isset($_POST['codigo']))
+					$codigo = $this->validaCodigo($_POST['codigo']);
+				else
+					$codigo = false;
+					
+				if(isset($_POST['nombre']))
+					$nombre = $this->validaNombre($_POST['nombre']);
+				else
+					$nombre = false;
+					
+				if(isset($_POST['correo']))
+					$correo = $this->validaCorreo($_POST['correo']);
+				else
+					$correo = false;
+				
+				if(isset($_POST['contraseña']))
+					$contraseña = $this->validaPass($_POST['contraseña']);
+				else
+					$contraseña = false;
+					
+					
+				if($codigo !== -1 && $codigo !== false && $nombre !== -1 && $correo !== -1 && $contraseña !== -1)
+					$status = true;
+				else
+					$status = false;
+				if($status){
+					if($nombre === false && $correo === false && $contraseña === false)
+						$status = false;
+					else
+						$status = true;
+					if($status){
+						$nuevaInfo = array();
+						if($this->esMaestro())
+							$nuevaInfo['codigo'] = $_SESSION['user'];
+						else
+							$nuevaInfo['codigo'] = $_POST['codigo'];
+							
+						if($nombre !== false)
+							$nuevaInfo['nombre'] = $_POST['nombre'];
+						if($correo !== false)
+							$nuevaInfo['correo'] = $_POST['correo'];
+						if($contraseña !== false)
+							$nuevaInfo['contraseña'] = $_POST['contraseña'];
+							
+						$nuevaInfo = $this->limpiaSQL($nuevaInfo);
+						
+						$actualizado = $this->model->modifica($nuevaInfo);
+						if($actualizado[0]){
+							include('Vista/maestroModificado.php');
+						}else{
+							include('Vista/erroresModifica.php');
+							falloModificacion($actualizado[1]);
+						}
+							
+						
+							
+					}else{//Without info
+						include('Vista/erroresModifica.php');
+						sinModificar();
+					}
+				
+				}else{
+					include('Vista/erroresModificaMaestro.php');
+					falloError(array('codigo' => $codigo, 'nombre' => $nombre, 'correo' => $correo, 'contraseña' => $contraseña));
+				}
+			}else{//Wrong rights
+				include('Vista/erroresLogueo.php');
+				faltaPermisos();
+			}
+		
+		}
+		public function consulta(){
+			if($this->isLogged()){
+				if($this->esMaestro()){
+					$miStatus = $this->model->consulta(array('codigo' => $_SESSION['user']));
+				if($miStatus[0]){
+					include('Vista/statusPropioProfesor.php');
+					datos($miStatus[1]);
+				}else{
+					include('Vista/errorConsulta.php');
+					errorConsulta($miStatus[1]);
+				}
+				
+			}else if($this->esAlumno || $this->esAdmin()){//Search by a code
+				if(isset($_POST['codigo']))
+					$codigo = $this->validaCodigo($_POST['codigo']);
+				else
+					$codigo = false;
+				
+				if($codigo){//Succes with code, now we're going to search his / her grades or info
+					$arreglo = array('codigo' =>  $_POST['codigo']);
+					$arreglo = $this->limpiaSQL($arreglo);
+					$status = $this->model->consulta($arreglo);
+					if($status[0]){
+						include('Vista/statusProfesor.php');
+						datos($status[1]);
+					}
+					else{
+						include('Vista/errorConsulta.php');
+						errorConsulta($status[1]);
+					}
+				}else if($codigo === -1){//Code is wrong
+					include('Vista/erroresMaestro.php');
+					fallos(2);
+				}
+				else if(!$codigo){//Code doesnt exists
+					include('Vista/erroresMaestro.php');
+					fallos(1);
+				}
+			}else{//Type of user unknowed
+				include('Vista/erroresLogueo.php');
+				faltaPermisos();
+			}
+		}else{//User not logged
+			include('Vista/erroresLogueo.php');
+			faltaPermisos();
+		}
+		
+		}
+		
+		
 		public function validaNombreCurso($nombrecurso){ //here we validate the syntaxis of the name of the course 
 			if (preg_match("/^[a-zA-Z ñÑáéíóúâêîôûàèìòùäëïöü]+/", $nombrecurso))
 				return true;

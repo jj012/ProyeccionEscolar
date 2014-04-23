@@ -45,8 +45,9 @@ abstract class CtrlEstandar{
 	public function validaCodigo($codigo){ //Function to validate the code with a lenght of 9 numbers
 		$codigo = ltrim($codigo);
 		$codigo = rtrim($codigo);//We clean the code first
-		if(preg_match("/^[A-Za-z]?[0-9]{9}/", $codigo))
+		if(preg_match("/^[A-Za-z]?[0-9]{6,9}/", $codigo)){
 			return true;
+		}
 		else
 			return -1;
 	}
@@ -76,6 +77,26 @@ abstract class CtrlEstandar{
 
 	public function validaPass($p){ //Function to validate the pass with a lenght of 6-20 characters
 		if(preg_match("/^[A-Za-z0-9_\-]{6,20}/", $p))
+			return true;
+		else
+			return -1;
+	}
+	
+	public function validaNombre($cadena){ //Function to validate the syntax of name
+
+		$cadena = ltrim($cadena);
+		$cadena = rtrim($cadena);//We clean the name first
+		if(preg_match("/^[A-Za-z\sñÑáéíóúâêîôûàèìòùäëïöü]+/", $cadena)){
+			return true;
+		}
+		else
+			return -1;
+	}
+	
+	public function validaCorreo($correo){//Function to validate the syntax of email
+		$correo = ltrim($correo);
+		$correo = rtrim($correo);//We clean the email first
+		if(preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/", $correo))
 			return true;
 		else
 			return -1;

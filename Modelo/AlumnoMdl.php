@@ -17,6 +17,7 @@
 			if($this->bd_driver->connect_errno){
 				die("No se pudo conectar porque {$this->bd_driver->connect_error}");
 			}
+			$this->bd_driver->set_charset("utf8");
 		}
 		
 		function listar(){
@@ -28,7 +29,7 @@
 			
 			//Realiza todo :_:
 			$todo[] = array();
-			while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+			while($a = $result->fetch_array())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
 				$todo[] = $a;
 			return $todo;
 		
@@ -76,15 +77,26 @@
 		
 
 		function consulta($datos){
-			if($datos['esEstudiante']){
-				$myQuery = "SELECT * FROM ALUMNO WHERE CODIGO = '{$_SESSION['user']}'";
-				$result = $this->bd_driver->query($miQuery);
+			$miQuery = "SELECT * FROM ALUMNO WHERE CODIGO = '{$datos['codigo']}'";
+			$result = $this->bd_driver->query($miQuery);
+			$consulta = array();
+			if($result && $this->bd_driver->affected_rows == 1){
+				$todo = array();
+				while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+					$todo[] = $a;
+				$consulta[0] = true;
+				$consulta[1] = $todo[0];//The result is an array of the consult, in this case will be an array of one student (can be more) so we're going to extract the first register.
 			}
+			else{
+				$consulta[0] = false;
+				$consulta[1] = $this->bd_driver->error;
+			}
+			
+			return $consulta;
  		}
- 		
- 		
+		
 		function baja($codigo){//Function to call a query with UPDATE into the database
-			$miQuery = "UPDATE ALUMNO SET ESTADO = 0 WHERE CODIGO = '{$codigo}';";
+			$miQuery = "UPDATE ALUMNO SET ESTADO = 0 WHERE CODIGO = '{$codigo}'";
 			
 			$result = $this->bd_driver->query($miQuery);
 			
@@ -98,14 +110,40 @@
 			return $baja;
 		}
 		
-		///Modificacion de Jesus
-		function consultaAlumno($codigo){
-
-			return true;//For the first advance we suppose that the data is correct and can access to the database
-						
+		function modifica($datos){//Function to modify the student with UPDATE
+			$miQuery = "UPDATE ALUMNO SET ";
+			
+			if(isset($datos['nombre']))
+				$miQuery .= "nombre = '{$datos['nombre']}' ,";
+			if(isset($datos['correo']))
+				$miQuery .= "correoElectronico = '{$datos['correo']}' ,";
+			if(isset($datos['carrera']))
+				$miQuery .= "carrera = {$datos['carrera']} ,";
+			if(isset($datos['url']))
+				$miQuery .= "paginaWeb = '{$datos['url']}' ,";
+			if(isset($datos['git']))
+				$miQuery .= "cuentaGit = '{$datos['git']}' ,";
+			if(isset($datos['celular']))
+				$miQuery .= "celular = '{$datos['celular']}' ,";
+				
+			$miQuery = substr($miQuery, 0, strlen($miQuery) - 1);
+			
+			$miQuery .= " WHERE codigo = '{$datos['codigo']}' ";
+				
+			$result = $this->bd_driver->query($miQuery);
+			
+			if($result && $this->bd_driver->affected_rows === 1){
+				$modifica = array(true, $this->bd_driver->error);
+			}else{
+				$modifica = array(-1, $this->bd_driver->error); //Regresamos que fue un error y aparte enviamos el mensaje de errir
+			}
+			var_dump($miQuery);
+			$this->bd_driver->close();
+			return $modifica;
+			
+		
 		}
 		
 	 }
 	 
 ?>
-0

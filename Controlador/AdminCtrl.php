@@ -31,6 +31,31 @@
 								} else{
 									$ciclo = false;
 								}
+								
+								if(isset($_POST['fechaInicio']))
+									$fechaInicio = $this->validaFecha
+								else
+									$fechaInicio = false;
+									
+								if(isset($_POST['fechaFin']))
+									$fechaFin = $this->validaFecha
+									
+								if(isset($_POST['fechasDescanso']))
+									$fechasDescanso = $this->validaGrupoFecha(
+								else
+									$fechasDescanso = false;
+									
+								if($ciclo && $fechaInicio && fechaFin && $fechasDescanso !== -1)
+									$status = true;
+								else
+									$status = false
+								if($status){
+									
+								
+								}else{
+								
+								
+								}
 								$status = $this->nuevoCiclo($ciclo);
 								if($status){
 									include('Vistas/nuevoCiclo.php');

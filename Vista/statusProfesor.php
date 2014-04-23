@@ -1,16 +1,18 @@
 <?php
 
-	function datosAlumno($datos){//Results of a consult from a student with success
+	function datos($datos){
 		$presentacion;
 		if($_SESSION['tipo'] === 'admin')
 			$presentacion = "Hola administrador {$_SESSION['nombre']} </br>";
 		else
-			$presentacion = "Hola maestro {$_SESSION['nombre']} </br>";
+			$presentacion = "Hola alumno {$_SESSION['nombre']} </br>";
 			
-		echo $presentacion."Estos son los datos del estudiante </br>";
+			
+		echo $presentacion."Estos son los datos del profesor </br>";
 			
 		foreach($datos as $llave => $valor){
 			echo $llave.": ".$valor."</br>";
 		}
 	}
+
 ?>

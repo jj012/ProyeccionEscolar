@@ -1,8 +1,8 @@
 <?php
 
 
-function errorContraseña(){}
-
-echo "La contraseña no pudo cambiarse </br>";
+function errorContraseña($causa){
+echo "La contraseña no pudo cambiarse porque {$causa} </br>";
+}
 
 ?>

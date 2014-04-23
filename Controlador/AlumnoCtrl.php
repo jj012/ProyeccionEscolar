@@ -31,6 +31,12 @@
 	 * @param codigoconsulta the code for the query
 	 * @param password the password of the student
 	 * 
+	 * FROM JAVIER RIZO OROZCO ON CASE CONSULTAR
+	 * To consult a student there is an extra accion with name accionC.
+	 * The values to accionC are datos and calificaciones.
+	 * For the student he doesnt need anymore that been logged. But he is going to receive only his / her info
+	 * To teachers and admins they gonna need the code for the student to consult
+	 * 
 	 * 
 	 * we also manage functions to validate data through regular expresions and a cleaning function for SQL they are documented down
 	 * 
@@ -83,6 +89,10 @@
 							$this->baja();
 						break;
 						
+						case 'modifica':
+							$this->modifica();
+						break;
+						
 						case 'listar':
 						//Check if there a group
 						if(isset($_POST['grupo'])){
@@ -113,67 +123,13 @@
 						}
 						break;
 						//Modificacion de Jesus
-						case 'consultar':
+						case 'consulta':
+							$this->consulta();
+						break;
 						
-						if(preg_match("/[A-Za-z]+/", $_POST['accionC'])){ //Validates the actionC is alphabetic
-							switch($_POST['accionC']){
-							
-								case 'datos'://Info from the student
-								if($this->esAlumno()){//This is easy because we already have the student
-									$statusMiCarrera = $this->model->consulta(array('esEstudiante'=>true));
-									if($statusMiCarrera['acepta']){
-										include('Vista/datosMiCarrera');
-										datos($statusMiCarrera);
-									}else{
-										include('Vista/errorConsulta.php');
-										errorConsulta($statusMiCarrera);
-									}
-								}
-								else if($this->esMaestro()){
-									if(isset($_POST['codigoAlumno']))
-										$codigo = $this->verificaCodigo();
-									else
-										$codigo = false;
-										
-									if($codigo){//Id aceppted, now we're going to search on the database
-										
-									}
-									else if($codigo === -1){//The format of id is too bad
-											
-									}
-									else{//There is no id from the student
-									
-									}
-								
-								}
-								break;
-								
-								case 'calificaciones'://Grades from the student
-								///aqui se consultan las calificaciones y asistencias
-								if(isset($_POST['codigo'])){
-									$codigoConsulta = $this->verificaCodigo($_POST['codigo']);
-								} else{
-									$codigoConsulta = false;
-								}
-								if(isset($_POST['password'])){
-									$password = $this->validaPassword($_POST['password']);
-								} else{
-									$password = false;
-								}
-								
-								$status = $this->model->consulta($codigoConsulta,$password);
-									if($status){
-										include('Vista/calificacionesAlumno.php');
-									} else{
-										include('Vista/errorConsulta.php');
-									}
-								break;
-							}
-						}
-						else{//This is an error
-							include('Vista/erroresAlumno.php');
-							falloControlador(1);
-						}
+						default:// Case rare
+						include('Vista/erroresAlumno.php');
+						falloControlador(2);
 						break;
 						////////////
 					}
@@ -190,7 +146,7 @@
 			}
 	}
 	
-	public function alta(){
+	public function alta(){//INSERT
 		if($this->isLogged()){
 			if(isset($_POST['nombre']))
 				$nombre = $this->validaNombre($_POST['nombre']);
@@ -270,7 +226,7 @@
 		}
 	}
 	
-	public function baja(){
+	public function baja(){//BAJA
 		if($this->isLogged() && $this->esMaestro() || $this->esAdmin()){
 			if(isset($_POST['codigo']))
 				$codigo = $this->validaCodigo($_POST['codigo']);
@@ -315,11 +271,153 @@
 	}
 	
 	public function modifica(){
+		if($this->isLogged()){
+			if(isset($_POST['nombre']))
+				$nombre = $this->validaNombre($_POST['nombre']);
+			else
+				$nombre = false;
+			if(isset($_POST['correo']))
+				$correo = $this->validaCorreo($_POST['correo']);
+			else
+				$correo = false;
+			if(isset($_POST['codigo']))
+				$codigo = $this->validaCodigo($_POST['codigo']);
+			else if($this->esAlumno())
+				$codigo = true;//Only for the student
+			else
+				$codigo = false;						
+			if(isset($_POST['carrera']))
+				$carrera = $this->validaCarrera($_POST['carrera']);
+			else
+				$carrera = false;
+			if(isset($_POST['url']))
+				$url = $this->validaURL($_POST['url']);
+			else
+				$url = false;
+			if(isset($_POST['git']))
+				$git = $this->validaGitHub($_POST['git']);
+			else
+				$git = false;
+			if(isset($_POST['celular']))
+				$celular = $this->validaURL($_POST['celular']);
+			else
+				$celular = false;
 	
+			if($nombre !== -1 && $correo !== -1 && $carrera !== -1 && $url !== -1 && $git !== -1 && $celular !== -1 
+			&& $codigo !== -1 && $codigo !== false)
+				$status = true;
+			else
+				$status = false;
+			if($status){//All the info is correct, we're going to now to verify if the info is isset
+				if($nombre === false && $correo === false && $carrera === false
+				&& $url === false && $git === false && $celular === false)
+					$status = false;
+				else
+					$status = true;
+				
+				if($status){//There is info to update
+					$nuevaInfo = array();
+					if($this->esAlumno())
+						$nuevaInfo['codigo'] = $_SESSION['user'];
+					else
+						$nuevaInfo['codigo'] = $_POST['codigo'];
+						
+					if($nombre !== false)
+						$nuevaInfo['nombre'] = $_POST['nombre'];
+						
+					if($correo !== false)
+						$nuevaInfo['correo'] = $_POST['correo'];
+						
+					if($carrera !== false)
+						$nuevaInfo['carrera'] = $_POST['carrera'];
+						
+					if($url !== false)
+						$nuevaInfo['url'] = $_POST['url'];
+						
+					if($git !== false)
+						$nuevaInfo['git'] = $_POST['git'];
+						
+					if($celular !== false)
+						$nuevaInfo['celular'] = $_POST['celular'];
+						
+						$nuevaInfo = $this->limpiaSQL($nuevaInfo);
+						
+						$actualizado = $this->model->modifica($nuevaInfo);
+						if($actualizado[0]){//Success
+							include('Vista/modificacionAlumno.php');
+						}
+						else{//Error to update
+							include('Vista/erroresModifica.php');
+							falloModificacion($actualizado[1]);
+						}
+				}
+				else{
+					include('Vista/erroresModifica.php');
+					sinModificar();
+				
+				}
+			}
+			else{
+				include('Vista/erroresModifica.php');
+				falloError(array('nombre' => $nombre, 'correo' => $correo, 'carrera' => $carrera, 'contraseña' => $contraseña,
+								 'url' => $url, 'git' => $git, 'celular' => $celular, 'codigo' => $codigo));
+			}
+			
+		}//End of ask that the user is logged
+		else{
+			include('Vista/erroresLogueo.php');
+			faltaPermisos();
+		}
 	
 	}
 	
-	public function consulta(){}
+	public function consulta(){
+		if($this->isLogged()){
+			if($this->esAlumno()){
+				$statusMiCarrera = $this->model->consulta(array('codigo' => $_SESSION['user']));
+				if($statusMiCarrera[0]){
+					include('Vista/datosMiCarrera.php');
+					datos($statusMiCarrera[1]);
+				}else{
+					include('Vista/errorConsulta.php');
+					errorConsulta($statusMiCarrera[1]);
+				}
+				
+			}else if($this->esMaestro() || $this->esAdmin()){//Search by a code
+				if(isset($_POST['codigo']))
+					$codigo = $this->validaCodigo($_POST['codigo']);
+				else
+					$codigo = false;
+				
+				if($codigo){//Succes with code, now we're going to search his / her grades or info
+					$arreglo = array('codigo' =>  $_POST['codigo']);
+					$arreglo = $this->limpiaSQL($arreglo);
+					$status = $this->model->consulta($arreglo);
+					if($status[0]){
+						include('Vista/datosAlumno.php');
+						datosAlumno($status[1]);
+					}
+					else{
+						include('Vista/erroresAlumno.php');
+						errorConsulta($status[1]);
+					}
+				}else if($codigo === -1){//Code is wrong
+					include('Vista/erroresAlumno.php');
+					fallos(2);
+				}
+				else if(!$codigo){//Code doesnt exists
+					include('Vista/erroresAlumno.php');
+					fallos(1);
+				}
+			}else{//Type of user unknowed
+				include('Vista/erroresLogueo.php');
+				faltaPermisos();
+			}
+		}else{//User not logged
+			include('Vista/erroresLogueo.php');
+			faltaPermisos();
+		}
+	}
 	
 	public function validaNombre($cadena){ //Function to validate the syntax of name
 

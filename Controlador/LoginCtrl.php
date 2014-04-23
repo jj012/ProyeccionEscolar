@@ -2,6 +2,10 @@
 	/**
 	* @author Javier Rizo Orozco
 	* Controller of Login to verify the data and start with a session
+	* ACTIONS
+	* login
+	* logout
+	* cambioContraseña
 	**/
 	
 	require_once("CtrlEstandar.php");
@@ -15,50 +19,154 @@
 		}
 		
 		//Search which action take to do it.
-			function ejecutar(){//This is where run the session
-			if(isset($_POST['accion']) && preg_match("/[A-Za-z]+/", $_POST['accion']))
+		function ejecutar(){//This is where run the session
+			if(isset($_POST['accion']) && preg_match("/[A-Za-z]+/", $_POST['accion'])){
 				switch($_POST['accion']){
-				case 'login':
-					if(!$this->isLogged()){
-						if(isset($_POST['user']))
-							$codigo = $this->validaCodigo($_POST['user']);
-						else
-							$codigo= false;
-						if(isset($_POST['pass']))
-							$p = $this->validaPass($_POST['pass']);
-						else
-							$p = false;
-						if($p && $codigo){
-							$arreglo = $this->limpiaSQL(array($_POST['user']));
-							$codigo = $arreglo[0];
-							//$p = crypt($_POST['pass']);//We use a hash to encrypt the password
-							if($this->login($codigo, $_POST['pass'])){
-								header("Location:index.php");
+					case 'login':
+						if(!$this->isLogged()){
+							if(isset($_POST['user']))
+								$codigo = $this->validaCodigo($_POST['user']);
+							else
+								$codigo= false;
+							if(isset($_POST['pass']))
+								$p = $this->validaPass($_POST['pass']);
+							else
+								$p = false;
+							if($p && $codigo){
+								$arreglo = $this->limpiaSQL(array($_POST['user']));
+								$codigo = $arreglo[0];
+								//$p = crypt($_POST['pass']);//We use a hash to encrypt the password
+								if($this->login($codigo, $_POST['pass'])){
+									header("Location:index.php");
+								}
+								else{
+									include('Vista/erroresLogueo.php');
+									incorrecto();//Data incorrect
+								}
 							}
+							else{
+								include('Vista/erroresLogueo.php');
+								erroresLogueo($p, $codigo);
+							}
+							break;
 						}
 						else{
 							include('Vista/erroresLogueo.php');
-							erroresLogueo($p, $codigo);
+							header("Location: index.php");
 						}
-						break;
-					}
-					else{
-						include('Vista/erroresLogueo.php');
-						header("Location: index.php");
-					}
-				break;
+					break;
+					
+					case 'logout':
+						if($this->isLogged()){
+							$this->logout();
+						}
+						else{
+							include('Vista/erroresLogueo.php');
+							noLogueado();
+							header("Location: index.php");
+						}
+					break;
+					
+					case 'cambioContraseña':
+						if($this->isLogged()){
+							$this->modificaPass();
+						}else{
+							include('Vista/erroresLogueo.php');
+							noLogueado();
+							header("Location: index.php");
+						}
+					break;
+				}
+			}
+		}
+	
+	public function alta(){}
+	public function baja(){}
+	public function modifica(){}
+	public function consulta(){}
+	
+	public function modificaPass(){
+		if($this->esAdmin()){
+			if(isset($_POST['codigo']))
+				$codigo = $this->validaCodigo($_POST['codigo']);
+			else
+				$codigo = false;
+			if(isset($_POST['contraseña']))
+				$contraseña = $this->validaPass($_POST['contraseña']);
+			else
+				$contraseña = false;
 				
-				case 'logout':
-				if($this->isLogged()){
-					$this->logout();
+			if(isset($_POST['tipo'])){
+				if($_POST['tipo'] == 1 || $_POST['tipo'] == 2 || $_POST['tipo'] == 3)
+					$tipo = true;
+				else
+					$tipo = -1;
+			}else{
+				$tipo = false;
+			} 
+				
+			if($codigo !== -1 && $codigo !== false && $contraseña !== -1 && $contraseña !== false && $tipo !== -1 && $tipo !== false)
+				$status = true;
+			else
+				$status = false;
+				
+			if($status){
+				$arreglo = array('codigo' => $_POST['codigo'], 'contraseña' => $_POST['contraseña'], 'tipo' => $_POST['tipo']);
+				$arreglo = $this->limpiaSQL($arreglo);
+				
+				$cambioPass = $this->model->modificaPass($arreglo);
+				if($cambioPass[0]){
+					include('Vista/cambioPass.php');
+					exitoCambio();
+				}else{
+					include('Vista/erroresPass.php');
+					errorContraseña($cambioPass[1]);
+				
 				}
-				else{
-					include('Vista/erroresLogueo.php');
-					noLogueado();
-					header("Location: index.php");
+			
+			}else{
+				$datos = array ('codigo' => $codigo, 'contraseña' => $contraseña, 'tipo' => $tipo);
+				include('Vista/cambioPass.php');
+				erroresCambioAdmin($datos);
+			}
+		}
+		else if($this->esMaestro() || $this->esAlumno()){
+			if(isset($_POST['contraseña']))
+				$contraseña = $this->validaPass($_POST['contraseña']);
+			else
+				$contraseña = false;
+				
+			if($contraseña){
+				$arreglo = array('contraseña' => $_POST['contraseña'], 'codigo' => $_SESSION['user']);
+				if($this->esAlumno())
+					$arreglo['tipo'] = '1';
+				else if($this->esMaestro())
+					$arreglo['tipo'] = '2';
+					
+				$arreglo = $this->limpiaSQL($arreglo);
+				$cambioPass = $this->modificaPass($arreglo);
+				if($cambioPass[0]){
+					include('Vista/cambioPass.php');
+					exitoCambio();
+				}else{
+					include('Vista/erroresPass.php');
+					errorContraseña($cambioPass[1]);
+				
 				}
-				break;
-				}
+				
+			}else if($contraseña === -1){
+				include('Vista/cambioPass.php');
+				noValidas();
+			
+			}else if(!contraseña){
+				include('Vista/cambioPass.php');
+				sinContraseña();
+			}
+		
+		}else{
+			include('Vista/erroresLogueo.php');
+			faltaPermisos();
+		}
 	}
 	
 	
@@ -74,15 +182,6 @@
 		return $variables;
 	}
 	
-
-	public function validaCodigo($codigo){ //Function to validate the code with a lenght of 9 numbers
-		$codigo = ltrim($codigo);
-		$codigo = rtrim($codigo);//We clean the code first
-		if(preg_match("/^[A-Za-z]?[0-9]{9}/", $codigo))
-			return true;
-		else
-			return -1;
-	}
 	
 	public function enviaCifrado($codigo){//We are suposed to think that the user acces to here by email
 		include("Vista/cambioPass.php");
@@ -104,8 +203,8 @@
 				if($exito){
 					include("Vista/cambioPass.php");
 					exitoCambio();
-		    }
-			  else
+				}
+				else
 					sinCambio();
 			}
 			else
