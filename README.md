@@ -86,6 +86,20 @@ www.proyeccionescolar.co.nf/index.php
 
 ========================================================================================================================
 ##Alcances Realizados 2
+>Creación de una base de datos en MySQL para su uso posterior con el sitio.
+>Cambio de Contraseña
+
+========================================================================================================================
+##Datos para probar el inicio de sesión
+Maestros
+idMaestro   Nombre                              Correo                      Password
+20000001 	Nancy Michelle Torres Villanueva 	lic.nancy.torres@gmail.com 	maestra
+20000000 	Abelardo Gomez Andrade 	            automatum@gmail.com 	    graficosAutomaticos
+20000002 	Luis Alberto Casillas Santillan 	casillasia@gmail.com 	    sistemas
+
+Admin
+idAdmin     Nombre                      Correo                  Password
+3000000 	Miguel Angel Ochoa Vazquez 	ochoadmin@hotmail.com 	pudin12345
 
 ========================================================================================================================
 ##Funcionalidad
@@ -97,7 +111,7 @@ variables a usar por POST
 ##Planeacion
 
 * Esqueleto del MVC               |  16 de marzo (Concluida)
-* Base de Datos y Sesiones        |  30 de marzo (En proceso) 
-* Maquetado Web y Correos         |  13 abril
+* Base de Datos y Sesiones        |  30 de marzo (En proceso | Atrasado, termina el 24 de abril) 
+* Maquetado Web y Correos         |  Fecha Pendiente
 * Frontend Dinamico               |  23 mayo
 * Generación y uso de Documentos  |  6 junio
