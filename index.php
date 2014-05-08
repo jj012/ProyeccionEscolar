@@ -28,8 +28,10 @@
 	 $_POST['celular']='3313845969';
 	 $_POST['equipo'] = 'J&J';*/
 	 
-	 if (!isset($_SESSION['user'])){ //We ask first of the session 
+	 if (!isset($_SESSION)){ //We ask first of the session 
 		session_start();
+		if(!isset($_SESSION['user']))
+			require('Vista\index.html');
 	}
 	 	  
 	  if(isset($_POST['usuario'])){//Check if in POST exists the user

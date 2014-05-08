@@ -18,10 +18,80 @@
 		}
 		
 		function nuevoCurso($datosCurso){//Function to call a query and INSERT into the database
-		
-			return true;//For the first advance we suppose to think that the data is correct and can been inserted
-						 //The next advance we return a false and we call a sql_command to verify if the data can be inserted or not.
+			
+			return true;
 		}
+		
+			idCurso	int(11)			No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
+
+    Primaria Primaria
+    Único Único
+    Índice Índice
+    Espacial Espacial
+    Más
+
+	2	nombre	varchar(30)	utf8_general_ci		No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
+
+    Primaria Primaria
+    Único Único
+    Índice Índice
+    Espacial Espacial
+    Más
+
+	3	seccion	varchar(45)	utf8_general_ci		No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
+
+    Primaria Primaria
+    Único Único
+    Índice Índice
+    Espacial Espacial
+    Más
+
+	4	nrc	varchar(6)	utf8_general_ci		No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
+
+    Primaria Primaria
+    Único Único
+    Índice Índice
+    Espacial Espacial
+    Más
+
+	5	academia	varchar(45)	utf8_general_ci		No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
+
+    Primaria Primaria
+    Único Único
+    Índice Índice
+    Espacial Espacial
+    Más
+
+	6	Maestro_idMaestro	int(11)			No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
+
+    Primaria Primaria
+    Único Único
+    Índice Índice
+    Espacial Espacial
+    Más
+
+	7	Ciclo_ciclo	char(5)	utf8_general_ci		No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
+
+    Primaria Primaria
+    Único Único
+    Índice Índice
+    Espacial Espacial
+    Más
+
+	8	horas	int(11)			No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
+
+    Primaria Primaria
+    Único Único
+    Índice Índice
+    Espacial Espacial
+    Más
+
+Para los elementos que están marcados:Marcar todosP
+		
+		
+		
+		
+		
 		function clonarCurso($clonarurso){
 			//We access the database and look for the especified course and make and copy those for a new register
 			return true;
