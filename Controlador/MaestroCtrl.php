@@ -61,50 +61,7 @@
 				if(preg_match("/[A-Za-z]+/", $_POST['accion'])){
 					switch($_POST['accion']){
 						case 'capturarcurso':
-							if(isset($_POST['nombrecurso'])){
-								$nombrecurso = $this->validaNombreCurso($_POST['nombrecurso']);
-							} else{
-								$nombrecurso = false;
-							}
-							if (isset($_POST['seccion'])) {
-								$seccion = $this->validaSeccion($_POST['seccion']);
-							} else {
-								$seccion = false;
-							}
-							if (isset($_POST['nrc'])) {
-								$nrc = $this->validaNrc($_POST['nrc']);
-							} else {
-								$nrc = false;
-							}
-							if (isset($_POST['academia'])) {
-								$academia = $this->validaAcademia($_POST['academia']);
-							} else {
-								$academia = false;
-							}
-							if (isset($_POST['dias'])) {
-								$dias = $this->array_walk($_POST['dias'],'validaDias');
-							} else {
-								$dias = false;
-							}
-							if (isset($_POST['cantidadhoras'])) {
-								$horas = $this->validaHoras($_POST['cantidadhoras']);
-							} else {
-								$horas = false;
-							}
-							if (isset($_POST['horario'])) {
-								$horario = $this->validaHorario($_POST['horario']);
-							} else {
-								$horario = false;
-							}
-							$datoscurso = array($nombrecurso,$seccion,$nrc,$academia,$dias,$horas,$horario);
-							$status = $this->nuevoCurso($datoscurso);
-							if($status){
-								include('Vista/nuevoCurso.php');
-							} else{
-								include('Vista/errorCurso.php');
-							}
-							
-							
+							$this->altaCurso();
 						break;
 						case 'clonarcurso':
 							if (isset($_POST['clonarcurso'])) {
@@ -224,6 +181,89 @@
 				}
 			}
     	}
+		
+		public function altaCurso(){
+			if($this->esMaestro() || $this->esAdmin()){
+				if(isset($_POST['nombrecurso'])){
+					$nombrecurso = $this->validaNombreCurso($_POST['nombrecurso']);
+				}else{
+					$nombrecurso = false;
+				}
+							
+				if(isset($_POST['seccion'])){
+					$seccion = $this->validaSeccion($_POST['seccion']);
+				}else{
+					seccion = false;
+				}
+				
+				if(isset($_POST['nrc'])){
+					$nrc = $this->validaNrc($_POST['nrc']);
+				}else{
+					$nrc = false;
+				}
+				if(isset($_POST['academia'])){
+					$academia = $this->validaAcademia($_POST['academia']);
+				}else{
+					$academia = false;
+				}
+							
+				if(isset($_POST['dias'])){
+					$dias = $this->array_walk($_POST['dias'],'validaDias');
+				}else{
+					$dias = false;
+				}
+				
+				if(isset($_POST['cantidadhoras'])){
+					$horas = $this->validaHoras($_POST['cantidadhoras']);
+				}else{
+					$horas = false;
+				}
+					
+				if(isset($_POST['horario'])){
+					$horario = $this->validaHorario($_POST['horario']);
+				}else{
+					$horario = false;
+				}
+				
+				if(isset($_POST['actividad'])){
+					$actividad = $this->validaActividad($_POST['actividad']);
+				}else{
+					$actividad = false;
+				}
+				
+				if(isset($_POST['porcentaje'])){
+					$porcentaje = $this->validaPorcentaje($_POST['porcentaje']);
+				}
+				else{
+					$porcentaje = false;
+				}
+				
+				if($nombrecurso && $seccion && $nrc && $academia && $dias && $horas && $horario && $actividad && $porcentaje)
+					$status = true;
+				else
+					$status = false;
+				
+				if($status){
+					$datoscurso = array('nombrecurso' => $_POST['nombrecurso'], 'seccion' => $_POST['seccion'], 'nrc' => $_POST['nrc'],
+										'academia' => $_POST['academia'], 'dias' => $_POST['dias'] , 'horas' => $_POST['horas'], 'horario' => $_POST['horario'],
+										'actividad' => $_POST['actividac'], 'porcentaje' => $_POST['porcentaje']);
+					$status = $this->model->nuevoCurso($datoscurso);
+					if($status[0]){
+						include('Vista/nuevoCurso.php');
+					}else{
+						include('Vista/errorCurso.php');
+						errorAlta($status[1]);
+					}
+				}else{
+					include('Vista/errorCurso.php');
+					errorDatosAlta(array('nombrecurso' => $nombrecurso, 'seccion' => $seccion, 'nrc' => $nrc, 'academia' => $academia, 'dias' => $dias, 
+										 'horas' => $horas, 'horario' => $horario, 'actividad' => $actividad, 'porcentaje' => $porcentaje));
+				}
+			}else{
+				include('Vista/erroresLogueo.php');
+				faltaPermisos();
+			}
+		}
 		
 		public function alta(){
 			if($this->esMaestro() || $this->esAdmin()){
@@ -432,63 +472,63 @@
 			if (preg_match("/^[a-zA-Z ñÑáéíóúâêîôûàèìòùäëïöü]+/", $nombrecurso))
 				return true;
 			else 
-				return false;
+				return -1;
 		}
 		public function validaSeccion($seccion){//function to validate the name of the section
 			if(preg_match("/[A-Za-z]+[0-9]+\-D[0-9]+/",$seccion))
 				return true;
 			else
-				return false;
+				return -1;
 		}
 		public function validaNrc($nrc){//function to validate the nrc of the especific group
 			if(preg_match("/0[0-9]{4}/",$nrc))
 				return true;
 			else 
-				return false;
+				return -1;
 		}
 		public function validaAcademia($academia){//function to validate the syntaxis of the name of the academy
 			if (preg_match("/^[a-zA-Z ñÑáéíóúâêîôûàèìòùäëïöü]+/", $academia))
 				return true;
 			else 
-				return false;
+				return -1;
 		}
 		public function validaDias($dias){//function to validate the days of the class
 			if(preg_match("/[1-6]/",$dias))
 				return true;
 			else 
-				return false;
+				return -1;
 			
 		}
 		public function validaHoras($horas){//function to validate the hours of the class from 1 to 4
 			if(preg_match("/[1-4]/",$horas))
 				return true;
 			else
-				return false;
+				return -1;
 		}
 		public function validaHorario($horario){//function to validate the schedule of the class
 			if(preg_match("/[0-2][0-9]{3}/",$horario))
 				return true;
 			else
-				return false;
+				return -1;
 		}
 		
 		public function validaActividad($actividad){//function to validate the activity of evaluation
 			if (preg_match("/^[a-zA-Z ñÑáéíóúâêîôûàèìòùäëïöü]+/", $actividad))
 				return true;
 			else 
-				return false;
+				return -1;
 		}
 		public function validaPorcentaje($porcentaje){//function to validate the percentage of the activity
 			if (preg_match("/(100)|[0-9]{2}/", $porcentaje))
 				return true;
 			else 
-				return false;
+				return -1;
 		}
 		public function validaCalificacion($calificacion){//function to validate the qualification 0-10 and 1 decimal also accepts SD and NP
 			if(preg_match("/10|([0-9][.][0-9]{1})|DS|NP/",$calificacion))
 				return true;
 			else 
-				return false;
+				return -1;
 		}
 	}
 ?>

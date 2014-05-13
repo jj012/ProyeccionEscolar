@@ -101,5 +101,25 @@ abstract class CtrlEstandar{
 		else
 			return -1;
 	}
+	
+	public function procesaPlantilla($ruta_contenido, $diccionario){
+			
+		
+		$encabezado = file_get_contents('ruta_archivo');
+		$cuerpo = file_get_contents('ruta_archivo');
+		$pie = file_get_contents('ruta_archivo');
+		
+		$vista = $encabezado . $cuerpo . $pie;
+		
+		$diccionario = array(
+			'{{nombre}}' => $_SESSION['usuario'],
+			'{{materia}}' => $alumno->materia
+			);
+			
+		$vista = strtr ($vista, $diccionario);
+		
+		echo $vista;
+
+	}
 
 };

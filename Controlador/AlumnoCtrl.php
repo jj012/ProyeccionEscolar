@@ -83,7 +83,11 @@
 				if(preg_match("/[A-Za-z]+/", $_POST['accion'])){ //Validates the action is alphabetic
 					switch($_POST['accion']){
 						case 'alta':
-							$this->alta();
+							if(empty($_POST)){
+								require_once("Vista/AltaAlumno.html");
+							}
+							else
+								$this->alta();
 						break;
 						case 'baja':
 							$this->baja();
@@ -203,6 +207,7 @@
 					$status = $this->model->insertaAlumno($datosAlumno);
 					if($status[0]){//On this part the query of insert in the database is done correctly
 						include('Vista/insercionAlumno.php');
+						procesaPlantilla();
 				
 					}
 					else{//On this part the query cannot be done of insert
