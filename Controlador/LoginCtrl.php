@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 	/**
 	* @author Javier Rizo Orozco
 	* Controller of Login to verify the data and start with a session
@@ -20,8 +20,8 @@
 		
 		//Search which action take to do it.
 		function ejecutar(){//This is where run the session
-			if(isset($_POST['accion']) && preg_match("/[A-Za-z]+/", $_POST['accion'])){
-				switch($_POST['accion']){
+			if(isset($_GET['accion']) && preg_match("/[A-Za-z]+/", $_GET['accion'])){
+				switch($_GET['accion']){
 					case 'login':
 						if(!$this->isLogged()){
 							if(isset($_POST['user']))
@@ -37,7 +37,8 @@
 								$codigo = $arreglo[0];
 								//$p = crypt($_POST['pass']);//We use a hash to encrypt the password
 								if($this->login($codigo, $_POST['pass'])){
-									header("Location:index.php");
+									include('Vista/erroresLogueo.php');
+									incorrecto();//Data incorrect
 								}
 								else{
 									include('Vista/erroresLogueo.php');

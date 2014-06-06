@@ -152,35 +152,51 @@
 						break;
 						
 						case 'capturarcalificacion':
-							if(isset($_POST['calificacion'])){
-								$calificacion = $this -> validaCalificacion($_POST['calificacion']);
-							}
-							else {
-								$calificacion = false;
-							}
-							if(isset($_POST['asistencia'])){
-								$asistencia = $this ->validaAsistencia($_POST['asistencia']);
-							}
-							else {
-								$asistencia = false;
-							}
-							$status = $this -> insertarCalificacion($calificacion);
-							if ($status) {
-								include('Vista/insertaCalificacion.php');
-							} else{
-								include('Vista/errorCalificacion.php');
-							}
-							$status= $this -> insertarAsistencia($asistencia);
-							if($status){
-								include('Vista/insertaAsistencia.php');
-							} else{
-								include('Vista/errorAsistencia.php');
-							}
+							$this->capturaCalificacion();
 						break;
 					}	
 				}
 			}
     	}
+		
+		public function capturaCalificacion(){
+			if(!isset($_GET['esRubro']) && $_GET['esRubro'] !== true){
+
+				if(isset($_POST['calificaciones'])){
+			
+					$calificaciones = $this -> validaCalificaciones($_POST['calificaciones']);
+				}
+				else {
+					$calificaciones = false;
+				}
+				if(isset($_POST['codigoestudiante'])){//Code from the student
+					$codigo = $this ->validaCodigo($_POST['codigoestudiante']);
+				}
+				else {
+					$asistencia = false;
+				}
+				if(isset($_POST['nrc'])){
+					$nrc = $this->validaNrc($_POST['nrc']);
+				}
+				else
+					$nrc = false;
+				if(isset($_POST['rubro'])){}
+					
+			}else{
+			
+			}
+				
+			
+			$status = $this -> insertarCalificacion($calificacion);
+			if ($status) {
+				include('Vista/insertaCalificacion.php');
+			} else{
+				include('Vista/errorCalificacion.php');
+			}
+
+			
+		}
+		
 		
 		public function altaCurso(){
 			if($this->esMaestro() || $this->esAdmin()){
@@ -247,6 +263,7 @@
 					$datoscurso = array('nombrecurso' => $_POST['nombrecurso'], 'seccion' => $_POST['seccion'], 'nrc' => $_POST['nrc'],
 										'academia' => $_POST['academia'], 'dias' => $_POST['dias'] , 'horas' => $_POST['horas'], 'horario' => $_POST['horario'],
 										'actividad' => $_POST['actividac'], 'porcentaje' => $_POST['porcentaje']);
+					$datoscurso = $this->limpiaSQL($datoscurso);
 					$status = $this->model->nuevoCurso($datoscurso);
 					if($status[0]){
 						include('Vista/nuevoCurso.php');
@@ -467,6 +484,17 @@
 		
 		}
 		
+				
+		public function validaCalificaciones($calificaciones){
+
+			foreach($calificaciones as $calificacion){
+				if($this->validaCalificacion($calificacion) === -1)
+					return -1;
+			}
+			return true;
+		}
+		
+		
 		
 		public function validaNombreCurso($nombrecurso){ //here we validate the syntaxis of the name of the course 
 			if (preg_match("/^[a-zA-Z ñÑáéíóúâêîôûàèìòùäëïöü]+/", $nombrecurso))
@@ -497,7 +525,13 @@
 				return true;
 			else 
 				return -1;
-			
+		}
+		
+		public function validaRubro($rubro){
+			if (preg_match("/^[a-zA-Z ñÑáéíóúâêîôûàèìòùäëïöü]+/", $rubro))
+				return true;
+			else 
+				return -1;
 		}
 		public function validaHoras($horas){//function to validate the hours of the class from 1 to 4
 			if(preg_match("/[1-4]/",$horas))
@@ -525,7 +559,7 @@
 				return -1;
 		}
 		public function validaCalificacion($calificacion){//function to validate the qualification 0-10 and 1 decimal also accepts SD and NP
-			if(preg_match("/10|([0-9][.][0-9]{1})|DS|NP/",$calificacion))
+			if(preg_match("/10|([0-9][.][0-9]{1})|SD|NP/",$calificacion))
 				return true;
 			else 
 				return -1;
