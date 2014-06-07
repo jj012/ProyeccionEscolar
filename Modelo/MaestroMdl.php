@@ -21,7 +21,7 @@
 			
 			return true;
 		}
-		
+		/*
 			idCurso	int(11)			No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
 
     Primaria Primaria
@@ -86,7 +86,7 @@
     Espacial Espacial
     Más
 
-Para los elementos que están marcados:Marcar todosP
+Para los elementos que están marcados:Marcar todosP*/
 		
 		
 		

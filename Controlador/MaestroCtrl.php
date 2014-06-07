@@ -193,7 +193,7 @@
 				if(isset($_POST['seccion'])){
 					$seccion = $this->validaSeccion($_POST['seccion']);
 				}else{
-					seccion = false;
+					$seccion = false;
 				}
 				
 				if(isset($_POST['nrc'])){

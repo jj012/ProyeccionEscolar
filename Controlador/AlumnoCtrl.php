@@ -88,6 +88,8 @@
 							}
 							else
 								$this->alta();
+								$this->enviarmail();
+							
 						break;
 						case 'baja':
 							$this->baja();
