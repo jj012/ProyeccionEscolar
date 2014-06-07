@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 	/**
 	 * @author: J. Rizo Orozco & Jesus Alberto Ley Ayón
 	 * @since: 27/Feb/2014
@@ -6,37 +6,42 @@
 	 * Project J&J ProyeccionEscolar
 	 * In this project we are going to make a Online Qualifications Systems for some school 
 	 * trying to cover the most important task that concerns teachers, admins and students
-	 * the URL for the index.php is (when we get the web page up in the server) 
+	 * the URL for the index.php is (when we _POST['accion'] the web page up in the server) 
 	 * www.proyeccionescolar.co.nf/index.php?usuario='alumno'&accion='alta' 
 	 * 
 	 * @param usuario This describes to where the controller is passed to, there are 3 users 'alumno' 'maestro' 'admin'
 	 * @param accion This describes what action is taking depends on each user
 	 * if theres no valid user or actions, appears a error message
 	 */
-	 //$_POST['ctrl']='alumno';
+	 //$_POST['accion']['ctrl']='alumno';
 	 /*
-	 $_POST['usuario'] ='alumno';
-	 $_POST['acccion']='listar';
-	 $_POST['grupo']='CC001';
-	 $_POST['ord']='1';
-	 $_POST['nombre']='Jesus Alberto Ley Ayon';
-	 $_POST['correo']='jesus_ayon@hotmail.com';
-	 $_POST['codigo']='206587305';
-	 $_POST['carrera']='01';
-	 $_POST['url']='https://bewtenue.net/index.php';
-	 $_POST['git']='bewtenue123';
-	 $_POST['celular']='3313845969';
-	 $_POST['equipo'] = 'J&J';*/
+	 $_POST['accion']['usuario'] ='alumno';
+	 $_POST['accion']['acccion']='listar';
+	 $_POST['accion']['grupo']='CC001';
+	 $_POST['accion']['ord']='1';
+	 $_POST['accion']['nombre']='Jesus Alberto Ley Ayon';
+	 $_POST['accion']['correo']='jesus_ayon@hotmail.com';
+	 $_POST['accion']['codigo']='206587305';
+	 $_POST['accion']['carrera']='01';
+	 $_POST['accion']['url']='https://bewtenue.net/index.php';
+	 $_POST['accion']['git']='bewtenue123';
+	 $_POST['accion']['celular']='3313845969';
+	 $_POST['accion']['equipo'] = 'J&J';*/
 	 
 	 if (!isset($_SESSION)){ //We ask first of the session 
 		session_start();
+<<<<<<< HEAD
 		//if(!isset($_SESSION['user']))
 			//require('Vista\index.html');
+=======
+			
+>>>>>>> 81736978ded8d5be34a8a8cb567291e5f1be404b
 	}
+	
 	 	  
-	  if(isset($_POST['usuario'])){//Check if in POST exists the user
-		if(preg_match("/[A-Za-z]+/",$_POST['usuario'])){ // The string must be alphabetic
-			switch($_POST['usuario']){
+	  if(isset($_GET['usuario'])){//Check if in POST exists the user
+		if(preg_match("/[A-Za-z]+/",$_GET['usuario'])){ // The string must be alphabetic
+			switch($_GET['usuario']){
 				case 'alumno':
 					require('Controlador/AlumnoCtrl.php');
 					//$ctrlAlumno = new AlumnoCtrl();
@@ -55,8 +60,7 @@
 					$controlador = new AdminCtrl();
 					break;					
 				default: //The user still need to login, we can't do anything if he / she is not logged
-					require('Controlador/LoginCtrl.php');
-					$controlador = new LoginCtrl();
+					header('Location: Vista/login.html');
 					break;
 			}
 			//if(isset($ctrlAlumno))
@@ -65,12 +69,10 @@
 				$controlador->ejecutar();
 		}
 		else{
-			include('Vista/erroresIndex.php');
-			errorIndice(1);
+			header('Location: Vista/login.html');
 		}
 	  }
 	  else{
-		include('Vista/erroresIndex.php');
-		errorIndice(2);
+			header('Location: Vista/login.html');
 	  }
 ?>
