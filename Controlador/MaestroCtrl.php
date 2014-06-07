@@ -136,10 +136,65 @@
 						case 'capturarcalificacion':
 							$this->capturaCalificacion();
 						break;
+						
+						case 'consultaCalificacion':
+							$this->consultaCalificacion();
+						break;
 					}	
 				}
 			}
     	}
+		
+		public function consultaCalificacion(){
+			if($this->esAlumno()){
+				$codigo = $_SESSION['user'];
+				$status = $this->model->consultaCalificacion($codigo);
+				if($status[0]){
+					//Aqui cargamos calificaciones propias
+				}else{
+					//Aqui va la vista de error
+				}
+			}else if($this->esMaestro()){
+				if(isset($_POST['codigo']))
+					$codigo = $this->validaCodigo($_POST['codigo']);
+				else
+					$codigo = -1;
+					
+				if(isset($_POST['nrc']))
+					$nrc = $this->validaNRC($_POST['nrc']);
+				else
+					$nrc = false;
+					
+				if(isset($_POST['ciclo']))
+					$ciclo = $this->validaCiclo($_POST['ciclo']);
+				else
+					$ciclo = false;
+					
+					
+				if($codigo && $nrc && $ciclo)
+					$status = true;
+				else
+					$status = false;
+					
+				if($status){
+					$arreglo = array('codigo' => $_POST['codigo'], 'nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo']);
+					$arreglo = $this->limpiaSQL($arreglo);
+					
+					$status = $this->model->consultaCalificacion($arreglo);
+					
+					if($status[0]){
+					
+						//CARGAMOS LAS CALIFICACIONES
+					}else{
+						//ERROR
+					}
+					
+				}else{
+					//Cargamos error
+				}
+			}
+		
+		}
 		
 		public function consultaListas(){
 			if(isset($_POST['ciclo']))

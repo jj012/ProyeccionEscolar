@@ -67,6 +67,61 @@
 			return $status;
 
 		}
+		
+		
+		function actualizaAsistencia($datos){
+			$miQuery = "UPDATE ASISTENCIA SET VALOR = ${datos['valor']} WHERE ALUMNO_CODIGO = '{$datos['codigoAlumno']}' AND ID_CURSO = {$datos['nrc']}";
+			
+			
+			$result = $this->bd_driver->query($miQuery);
+				
+				if($result && $this->bd_driver->affected_rows == 1){
+					$status[0] = true;
+				}
+				else{
+					$status[0] = false;
+					$status[1] = $this->bd_driver->error;
+				}
+				
+			return $status;
+		}
+		
+		function insertaAsistencia($datos){//We use this to update the assistences
+			$miQuery = "INSERT INTO ASISTENCIA('FECHA','ALUMNO_CODIGO','ID_CODIGO') VALUES( '{$datos['fecha']}', '{$datos['codigoAlumno']}' AND ID_CURSO ={$datos['nrc']}";
+			
+			
+		$result = $this->bd_driver->query($miQuery);
+				
+				if($result && $this->bd_driver->affected_rows == 1){
+					$status[0] = true;
+				}
+				else{
+					$status[0] = false;
+					$status[1] = $this->bd_driver->error;
+				}
+		
+		}
+		function consultarCalificacion($datos){//Falta esta
+			if(is_array($datos)){
+				$miQuery = "SELECT * FROM CALIFICACION WHERE ALUMNO = '{$datos}'";
+				
+				$result = $this->bd_driver->query($miQuery);
+				
+				if($result && $this->bd_driver->affected_rows == 1){
+					$status[0] = true;
+				}
+				else{
+					$status[0] = false;
+					$status[1] = $this->bd_driver->error;
+				}
+			}else{
+				$miQuer = "SELECT * FROM CALIFICACION WHERE ALUMNO = '{$datos['codigo']}' AND N
+			
+			}
+			$this->bd_driver->close();
+			return $status;
+
+		}
 		function consultarAlumnos($datos){//Mystic query D: BE CAREFUL
 			$miQuery = "SELECT A.* FROM ALUMNOS A, CURSANDO C, CURSO U WHERE A.CODIGO = C.ALUMNO AND C.CURSO = U.NRC AND U.CICLO = '{$datos['ciclo']}' ";
 			$miQuery = " AND U.NRC = '{$datos['ciclo']}' ";
