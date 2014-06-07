@@ -113,17 +113,8 @@
 								
 						break;
 						
-						case 'altaalumnos':
-							 if(isset($_POST['codigo'])){
-							 	$codigo = $this->validaCodigo($_POST['codigo']);							 		
-							 }
-							 $status = $this -> consultarAlumno($codigo);
-							 if($status){
-							 	include('Vista/altaAlumno.php');
-							 } else{
-							 	include('Vista/errorAlta.php');
-							 }
-							 
+						case 'consultalistas':
+							$this->consultaListas();
 						break;
 						
 						case 'alta':
@@ -149,6 +140,40 @@
 				}
 			}
     	}
+		
+		public function consultaListas(){
+			if(isset($_POST['ciclo']))
+				$ciclo = $this->validaCiclo($_POST['ciclo']);
+			else
+				$ciclo = false;
+				
+			if(isset($_POST['nrc']))
+				$nrc = $this->validaNRC($_POST['nrc']);
+			else
+				$nrc = false;
+				
+			if($ciclo === true && $nrc === true)
+				$statuts = true;
+			else
+				$status = false;
+				
+			if($status){
+				$consultaListas = array('ciclo' => $_POST['ciclo'], 'nrc' => $_POST['nrc']);
+				$consultaListas = $this->limpiaSQL($consultaListas);
+				
+				$status = $this->model->consultarAlumnos($consultaListas);
+				if($status[0]){
+					//Aqui cargamos la vista
+					
+				}
+				else{
+					//Aqui cargamos el error
+				}
+			}else{
+				//Aqui cargamos un error
+			}
+		
+		}
 		
 		public function clonarCurso(){
 			if (isset($_POST['cicloNuevo'])){
@@ -179,7 +204,7 @@
 			
 				$datosCopiar = array('nrc' => $_POST['nrc'], 'cicloViejo'=> $_POST['cicloViejo'], 'cicloNuevo' => $_POST['cicloNuevo'], 'idmaestro' => $_SESSION['user'] );
 				$datosCopiar = $this->limpiaSQL($datosCopiar);
-				$status = $this->clonarCurso($datosCopiar);
+				$status = $this->model->clonarCurso($datosCopiar);
 				if($status){
 					include('Vista/clonarCurso.php');
 				}else{
