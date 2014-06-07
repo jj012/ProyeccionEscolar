@@ -63,20 +63,11 @@
 						case 'capturarcurso':
 							$this->altaCurso();
 						break;
+						
 						case 'clonarcurso':
-							if (isset($_POST['clonarcurso'])) {
-								$clonarcurso = $this->validaNombreCurso($_POST['clonarcurso']);
-							} else {
-								$clonarcurso = false;
-							}
-							$status = $this->clonarCurso($clonarcurso);
-							if($status){
-								include('Vista/clonarCurso.php');
-							} else{
-								include('Vista/errorClonar.php');
-							}
-							
+							$this->clonarCurso();
 						break;
+						
 						case 'evaluacion':
 							if(isset($_POST['actividad'])){
 								$actividad = $this->validaActividad($_POST['actividad']);
@@ -159,12 +150,52 @@
 			}
     	}
 		
-		public function capturaCalificacion(){
-			if(!isset($_GET['esRubro']) && $_GET['esRubro'] !== true){
-
-				if(isset($_POST['calificaciones'])){
+		public function clonarCurso(){
+			if (isset($_POST['cicloNuevo'])){
+				$ciclo = $this->validaCiclo($_POST['cicloNuevo']);
+			}else {
+				$ciclo = false;
+			}
 			
-					$calificaciones = $this -> validaCalificaciones($_POST['calificaciones']);
+			if(isset($_POST['nrc'])){
+				$curso = $this->validaCurso($_POST['nrc']);
+			}
+			else{
+				$curso = false;
+			}
+			
+			if(isset($_POST['cicloViejo'])){
+				$cicloViejo = $this->validaCiclo($_POST['cicloViejo']);
+			}else{
+				$cicloViejo = false;
+			}
+			
+			if($ciclo === true && $curso === true $cicloViejo === true)
+				$status = true;
+			else
+				$status = false;
+				
+			if($status){
+			
+				$datosCopiar = array('nrc' => $_POST['nrc'], 'cicloViejo'=> $_POST['cicloViejo'], 'cicloNuevo' => $_POST['cicloNuevo'], 'idmaestro' => $_SESSION['user'] );
+				$datosCopiar = $this->limpiaSQL($datosCopiar);
+				$status = $this->clonarCurso($datosCopiar);
+				if($status){
+					include('Vista/clonarCurso.php');
+				}else{
+					include('Vista/errorClonar.php');
+				}
+			}else{
+				include('Vista/errorClonar.php');
+			}
+							
+		
+		}
+		
+		public function capturaCalificacion(){//Method to update notes
+				if(isset($_POST['calificacion'])){
+			
+					$calificaciones = $this -> validaCalificaciones($_POST['calificacion']);
 				}
 				else {
 					$calificaciones = false;
@@ -173,27 +204,38 @@
 					$codigo = $this ->validaCodigo($_POST['codigoestudiante']);
 				}
 				else {
-					$asistencia = false;
+					$codigo = false;
 				}
 				if(isset($_POST['nrc'])){
 					$nrc = $this->validaNrc($_POST['nrc']);
 				}
 				else
 					$nrc = false;
-				if(isset($_POST['rubro'])){}
+				if(isset($_POST['rubro'])){
+					$rubro = $this->validaRubro($_POST['rubro']));
+				}
+				else
+					$rubro = false;
 					
-			}else{
-			
 			}
+			if($calificaciones === true && $codigo === true && $nrc === true && $rubro === true)
+				$status = true;
+			else
+				$status = false;
 				
-			
-			$status = $this -> insertarCalificacion($calificacion);
-			if ($status) {
-				include('Vista/insertaCalificacion.php');
-			} else{
+			if($status){
+				$arreglo = array('calificacion' => $calificaciones, 'codigo' => $codigo, 'nrc'=> $nrc, 'rubro' => $rubro);
+				$arreglo = $this->limpiaSQL($arreglo);
+				
+				$status = $this -> insertarCalificacion($arreglo);
+				if ($status[0]) {
+					include('Vista/insertaCalificacion.php');
+				} else{
+					include('Vista/errorCalificacion.php');
+				}
+			}else{
 				include('Vista/errorCalificacion.php');
 			}
-
 			
 		}
 		
