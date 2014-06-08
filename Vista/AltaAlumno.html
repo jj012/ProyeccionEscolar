@@ -1,27 +1,31 @@
 
+
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		
 		<div>
 
-			<section id="CONTENIDO">Formulario Alumno
+			<section id="FORMALUMNO">
+				<h1>Formulario Alumno</h1>
 			<div>
 				<form method="post" action="index.php?usuario=alumno&accion=alta">
 				
-					<div>
+					<div class ="input">
 						<label for="nombre">Ingrese su Nombre</label>
 						<input type="text" id="nombre" name="nombre" required  onClick="algo()">
 					</div>
 					
-					<div>
+					<div class ="input">
 						<label for="aMaterno">Ingrese su Apellido Materno</label>
 						<input type="text" id="aMaterno" name="aMaterno" required >
 					</div>
 					
-					<div>
+					<div class ="input">
 						<label for="aPaterno">Ingrese su Apellido Paterno </label>
 						<input type="text" id="aPaterno" name="aPaterno" required>
 					</div>
 					
-					<div>
-						<label for="genero">Genero: </label>
+					<div class ="input">
+						<label for="genero">G&eacute;nero: </label>
 						<fieldset>
 							<div>
 								<input type="radio" name="genero" value="Masculino" required/>Masculino
@@ -32,7 +36,7 @@
 						</fieldset>
 					</div>
 					
-					<div>
+					<div class ="input">
 						<label for="transporte"> Medio de Transporte: </label>
 						<fieldset>
 							<div>
@@ -47,53 +51,53 @@
 						</fieldset>
 					</div>
 					
-					<div>
+					<div class ="input">
 						<label for="github"> Url de Github </label>
 						<input type="url" id="github" name="github" />
 					</div>
 					
-					<div>
-						<label for="telefono">Ingrese tu teléfono</label>
+					<div class ="input">
+						<label for="telefono">Ingrese tu tel&eacute;fono</label>
 						<input type="tel" id="telefono" name="telefono" required/>
 					</div>
 					
-					<div>
+					<div class ="input">
 						<label for="celphone">Ingresa tu num de cel</label>
 						<input type="tel" id="celphone" name="celphone" />
 					</div>
 					
-					<div>
+					<div class ="input">
 						<label for="correo">Ingresa tu correo</label>
 						<input type="email" id="correo" name="correo" required/>
 					</div>
 					
-					<div>
+					<div class ="input">
 						<label for="edad">Ingresa tu edad</label>
 						<input type="number" id="edad" name="edad" min="1" max="75" required/>
 					</div>
 					
-					<div>
-						<label for="nacimiento">Fecha de Cumpleaños</label> 
+					<div class ="input">
+						<label for="nacimiento">Fecha de Cumplea&ntilde;os</label> 
 						<input type="date" id="nacimiento" name="nacimiento" required />
 					</div>
 					
-					<div>
+					<div class ="input">
 						<label for="inteligencia">Elija su nivel de IQ</label>
 						0<input type="range" id="inteligencia" name="inteligencia" min="0" max="5" />5
 					</div>
 					
-					<div>
+					<div class ="input">
 						<label for="imagen">Sube tu foto </label>
 						<input id="imagen" name="imagen" type="file"
 						accept="image/*" />
 					</div>
 					
-					<div>
+					<div class ="input">
 						<label for="textarea">Comentarios</label>
-						<textarea id="textarea" name="textarea"wrap="hard">Escriba aquí...</textarea>
+						<textarea id="textarea" name="textarea"wrap="hard">Escribe aqu&iacute;...</textarea>
 					</div>
 					
-					<div>	
+					<div class ="input">	
 						<button type="submit">Enviar</button>			
 					</div>
 				

@@ -30,12 +30,10 @@
 	 
 	 if (!isset($_SESSION)){ //We ask first of the session 
 		session_start();
-<<<<<<< HEAD
-		//if(!isset($_SESSION['user']))
-			//require('Vista\index.html');
-=======
-			
->>>>>>> 81736978ded8d5be34a8a8cb567291e5f1be404b
+
+		if(!isset($_SESSION['user']))
+			require('Vista\index.html');
+
 	}
 	
 	 	  

@@ -35,7 +35,7 @@
 			return $status;
 
 		}
-<<<<<<< HEAD
+
 		/*
 			idCurso	int(11)			No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
 
@@ -130,10 +130,9 @@
 <<<<<<< HEAD
 Para los elementos que están marcados:Marcar todosP*/
 		
-=======
+
 		}
->>>>>>> 3b3bb2d26f1531239043b47b3e4549b99418109a
-		
+
 		
 		function actualizaAsistencia($datos){
 			$miQuery = "UPDATE ASISTENCIA SET VALOR = ${datos['valor']} WHERE ALUMNO_CODIGO = '{$datos['codigoAlumno']}' AND ID_CURSO = {$datos['nrc']}";
