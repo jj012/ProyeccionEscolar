@@ -434,6 +434,9 @@
 					$insercion = $this->model->inserta($datosMaestro);
 					if($insercion[0]){
 						include('Vista/insercionMaestro.php');
+						
+						//Send email of up on the website
+						enviaCorreo($datosMaestro['correo'],$datosMaestro['nombre']); //enviaCorreo(email,name);
 					}
 					else{
 						include('Vista/erroresMaestro.php');
