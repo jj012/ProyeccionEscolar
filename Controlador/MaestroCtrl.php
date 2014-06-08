@@ -63,20 +63,11 @@
 						case 'capturarcurso':
 							$this->altaCurso();
 						break;
+						
 						case 'clonarcurso':
-							if (isset($_POST['clonarcurso'])) {
-								$clonarcurso = $this->validaNombreCurso($_POST['clonarcurso']);
-							} else {
-								$clonarcurso = false;
-							}
-							$status = $this->clonarCurso($clonarcurso);
-							if($status){
-								include('Vista/clonarCurso.php');
-							} else{
-								include('Vista/errorClonar.php');
-							}
-							
+							$this->clonarCurso();
 						break;
+						
 						case 'evaluacion':
 							if(isset($_POST['actividad'])){
 								$actividad = $this->validaActividad($_POST['actividad']);
@@ -122,17 +113,8 @@
 								
 						break;
 						
-						case 'altaalumnos':
-							 if(isset($_POST['codigo'])){
-							 	$codigo = $this->validaCodigo($_POST['codigo']);							 		
-							 }
-							 $status = $this -> consultarAlumno($codigo);
-							 if($status){
-							 	include('Vista/altaAlumno.php');
-							 } else{
-							 	include('Vista/errorAlta.php');
-							 }
-							 
+						case 'consultalistas':
+							$this->consultaListas();
 						break;
 						
 						case 'alta':
@@ -154,17 +136,146 @@
 						case 'capturarcalificacion':
 							$this->capturaCalificacion();
 						break;
+						
+						case 'consultaCalificacion':
+							$this->consultaCalificacion();
+						break;
 					}	
 				}
 			}
     	}
 		
-		public function capturaCalificacion(){
-			if(!isset($_GET['esRubro']) && $_GET['esRubro'] !== true){
-
-				if(isset($_POST['calificaciones'])){
+		public function consultaCalificacion(){
+			if($this->esAlumno()){
+				$codigo = $_SESSION['user'];
+				$status = $this->model->consultaCalificacion($codigo);
+				if($status[0]){
+					//Aqui cargamos calificaciones propias
+				}else{
+					//Aqui va la vista de error
+				}
+			}else if($this->esMaestro()){
+				if(isset($_POST['codigo']))
+					$codigo = $this->validaCodigo($_POST['codigo']);
+				else
+					$codigo = -1;
+					
+				if(isset($_POST['nrc']))
+					$nrc = $this->validaNRC($_POST['nrc']);
+				else
+					$nrc = false;
+					
+				if(isset($_POST['ciclo']))
+					$ciclo = $this->validaCiclo($_POST['ciclo']);
+				else
+					$ciclo = false;
+					
+					
+				if($codigo && $nrc && $ciclo)
+					$status = true;
+				else
+					$status = false;
+					
+				if($status){
+					$arreglo = array('codigo' => $_POST['codigo'], 'nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo']);
+					$arreglo = $this->limpiaSQL($arreglo);
+					
+					$status = $this->model->consultaCalificacion($arreglo);
+					
+					if($status[0]){
+					
+						//CARGAMOS LAS CALIFICACIONES
+					}else{
+						//ERROR
+					}
+					
+				}else{
+					//Cargamos error
+				}
+			}
+		
+		}
+		
+		public function consultaListas(){
+			if(isset($_POST['ciclo']))
+				$ciclo = $this->validaCiclo($_POST['ciclo']);
+			else
+				$ciclo = false;
+				
+			if(isset($_POST['nrc']))
+				$nrc = $this->validaNRC($_POST['nrc']);
+			else
+				$nrc = false;
+				
+			if($ciclo === true && $nrc === true)
+				$statuts = true;
+			else
+				$status = false;
+				
+			if($status){
+				$consultaListas = array('ciclo' => $_POST['ciclo'], 'nrc' => $_POST['nrc']);
+				$consultaListas = $this->limpiaSQL($consultaListas);
+				
+				$status = $this->model->consultarAlumnos($consultaListas);
+				if($status[0]){
+					//Aqui cargamos la vista
+					
+				}
+				else{
+					//Aqui cargamos el error
+				}
+			}else{
+				//Aqui cargamos un error
+			}
+		
+		}
+		
+		public function clonarCurso(){
+			if (isset($_POST['cicloNuevo'])){
+				$ciclo = $this->validaCiclo($_POST['cicloNuevo']);
+			}else {
+				$ciclo = false;
+			}
 			
-					$calificaciones = $this -> validaCalificaciones($_POST['calificaciones']);
+			if(isset($_POST['nrc'])){
+				$curso = $this->validaCurso($_POST['nrc']);
+			}
+			else{
+				$curso = false;
+			}
+			
+			if(isset($_POST['cicloViejo'])){
+				$cicloViejo = $this->validaCiclo($_POST['cicloViejo']);
+			}else{
+				$cicloViejo = false;
+			}
+			
+			if($ciclo === true && $curso === true $cicloViejo === true)
+				$status = true;
+			else
+				$status = false;
+				
+			if($status){
+			
+				$datosCopiar = array('nrc' => $_POST['nrc'], 'cicloViejo'=> $_POST['cicloViejo'], 'cicloNuevo' => $_POST['cicloNuevo'], 'idmaestro' => $_SESSION['user'] );
+				$datosCopiar = $this->limpiaSQL($datosCopiar);
+				$status = $this->model->clonarCurso($datosCopiar);
+				if($status){
+					include('Vista/clonarCurso.php');
+				}else{
+					include('Vista/errorClonar.php');
+				}
+			}else{
+				include('Vista/errorClonar.php');
+			}
+							
+		
+		}
+		
+		public function capturaCalificacion(){//Method to update notes
+				if(isset($_POST['calificacion'])){
+			
+					$calificaciones = $this -> validaCalificaciones($_POST['calificacion']);
 				}
 				else {
 					$calificaciones = false;
@@ -173,27 +284,38 @@
 					$codigo = $this ->validaCodigo($_POST['codigoestudiante']);
 				}
 				else {
-					$asistencia = false;
+					$codigo = false;
 				}
 				if(isset($_POST['nrc'])){
 					$nrc = $this->validaNrc($_POST['nrc']);
 				}
 				else
 					$nrc = false;
-				if(isset($_POST['rubro'])){}
+				if(isset($_POST['rubro'])){
+					$rubro = $this->validaRubro($_POST['rubro']));
+				}
+				else
+					$rubro = false;
 					
-			}else{
-			
 			}
+			if($calificaciones === true && $codigo === true && $nrc === true && $rubro === true)
+				$status = true;
+			else
+				$status = false;
 				
-			
-			$status = $this -> insertarCalificacion($calificacion);
-			if ($status) {
-				include('Vista/insertaCalificacion.php');
-			} else{
+			if($status){
+				$arreglo = array('calificacion' => $calificaciones, 'codigo' => $codigo, 'nrc'=> $nrc, 'rubro' => $rubro);
+				$arreglo = $this->limpiaSQL($arreglo);
+				
+				$status = $this -> insertarCalificacion($arreglo);
+				if ($status[0]) {
+					include('Vista/insertaCalificacion.php');
+				} else{
+					include('Vista/errorCalificacion.php');
+				}
+			}else{
 				include('Vista/errorCalificacion.php');
 			}
-
 			
 		}
 		
@@ -312,6 +434,9 @@
 					$insercion = $this->model->inserta($datosMaestro);
 					if($insercion[0]){
 						include('Vista/insercionMaestro.php');
+						
+						//Send email of up on the website
+						enviaCorreo($datosMaestro['correo'],$datosMaestro['nombre']); //enviaCorreo(email,name);
 					}
 					else{
 						include('Vista/erroresMaestro.php');

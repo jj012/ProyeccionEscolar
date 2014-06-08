@@ -18,9 +18,24 @@
 		}
 		
 		function nuevoCurso($datosCurso){//Function to call a query and INSERT into the database
+			$miQuery = "INSERT INTO CURSO VALUES('{$datosCurso['nombre']}', '{$datosCurso['seccion']}', '{$datosCurso['nrc']}', '{$datosCurso['academia']}', {$datosCurso['codigoMaestro']},";
+			$miQuery .= "'{$datosCurso['ciclo']}', {$datosCurso['horas']} ) ";
 			
-			return true;
+			$result = $this->bd_driver->query($miQuery);
+			
+			if($result && $this->bd_driver->affected_rows == 1){
+				$status[0] = true;
+			}
+			else{
+				$status[0] = false;
+				$status[1] = $this->bd_driver->error;
+			}
+			
+			$this->bd_driver->close();
+			return $status;
+
 		}
+<<<<<<< HEAD
 		/*
 			idCurso	int(11)			No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
 
@@ -79,26 +94,123 @@
     Más
 
 	8	horas	int(11)			No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
+=======
+		
+		function clonarCurso($clonarcurso){
+			//We access the database and look for the especified course and make and copy those for a new register
+			$miQuery = "SELECT * FROM CURSO WHERE NRC = '{$clonarcurso['nrc']}' AND CICLO = '{$clonarcurso['cicloViejo']}'";
+			
+			$result = $this->bd_driver->query($miQuery);
+			
+			
+			if($result && $this->bd_driver->affected_rows == 1){//Encontramos el curso, copiamos y cambiamos el valor del ciclo con uno nuevo
+				$miQuery = "INSERT INTO CURSO (NOMBRE, SECCION, NRC, ACADEMIA, IDMAESTRO, CICLO, HORAS) ";
+				$miQuery .= "VALUES('{$result['nombre']}', '{$result['seccion']}', '{$result['nrc']}', '{$result['academia]}', ";
+				$miQuery .= " {$clonarcurso['idmaestro']}, '{$clonarcurso[cicloNuevo]}', {$result['horas']} )";
+				
+				$resultadoClonado = $this->bd_driver->query($miQuery);
+>>>>>>> 3b3bb2d26f1531239043b47b3e4549b99418109a
 
-    Primaria Primaria
-    Único Único
-    Índice Índice
-    Espacial Espacial
-    Más
+				if($resultadoClonado && $this->bd_driver->affected_rows == 1){
+					$status[0] = true;
+				}
+				else{
+					$status[0] = false;
+					$status[1] = $this->bd_driver->error;
+				}		
+			}
+			else{
+				$status[0] = false;
+				$status[1] = $this->bd_driver->error;
+			}
+			
+			$this->bd_driver->close();
+			return $status;
 
+<<<<<<< HEAD
 Para los elementos que están marcados:Marcar todosP*/
 		
-		
-		
-		
-		
-		function clonarCurso($clonarurso){
-			//We access the database and look for the especified course and make and copy those for a new register
-			return true;
+=======
 		}
-		function consultarAlumno($codigo){
-			//Access to the database and look for the code in alumn table if it was found, return the info in a array
-			return true;//in this case we assume it was found and return a true
+>>>>>>> 3b3bb2d26f1531239043b47b3e4549b99418109a
+		
+		
+		function actualizaAsistencia($datos){
+			$miQuery = "UPDATE ASISTENCIA SET VALOR = ${datos['valor']} WHERE ALUMNO_CODIGO = '{$datos['codigoAlumno']}' AND ID_CURSO = {$datos['nrc']}";
+			
+			
+			$result = $this->bd_driver->query($miQuery);
+				
+				if($result && $this->bd_driver->affected_rows == 1){
+					$status[0] = true;
+				}
+				else{
+					$status[0] = false;
+					$status[1] = $this->bd_driver->error;
+				}
+				
+			return $status;
+		}
+		
+		function insertaAsistencia($datos){//We use this to update the assistences
+			$miQuery = "INSERT INTO ASISTENCIA('FECHA','ALUMNO_CODIGO','ID_CODIGO') VALUES( '{$datos['fecha']}', '{$datos['codigoAlumno']}' AND ID_CURSO ={$datos['nrc']}";
+			
+			
+		$result = $this->bd_driver->query($miQuery);
+				
+				if($result && $this->bd_driver->affected_rows == 1){
+					$status[0] = true;
+				}
+				else{
+					$status[0] = false;
+					$status[1] = $this->bd_driver->error;
+				}
+		
+		}
+		function consultarCalificacion($datos){//Falta esta
+			if(is_array($datos)){
+				$miQuery = "SELECT * FROM CALIFICACION WHERE ALUMNO = '{$datos}'";
+				
+				$result = $this->bd_driver->query($miQuery);
+				
+				if($result && $this->bd_driver->affected_rows == 1){
+					$status[0] = true;
+				}
+				else{
+					$status[0] = false;
+					$status[1] = $this->bd_driver->error;
+				}
+			}else{
+				$miQuer = "SELECT * FROM CALIFICACION WHERE ALUMNO = '{$datos['codigo']}' AND N
+			
+			}
+			$this->bd_driver->close();
+			return $status;
+
+		}
+		function consultarAlumnos($datos){//Mystic query D: BE CAREFUL
+			$miQuery = "SELECT A.* FROM ALUMNOS A, CURSANDO C, CURSO U WHERE A.CODIGO = C.ALUMNO AND C.CURSO = U.NRC AND U.CICLO = '{$datos['ciclo']}' ";
+			$miQuery = " AND U.NRC = '{$datos['ciclo']}' ";
+			
+			$result = $this->bd_driver->query($miQuery);
+			
+			
+			if($result && $this->bd_driver->affected_rows == 1){
+			
+				$todo = array();
+				while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+					$todo[] = $a;
+					
+				$status[0] = true;
+				$status[1] = $todo[0];
+			}
+			else{
+				$status[0] = false;
+				$status[1] = $this->bd_driver->error;
+			}
+			
+			$this->bd_driver->close();
+			return $status;
 		}
 		
 		function insertaEvaluacion($actividad,$porcentaje){//in case it just evaluates the activity 
@@ -109,10 +221,39 @@ Para los elementos que están marcados:Marcar todosP*/
 			return true;
 		}
 		function insertaCalificacion($calificacion){
-			return true;
+			$miQuery = "INSERT INTO CALIFICACION VALUES('{$calificacion['calificacion']}', '{$calificacion['codigo']}', {$calificacion['nrc']} ,'{$calificacion['rubro']}')";
+			
+			$result = $this->bd_driver->query($miQuery);
+			
+			
+			if($result && $this->bd_driver->affected_rows == 1){
+				$status[0] = true;
+			}
+			else{
+				$status[0] = false;
+				$status[1] = $this->bd_driver->error;
+			}
+			
+			$this->bd_driver->close();
+			return $status;
 		}
-		function insertaAsistencia($asistencia){
-			return true;
+		
+		function insertaAsistencia($asistencia){///FALTA
+			$miQuery = "INSERT INTO CALIFICACION VALUES('{$calificacion['calificacion']}', '{$calificacion['codigo']}', {$calificacion['nrc']} ,'{$calificacion['rubro']}')";
+			
+			$result = $this->bd_driver->query($miQuery);
+			
+			
+			if($result && $this->bd_driver->affected_rows == 1){
+				$status[0] = true;
+			}
+			else{
+				$status[0] = false;
+				$status[1] = $this->bd_driver->error;
+			}
+			
+			$this->bd_driver->close();
+			return $status;
 		}
 		
 		function inserta($datos){//INSERT A TEACHER

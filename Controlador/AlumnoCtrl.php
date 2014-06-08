@@ -98,36 +98,7 @@
 						case 'modifica':
 							$this->modifica();
 						break;
-						
-						case 'listar':
-						//Check if there a group
-						if(isset($_POST['grupo'])){
-							$grupoCorrecto = $this->verificaGrupo($_POST['grupo']);
-							if($grupoCorrecto){
-								
-								$grupo = $this->model->listar($_POST['grupo']);
-								if($grupo['status']){
-									include('Vista/listadoAlumno.php');
-									unset($grupo['status']);
-									if(isset($_POST['ordena']) && $_POST['ordena']==1)
-										sort($grupo);
-									lista($grupo);
-								}
-								else{
-									include('Vista/erroresGrupo.php');
-									sinGrupo();
-								}
-							}
-							else{
-								include('Vista/listadoAlumno.php');
-								grupoIncorrecto();
-							}
-						}
-						else{
-							include('Vista/listadoAlumno.php');
-							grupoNulo(); //No mando nada
-						}
-						break;
+
 						//Modificacion de Jesus
 						case 'consulta':
 							$this->consulta();
@@ -209,6 +180,8 @@
 					$status = $this->model->insertaAlumno($datosAlumno);
 					if($status[0]){//On this part the query of insert in the database is done correctly
 						include('Vista/insercionAlumno.php');
+						//Send email of up on the website
+						enviaCorreo($datosMaestro['correo'],$datosMaestro['nombre']); //enviaCorreo(email,name);
 						procesaPlantilla();
 				
 					}
