@@ -110,8 +110,8 @@ variables a usar por POST
 ========================================================================================================================
 ##Planeacion
 
-* Esqueleto del MVC               |  16 de marzo (Concluida)
-* Base de Datos y Sesiones        |  30 de marzo (En proceso | Atrasado, termina el 24 de abril) 
+* Esqueleto del MVC               |  16 de marzo 
+* Base de Datos y Sesiones        |  30 de marzo
 * Maquetado Web y Correos         |  Fecha Pendiente
 * Frontend Dinamico               |  23 mayo
 * Generación y uso de Documentos  |  6 junio
