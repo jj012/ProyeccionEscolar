@@ -69,16 +69,10 @@
 						break;
 						
 						case 'evaluacion':
-							if(isset($_POST['actividad'])){
-								$actividad = $this->validaActividad($_POST['actividad']);
-							} else{
-								$actividad = false;
-							}
-							if(isset($_POST['porcentaje'])){
-								$porcentaje = $this->validaPorcentaje($_POST['porcentaje']);
-							} else{
-								$porcentaje = false;
-							}
+							$this->agregaEvaluacion();
+							break;
+							
+							
 							///para las hojas extras de evaluacion
 							if(isset($_POST['actividad']['hojaextra'])){
 								$hoja = $this->validaHoja($_POST['hoja']);
@@ -144,6 +138,54 @@
 				}
 			}
     	}
+		
+		public function agregaEvaluacion(){
+			if(isset($_POST['nrc'])){
+				$nrc = $this->validaNrc($_POST['nrc']);
+			}
+			else
+				$nrc = false;
+				
+			if(isset($_POST['ciclo'])){
+				$ciclo = $this->validaCiclo($_POST['ciclo']);
+			}
+			else
+				$ciclo = false;
+				
+			if(isset($_POST['actividad'])){
+				$actividad = $this->validaActividad($_POST['actividad']);
+			}
+			else
+				$actividad = false;
+			
+			if(isset($_POST['porcentaje'])){
+				$porcentaje = $this->validaPorcentaje($_POST['porcentaje']);
+			}
+			else
+				$porcentaje = false;
+				
+				
+			if($nrc && $ciclo && $actividad && $porcentaje)
+				$status = true;
+			else
+				$status = false;
+				
+			if($status){
+				$arreglo = array('nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo'], 'actividad' => $_POST['actividad'], 'porcentaje' => $_POST['porcentaje');
+				$arreglo = $this->limpiaSQL($arreglo);
+				$insertaEvaluacion = $this->model->insertaEvaluacion($arreglo);
+				if($insertaEvaluacion[0]){
+					include('Vista/insertaEvaluacion.php');
+				}else{
+					include('Vista/errorEvaluacion.php');
+				}
+			}else{
+				include('Vista/errorEvaluacion.php');
+							
+									
+			}
+		
+		}
 		
 		public function consultaCalificacion(){
 			if($this->esAlumno()){
@@ -405,7 +447,7 @@
 					if($status[0]){
 					
 						//NOW INSERT THE ACTIVITIES FOR THE CLASS
-						$status = $this->model->insertaEvaluacion(array('actividades' => $_POST['actividades'], 'porcentajes' => $_POST['porcentajes'],
+						$status = $this->model->insertaEvaluacionA(array('actividades' => $_POST['actividades'], 'porcentajes' => $_POST['porcentajes'],
 																		'idcurso' => $status[2]);
 						if($status){
 							include('Vista/nuevoCurso.php');

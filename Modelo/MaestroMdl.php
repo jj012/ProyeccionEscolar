@@ -256,12 +256,49 @@
 				while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
 					$todo[] = $a;
 					
-				return $todo[0];
+				$status = $todo[0];
 				
-			}else
-				return false;
+			}else{
+				$status[0] = false;
+				$status[1] = $this->bd_driver->error;
+			}
+			
+				$this->bd_driver->close();
+				return $todo;
 		}
-		function insertaEvaluacion($datos){//in case it just evaluates the activity 
+		
+		function insertaEvaluacion($datos){
+			$miQuery = "SELECT idcurso from curso where ciclo_ciclo = '{$datos['ciclo']}' and nrc = {$datos['nrc']}";
+			
+			$result = $this->bd_driver->query($miQuery);
+			
+			if($result){
+				$todo = array();
+				while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+					$todo[] = $a;
+					
+				$todo = $todo[0];//idcurso
+				
+				$miQuery = "INSERT INTO EVALUACION (NOMBRE, PORCENTAJE, CURSO_IDCURSO) VALUES ";
+				$miQuery .= "( '{$datos['actividad']}', {$datos['porcentaje']},{$todo['idcurso'] } )";
+				$result = $this->bd_driver->query($miQuery);
+				
+				if($result && $this->bd_driver->affected_rows == 1){
+					$status[0] = true;
+				}else{
+					$status[0] = false;
+					$status[1] = $this->bd_driver->error;
+				}
+			
+			}else{
+			
+				$status[0] = false;
+				$status[1] = $this->bd_driver->error;
+			}
+			$this->bd_driver->close();
+			return $status;
+		}
+		function insertaEvaluacionA($datos){//in case it just evaluates the activity 
 			$porcentajes = $datos['porcentajes'];
 			foreach($datos['actividades'] as $actividad){
 				$miQuery = "INSERT INTO EVALUACION (NOMBRE, PORCENTAJE,CURSO_IDCURSO) VALUES ";
