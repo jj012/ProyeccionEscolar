@@ -259,8 +259,10 @@
 			
 				$datosCopiar = array('nrc' => $_POST['nrc'], 'cicloViejo'=> $_POST['cicloViejo'], 'cicloNuevo' => $_POST['cicloNuevo'], 'idmaestro' => $_SESSION['user'] );
 				$datosCopiar = $this->limpiaSQL($datosCopiar);
+				$dias = $this->model->dameDias(array('ciclo'=>$_POST['cicloViejo'], 'nrc' =>$_POST['nrc']));
+				$datosCopiar['fechas'] = $this->generaClases($_POST['cicloNuevo'], $_POST['dias']);
 				$status = $this->model->clonarCurso($datosCopiar);
-				if($status){
+				if($status[0]){
 					include('Vista/clonarCurso.php');
 				}else{
 					include('Vista/errorClonar.php');
@@ -393,8 +395,9 @@
 					$datoscurso = $this->limpiaSQL($datoscurso);
 					
 					$datoscurso['horario'] = date('H',strtotime($datoscurso['horario']));
+					$datoscurso['dias'] = $_POST['dias'];
 					
-					//Genera las fecha clase y agregalas a $datoscuros
+					//Generate the dates of class, add to $datoscurso
 					$ciclo = ltrim($_POST['ciclo']);
 					$ciclo = rtrim($ciclo);
 					$datoscurso['fechas'] = $this->generaClases($ciclo, $_POST['dias']);
@@ -477,9 +480,9 @@
 			}
 		}
 	
-	function generaClases($curso, $dias){
+	function generaClases($ciclo, $dias){
 	
-		$dameFechas = $this->model->fechasCI($curso);
+		$dameFechas = $this->model->fechasCI($ciclo);
 		
 		$clases = $this->dameDiasCurso($dameFechas['fechaInicial'], $dameFechas['fechaFinal'], $dias);
 		
