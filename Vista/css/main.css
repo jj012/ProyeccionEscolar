@@ -136,6 +136,7 @@ header{
 	width: 57.4%;
 	margin-left: 0.2%;
 	margin-right: 0.4%;
+	
 }
 
 #MENU-DERECHO{
@@ -209,6 +210,43 @@ ul li:nth-child(odd) a{
 table #mi1{
 	text-align:center;
 }
+
+h1{
+	font-size: 10%;
+}
+
+div section#FORMALUMNO{
+	font-size: 10%;
+}
+
+div.input > label{
+	float:left;
+	width: 50%;
+	text-align:right;
+	margin-right:20px;
+	
+}
+
+div.input{
+	margin:10px 0;
+}
+
+input,textarea{
+	width 40%
+}
+form{
+	width:80%;
+	margin:auto;
+}
+button{
+	float:center;
+}
+
+div fieldset{
+	width:10%;
+}
+
+
 
 /* ==========================================================================
    Helper classes

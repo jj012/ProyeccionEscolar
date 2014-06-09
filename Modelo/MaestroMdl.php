@@ -35,6 +35,66 @@
 			return $status;
 
 		}
+
+		/*
+			idCurso	int(11)			No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
+
+    Primaria Primaria
+    Único Único
+    Índice Índice
+    Espacial Espacial
+    Más
+
+	2	nombre	varchar(30)	utf8_general_ci		No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
+
+    Primaria Primaria
+    Único Único
+    Índice Índice
+    Espacial Espacial
+    Más
+
+	3	seccion	varchar(45)	utf8_general_ci		No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
+
+    Primaria Primaria
+    Único Único
+    Índice Índice
+    Espacial Espacial
+    Más
+
+	4	nrc	varchar(6)	utf8_general_ci		No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
+
+    Primaria Primaria
+    Único Único
+    Índice Índice
+    Espacial Espacial
+    Más
+
+	5	academia	varchar(45)	utf8_general_ci		No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
+
+    Primaria Primaria
+    Único Único
+    Índice Índice
+    Espacial Espacial
+    Más
+
+	6	Maestro_idMaestro	int(11)			No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
+
+    Primaria Primaria
+    Único Único
+    Índice Índice
+    Espacial Espacial
+    Más
+
+	7	Ciclo_ciclo	char(5)	utf8_general_ci		No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
+
+    Primaria Primaria
+    Único Único
+    Índice Índice
+    Espacial Espacial
+    Más
+
+	8	horas	int(11)			No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
+=======
 		
 		function clonarCurso($clonarcurso){
 			//We access the database and look for the especified course and make and copy those for a new register
@@ -49,6 +109,7 @@
 				$miQuery .= " {$clonarcurso['idmaestro']}, '{$clonarcurso[cicloNuevo]}', {$result['horas']} )";
 				
 				$resultadoClonado = $this->bd_driver->query($miQuery);
+>>>>>>> 3b3bb2d26f1531239043b47b3e4549b99418109a
 
 				if($resultadoClonado && $this->bd_driver->affected_rows == 1){
 					$status[0] = true;
@@ -66,8 +127,12 @@
 			$this->bd_driver->close();
 			return $status;
 
-		}
+<<<<<<< HEAD
+Para los elementos que están marcados:Marcar todosP*/
 		
+
+		}
+
 		
 		function actualizaAsistencia($datos){
 			$miQuery = "UPDATE ASISTENCIA SET VALOR = ${datos['valor']} WHERE ALUMNO_CODIGO = '{$datos['codigoAlumno']}' AND ID_CURSO = {$datos['nrc']}";

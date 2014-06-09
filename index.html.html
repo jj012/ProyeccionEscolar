@@ -1,31 +1,27 @@
 
-
-		<link href="css/bootstrap.min.css" rel="stylesheet">
-		
 		<div>
 
-			<section id="FORMALUMNO">
-				<h1>Formulario Alumno</h1>
+			<section id="CONTENIDO">Formulario Alumno
 			<div>
 				<form method="post" action="index.php?usuario=alumno&accion=alta">
 				
-					<div class ="input">
+					<div>
 						<label for="nombre">Ingrese su Nombre</label>
-						<input type="text" id="nombre" name="nombre" required  onClick="algo()">
+						<input type="text" id="nombre" name="nombre" required >
 					</div>
 					
-					<div class ="input">
+					<div>
 						<label for="aMaterno">Ingrese su Apellido Materno</label>
 						<input type="text" id="aMaterno" name="aMaterno" required >
 					</div>
 					
-					<div class ="input">
+					<div>
 						<label for="aPaterno">Ingrese su Apellido Paterno </label>
 						<input type="text" id="aPaterno" name="aPaterno" required>
 					</div>
 					
-					<div class ="input">
-						<label for="genero">G&eacute;nero: </label>
+					<div>
+						<label for="genero">Genero: </label>
 						<fieldset>
 							<div>
 								<input type="radio" name="genero" value="Masculino" required/>Masculino
@@ -36,7 +32,7 @@
 						</fieldset>
 					</div>
 					
-					<div class ="input">
+					<div>
 						<label for="transporte"> Medio de Transporte: </label>
 						<fieldset>
 							<div>
@@ -51,55 +47,54 @@
 						</fieldset>
 					</div>
 					
-					<div class ="input">
+					<div>
 						<label for="github"> Url de Github </label>
 						<input type="url" id="github" name="github" />
 					</div>
 					
-					<div class ="input">
-						<label for="telefono">Ingrese tu tel&eacute;fono</label>
+					<div>
+						<label for="telefono">Ingrese tu teléfono</label>
 						<input type="tel" id="telefono" name="telefono" required/>
 					</div>
 					
-					<div class ="input">
+					<div>
 						<label for="celphone">Ingresa tu num de cel</label>
 						<input type="tel" id="celphone" name="celphone" />
 					</div>
 					
-					<div class ="input">
+					<div>
 						<label for="correo">Ingresa tu correo</label>
 						<input type="email" id="correo" name="correo" required/>
 					</div>
 					
-					<div class ="input">
+					<div>
 						<label for="edad">Ingresa tu edad</label>
 						<input type="number" id="edad" name="edad" min="1" max="75" required/>
 					</div>
 					
-					<div class ="input">
-						<label for="nacimiento">Fecha de Cumplea&ntilde;os</label> 
+					<div>
+						<label for="nacimiento">Fecha de Cumpleaños</label> 
 						<input type="date" id="nacimiento" name="nacimiento" required />
 					</div>
 					
-					<div class ="input">
+					<div>
 						<label for="inteligencia">Elija su nivel de IQ</label>
-						<input type="range" id="inteligencia" name="inteligencia" min="0" max="5" />
-						<p id=int1>0</p> <p id=int2>5</p>
+						0<input type="range" id="inteligencia" name="inteligencia" min="0" max="5" />5
 					</div>
 					
-					<div class ="input">
-						<label id=imagen2 for="imagen">Sube tu foto </label>
+					<div>
+						<label for="imagen">Sube tu foto </label>
 						<input id="imagen" name="imagen" type="file"
 						accept="image/*" />
 					</div>
 					
-					<div class ="input">
-						<label id=textarea2 for="textarea">Comentarios</label>
-						<textarea id="textarea" name="textarea"wrap="hard">Escribe aqu&iacute;...</textarea>
+					<div>
+						<label for="textarea">Comentarios</label>
+						<textarea id="textarea" name="textarea"wrap="hard">Escriba aquí...</textarea>
 					</div>
 					
-					<div class ="input">	
-						<button type="submit">Enviar</button>			
+					<div>	
+						<button type="button" onclick="mostrarAlumno">Enviar</button>			
 					</div>
 				
 				</form>
@@ -107,12 +102,29 @@
 			</section>
 		</div>
 		
-		
-<script type ="text/javascript">
+		<script type="text/javascript">
+			
+			function mostrarAlumno(miselect){
+				//Crear el objeto AJAX
+				var ajax = new nuevoAjax();
+				
+				//Hacer la peticion
+				ajax.open('post','index.php',true);
+				ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+				
+				//enviar el id
+				var id = miselect.value;
+				
+				//escuchar el cambio de status de ajax
+				ajax.onreadystatechange = function(){
+					//si mi funcion es de terminado
+					if(ajax.readyState == 4){
+						//Obtengo el resultado
+						console.log(ajax.responseText);
+					}
+				}
+				ajax.send('codigo='+codigo);
+			}
+		</script>
 
-	function algo(variable){
-		variable = variable.toUpperCase();
-	}
 
-</script>
-		

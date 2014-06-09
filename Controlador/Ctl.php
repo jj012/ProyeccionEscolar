@@ -14,7 +14,7 @@
 
 		//variables necesarias para el procesamiento de palntillas
 		protected $header = file_get_contents("vista/header.html");//variable que contiene header
-		protected $footer = file_get_contents("vista/footer.html")//variable que contiene footer
+		protected $footer = file_get_contents("vista/footer.html");//variable que contiene footer
 		protected $contenido;
 		
 
@@ -41,5 +41,39 @@
 			//imprime la vista
 			echo $vista;
 		}
+		
+		function enviarmail()
+		{
+			$mail             = new PHPMailer(); // defaults to using php "mail()"
+			 
+			$body             = file_get_contents('contents.html');
+			$body             = eregi_replace("[\]",'',$body);
+			 
+			$mail->AddReplyTo("name@yourdomain.com","First Last");
+			 
+			$mail->SetFrom('name@yourdomain.com', 'First Last');
+			 
+			$mail->AddReplyTo("name@yourdomain.com","First Last");
+			 
+			$address = "whoto@otherdomain.com";
+			$mail->AddAddress($address, "John Doe");
+			 
+			$mail->Subject    = "PHPMailer Test Subject via mail(), basic";
+			 
+			$mail->AltBody    = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
+			 
+			$mail->MsgHTML($body);
+			 
+			$mail->AddAttachment("images/phpmailer.gif");      // attachment
+			$mail->AddAttachment("images/phpmailer_mini.gif"); // attachment
+			 
+			if(!$mail->Send()) {
+			echo "Mailer Error: " . $mail->ErrorInfo;
+			} else {
+			echo "Message sent!";
+			}
+						
+		}
+					
 	}
 ?>
