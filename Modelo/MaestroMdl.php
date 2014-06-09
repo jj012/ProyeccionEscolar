@@ -18,14 +18,53 @@
 		}
 		
 		function nuevoCurso($datosCurso){//Function to call a query and INSERT into the database
-			$miQuery = "INSERT INTO CURSO VALUES('{$datosCurso['nombre']}', '{$datosCurso['seccion']}', '{$datosCurso['nrc']}', '{$datosCurso['academia']}', {$datosCurso['codigoMaestro']},";
-			$miQuery .= "'{$datosCurso['ciclo']}', {$datosCurso['horas']} ) ";
+			$miQuery = "INSERT INTO CURSO (Nombre, Seccion, NRC, ACADEMIA, Maestro_idMaestro, Ciclo_ciclo, horas) ";
+			$miQuery .= " VALUES('{$datosCurso['nombre']}', '{$datosCurso['seccion']}', '{$datosCurso['nrc']}', '{$datosCurso['academia']}', ";
+			$miQuery .= "{$datosCurso['codigoMaestro']},'{$datosCurso['ciclo']}', {$datosCurso['horas']} ) ";
 			
 			$result = $this->bd_driver->query($miQuery);
 			
 			if($result && $this->bd_driver->affected_rows == 1){
-				$status[0] = true;
+			
+				//SELECT THIS COURSE
+				
+				$miQuery2 ="SELECT IDCURSO FROM CURSO WHERE NRC = '{$datosCurso['nrc']}' AND CICLO ='{$datosCurso['ciclo']}'";
+				$result = $this->bd_driver->query($miQuery2);
+			
+				if($result && $this->bd_driver->affected_rows == 1){
+					
+					$todo = array();
+					while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+						$todo[] = $a;
+					
+					$todo = $todo[0]; //This will be the id
+					
+						//ADD THE DATES OF CLASSES
+					$fechas = $datosCurso['fechas'];
+					$status[0] = true;
+					$status[2] = $todo['idcurso'];
+					foreach($fechas as $fecha){
+						$miQuery = "INSERT INTO HORARIO (FECHA,HORAINICIO,Curso_idCurso) values('{$fecha}', ";
+						$miQuery .= "'{$datoscurso['horario']}', {$todo['idcurso']} )";
+						
+						$this->bd_driver->query($miQuery);
+						if($this->bd_driver->error !== NULL){
+							$status[0] = false;
+							$status[1] = $this->bd_driver->error;
+							break;
+						}
+						
+					}
+
+
+				
+				}else{
+					$status[0] = false;
+					$status[1] = $this->bd_driver->error;
+				}
+				
 			}
+			
 			else{
 				$status[0] = false;
 				$status[1] = $this->bd_driver->error;
@@ -36,66 +75,7 @@
 
 		}
 
-		/*
-			idCurso	int(11)			No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
 
-    Primaria Primaria
-    Único Único
-    Índice Índice
-    Espacial Espacial
-    Más
-
-	2	nombre	varchar(30)	utf8_general_ci		No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
-
-    Primaria Primaria
-    Único Único
-    Índice Índice
-    Espacial Espacial
-    Más
-
-	3	seccion	varchar(45)	utf8_general_ci		No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
-
-    Primaria Primaria
-    Único Único
-    Índice Índice
-    Espacial Espacial
-    Más
-
-	4	nrc	varchar(6)	utf8_general_ci		No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
-
-    Primaria Primaria
-    Único Único
-    Índice Índice
-    Espacial Espacial
-    Más
-
-	5	academia	varchar(45)	utf8_general_ci		No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
-
-    Primaria Primaria
-    Único Único
-    Índice Índice
-    Espacial Espacial
-    Más
-
-	6	Maestro_idMaestro	int(11)			No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
-
-    Primaria Primaria
-    Único Único
-    Índice Índice
-    Espacial Espacial
-    Más
-
-	7	Ciclo_ciclo	char(5)	utf8_general_ci		No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
-
-    Primaria Primaria
-    Único Único
-    Índice Índice
-    Espacial Espacial
-    Más
-
-	8	horas	int(11)			No 	Ninguna		Cambiar Cambiar	Eliminar Eliminar	
-=======
-		
 		function clonarCurso($clonarcurso){
 			//We access the database and look for the especified course and make and copy those for a new register
 			$miQuery = "SELECT * FROM CURSO WHERE NRC = '{$clonarcurso['nrc']}' AND CICLO = '{$clonarcurso['cicloViejo']}'";
@@ -103,13 +83,12 @@
 			$result = $this->bd_driver->query($miQuery);
 			
 			
-			if($result && $this->bd_driver->affected_rows == 1){//Encontramos el curso, copiamos y cambiamos el valor del ciclo con uno nuevo
+			if($result && $this->bd_driver->affected_rows == 1){//FIND THE COURSE, COPY AND CHANGE THE CYCLE
 				$miQuery = "INSERT INTO CURSO (NOMBRE, SECCION, NRC, ACADEMIA, IDMAESTRO, CICLO, HORAS) ";
 				$miQuery .= "VALUES('{$result['nombre']}', '{$result['seccion']}', '{$result['nrc']}', '{$result['academia]}', ";
 				$miQuery .= " {$clonarcurso['idmaestro']}, '{$clonarcurso[cicloNuevo]}', {$result['horas']} )";
 				
 				$resultadoClonado = $this->bd_driver->query($miQuery);
->>>>>>> 3b3bb2d26f1531239043b47b3e4549b99418109a
 
 				if($resultadoClonado && $this->bd_driver->affected_rows == 1){
 					$status[0] = true;
@@ -126,10 +105,6 @@
 			
 			$this->bd_driver->close();
 			return $status;
-
-<<<<<<< HEAD
-Para los elementos que están marcados:Marcar todosP*/
-		
 
 		}
 
@@ -180,7 +155,7 @@ Para los elementos que están marcados:Marcar todosP*/
 					$status[1] = $this->bd_driver->error;
 				}
 			}else{
-				$miQuer = "SELECT * FROM CALIFICACION WHERE ALUMNO = '{$datos['codigo']}' AND N
+				$miQuer = "SELECT * FROM CALIFICACION WHERE ALUMNO = '{$datos['codigo']}' AND N";
 			
 			}
 			$this->bd_driver->close();
@@ -212,7 +187,21 @@ Para los elementos que están marcados:Marcar todosP*/
 			return $status;
 		}
 		
-		function insertaEvaluacion($actividad,$porcentaje){//in case it just evaluates the activity 
+		function insertaEvaluacion($datos){//in case it just evaluates the activity 
+			$porcentajes = $datos['porcentajes'];
+			foreach($datos['actividades'] as $actividad){
+				if
+				$miQuery = "INSERT INTO EVALUACION (NOMBRE, PORCENTAJE,CURSO_IDCURSO) VALUES ";
+				$miQuery .= " ( '{$actividad}', {$porcentajes[0]}, {$datos['idcurso']})";
+				$this->bd_driver->query($miQuery);
+				if($this->bd_driver->error){
+					return false;
+				}
+				array_shift($porcentajes);
+				if(count($porcentajes) <= 0)
+					break;
+			}
+			$this->bd_driver->close();
 			return true;	
 		}
 		
