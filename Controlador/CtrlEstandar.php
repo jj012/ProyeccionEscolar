@@ -56,7 +56,7 @@ abstract class CtrlEstandar{
 		$mail->SMTPDebug = 0;
 		$mail->Debugoutput ="html";
 
-		$mensaje = "<p>Saludos ".{$usuario}." </p> <p> Bienvenido al Sistema de Proyeccion Escolar </p>";
+		$mensaje = "<p>Saludos "."{$usuario}"." </p> <p> Bienvenido al Sistema de Proyeccion Escolar </p>";
 		$mensaje .= "<p>Para comenzar le recomendamos verificar que sus datos sean correctos entrando a su cuenta en nuestro sitio en la opcion de datos personales</p>";
 		$mensaje .= "<p> Recuerde que estamos a sus ordenes y si surge un problema puede contactarme a  ochoadmin@hotmail.com </p>";
 		$mensaje .= "<p> Esperamos que sea de su agrado el sitio </p>";

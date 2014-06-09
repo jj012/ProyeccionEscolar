@@ -32,7 +32,7 @@
 			while($a = $result->fetch_array())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
 				$todo[] = $a;
 			return $todo;
-		
+			
 		}
 		
 		/**function listar($grupo){ //Consult the group, return the array with the group and status with true, if dont then only return the array with status false

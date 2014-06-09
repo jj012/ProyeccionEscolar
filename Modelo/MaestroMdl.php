@@ -180,8 +180,7 @@ Para los elementos que están marcados:Marcar todosP*/
 					$status[1] = $this->bd_driver->error;
 				}
 			}else{
-				$miQuer = "SELECT * FROM CALIFICACION WHERE ALUMNO = '{$datos['codigo']}' AND N
-			
+				$miQuer = "SELECT * FROM CALIFICACION WHERE ALUMNO = '{$datos['codigo']}' AND N";
 			}
 			$this->bd_driver->close();
 			return $status;
@@ -336,5 +335,5 @@ Para los elementos que están marcados:Marcar todosP*/
 			return $consulta;
 		
 		}
-    }
+    
 ?>

@@ -250,7 +250,7 @@
 				$cicloViejo = false;
 			}
 			
-			if($ciclo === true && $curso === true $cicloViejo === true)
+			if($ciclo === true && $curso === true && $cicloViejo === true)
 				$status = true;
 			else
 				$status = false;
@@ -292,12 +292,12 @@
 				else
 					$nrc = false;
 				if(isset($_POST['rubro'])){
-					$rubro = $this->validaRubro($_POST['rubro']));
+					$rubro = $this->validaRubro($_POST['rubro']);
 				}
 				else
 					$rubro = false;
 					
-			}
+			
 			if($calificaciones === true && $codigo === true && $nrc === true && $rubro === true)
 				$status = true;
 			else

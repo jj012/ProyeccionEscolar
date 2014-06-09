@@ -399,6 +399,13 @@
 		}
 	}
 	
+	public function mostrarAsistencias(){
+		
+	}
+	
+	
+	////////VALIDACIONES//////////////
+	
 	public function validaNombre($cadena){ //Function to validate the syntax of name
 
 		$cadena = ltrim($cadena);
