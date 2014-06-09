@@ -1,21 +1,27 @@
 <?php
 /**
-  * @author: Javier Rizo Orozco
+  * @author: Javier Rizo Orozco y Jorge Eduardo Garza
   * @date: 18/03/2014
   * Class Standard to inherence the other classes.
-  * @version:1
+  * @version:2
   * Methods to verify the user is logued or not
 **/
+require_once("Verificador.php");
 
 
 abstract class CtrlEstandar{
 
-	private $model;
+	protected $model;
+	protected $diccionarioEstandar = array(
+			'{{nombre}}' => $_SESSION['usuario'],
+			'{{materia}}' => $alumno->materia
+			);
+	protected $verificador = new Verificador();
 
 	function __construct(){
 	}
 	
-	function isLogged(){//We verify the user is in the 
+	protected function isLogged(){//We verify the user is in the 
 		if(isset($_SESSION['user']))
 			return true;
 		else
@@ -28,8 +34,10 @@ abstract class CtrlEstandar{
 	abstract function baja();
 	abstract function modifica();
 	abstract function consulta();
+	abstract function procesaPlantilla();
+	abstract function enviarMail($correo,$usuario,$msn);
 
-	public function limpiaSQL($variables){//Posibility to use with the other controllers because is more standard this function
+	protected function limpiaSQL($variables){//Posibility to use with the other controllers because is more standard this function
 		foreach($variables as $llave => $valor){
 			if(is_string($valor)){
 				$valor = ltrim($valor);
@@ -41,7 +49,7 @@ abstract class CtrlEstandar{
 		return $variables;
 	}
 	
-	function enviaCorreo($correo, $usuario){
+	protected function enviaCorreo($correo, $usuario,$msn){
 
 		require_once('PHPMailer/class.phpmailer.php');
 		$mail = new PHPMailer();
@@ -56,10 +64,7 @@ abstract class CtrlEstandar{
 		$mail->SMTPDebug = 0;
 		$mail->Debugoutput ="html";
 
-		$mensaje = "<p>Saludos "."{$usuario}"." </p> <p> Bienvenido al Sistema de Proyeccion Escolar </p>";
-		$mensaje .= "<p>Para comenzar le recomendamos verificar que sus datos sean correctos entrando a su cuenta en nuestro sitio en la opcion de datos personales</p>";
-		$mensaje .= "<p> Recuerde que estamos a sus ordenes y si surge un problema puede contactarme a  ochoadmin@hotmail.com </p>";
-		$mensaje .= "<p> Esperamos que sea de su agrado el sitio </p>";
+		$mensaje .=$msn;
 		$mail->From ="proyeccionescolarjj@gmail.com";
 		$mail->FromName = "Miguel Angel Ochoa";
 		$mail->AddAddress($correo, $usuario);//First a email, then a name
@@ -79,7 +84,7 @@ abstract class CtrlEstandar{
 	}
 	
 
-	public function validaCodigo($codigo){ //Function to validate the code with a lenght of 9 numbers
+	protected function validaCodigo($codigo){ //Function to validate the code with a lenght of 9 numbers
 		$codigo = ltrim($codigo);
 		$codigo = rtrim($codigo);//We clean the code first
 		if(preg_match("/^[A-Za-z]?[0-9]{6,9}/", $codigo)){
@@ -89,21 +94,21 @@ abstract class CtrlEstandar{
 			return -1;
 	}
 	
-	function esMaestro(){//Function to verify that the user is a teacher
+	protected function esMaestro(){//Function to verify that the user is a teacher
 		if(isset($_SESSION['tipo']) && $_SESSION['tipo'] == 'maestro')
 			return true;
 		else
 			return false;
 	}
 	
-	function esAlumno(){//Function to verify that the user is a teacher
+	protected function esAlumno(){//Function to verify that the user is a teacher
 		if(isset($_SESSION['tipo']) && $_SESSION['tipo'] == 'alumno')
 			return true;
 		else
 			return false;
 	}
 	
-	function esAdmin(){//Function to verify that the user is a teacher
+	protected function esAdmin(){//Function to verify that the user is a teacher
 		if(isset($_SESSION['tipo']) && $_SESSION['tipo'] == 'admin')
 			return true;
 		else
@@ -112,14 +117,14 @@ abstract class CtrlEstandar{
 	
 	
 
-	public function validaPass($p){ //Function to validate the pass with a lenght of 6-20 characters
+	protected function validaPass($p){ //Function to validate the pass with a lenght of 6-20 characters
 		if(preg_match("/^[A-Za-z0-9_\-]{6,20}/", $p))
 			return true;
 		else
 			return -1;
 	}
 	
-	public function validaNombre($cadena){ //Function to validate the syntax of name
+	protected function validaNombre($cadena){ //Function to validate the syntax of name
 
 		$cadena = ltrim($cadena);
 		$cadena = rtrim($cadena);//We clean the name first
@@ -130,7 +135,7 @@ abstract class CtrlEstandar{
 			return -1;
 	}
 	
-	public function validaCorreo($correo){//Function to validate the syntax of email
+	protected function validaCorreo($correo){//Function to validate the syntax of email
 		$correo = ltrim($correo);
 		$correo = rtrim($correo);//We clean the email first
 		if(preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/", $correo))
@@ -138,36 +143,5 @@ abstract class CtrlEstandar{
 		else
 			return -1;
 	}
-	
-	public function procesaPlantilla($ruta_contenido, $diccionario){
-			
-		
-		$encabezado = file_get_contents('ruta_archivo');
-		$cuerpo = file_get_contents('ruta_archivo');
-		$pie = file_get_contents('ruta_archivo');
-		
-		$vista = $encabezado . $cuerpo . $pie;
-		
-		$diccionario = array(
-			'{{nombre}}' => $_SESSION['usuario'],
-			'{{materia}}' => $alumno->materia
-			);
-			
-		$vista = strtr ($vista, $diccionario);
-		
-		echo $vista;
-
-	}
-	
-		
-		public function validaCiclo($ciclo){//validating the year and period of the scholar cicle, assuming less than 100 years this will only accept
-			$ciclo = $this->limpiaDato($ciclo);
-			if(preg_match("/20([0-9]{2})[A|B]/",$ciclo))//between 2000 and 2099
-				return true;
-			else 
-				return false;
-		}
-
-
 
 };

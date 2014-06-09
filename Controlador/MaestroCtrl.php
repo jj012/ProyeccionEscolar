@@ -49,10 +49,10 @@
 	 
 	 require('CtrlEstandar.php');
     class MaestroCtrl extends CtrlEstandar{
-    	public $model;
+    	private $model;
 		
 		public function __construct(){//Charge the model Alumno
-			require('Modelo/MaestroMdl.php');
+			require_once('Modelo/MaestroMdl.php');
 			$this->model = new MaestroMdl();
 		}
 		
@@ -69,20 +69,18 @@
 						break;
 						
 						case 'evaluacion':
-							$this->agregaEvaluacion();
-							break;
-							
+							$this->agregaEvaluacion();							
 							
 							///para las hojas extras de evaluacion
 							if(isset($_POST['actividad']['hojaextra'])){
-								$hoja = $this->validaHoja($_POST['hoja']);
+								$hoja = $verificador->validaHoja($_POST['hoja']);
 								if(isset($_POST['subactividad'])){
-									$subactividad = $this->validaActividad($_POST['porcentaje']);
+									$subactividad = $verificador->validaActividad($_POST['porcentaje']);
 								} else{
 									$subactividad = false;
 								}
 								if(isset($_POST['subporcentaje'])){
-									$subporcentaje = $this->validaPorcentaje($subporcentaje);
+									$subporcentaje = $verificador->validaPorcentaje($subporcentaje);
 								} else{
 									$subporcentaje = false;
 								}
@@ -139,40 +137,26 @@
 			}
     	}
 		
-		public function agregaEvaluacion(){
-			if(isset($_POST['nrc'])){
-				$nrc = $this->validaNrc($_POST['nrc']);
-			}
-			else
-				$nrc = false;
+		private function agregaEvaluacion(){
+			if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
+			else $nrc = false;
 				
-			if(isset($_POST['ciclo'])){
-				$ciclo = $this->validaCiclo($_POST['ciclo']);
-			}
-			else
-				$ciclo = false;
+			if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
+			else $ciclo = false;
 				
-			if(isset($_POST['actividad'])){
-				$actividad = $this->validaActividad($_POST['actividad']);
-			}
-			else
-				$actividad = false;
+			if(isset($_POST['actividad'])) $actividad = $verificador->validaActividad($_POST['actividad']);
+			else $actividad = false;
 			
-			if(isset($_POST['porcentaje'])){
-				$porcentaje = $this->validaPorcentaje($_POST['porcentaje']);
-			}
-			else
-				$porcentaje = false;
+			if(isset($_POST['porcentaje'])) $porcentaje = $verificador->validaPorcentaje($_POST['porcentaje']); 
+			else $porcentaje = false;
 				
 				
-			if($nrc && $ciclo && $actividad && $porcentaje)
-				$status = true;
-			else
-				$status = false;
+			if($nrc && $ciclo && $actividad && $porcentaje) $status = true;
+			else $status = false;
 				
 			if($status){
 				$arreglo = array('nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo'], 'actividad' => $_POST['actividad'], 'porcentaje' => $_POST['porcentaje');
-				$arreglo = $this->limpiaSQL($arreglo);
+				$arreglo = $verificador->limpiaSQL($arreglo);
 				$insertaEvaluacion = $this->model->insertaEvaluacion($arreglo);
 				if($insertaEvaluacion[0]){
 					include('Vista/insertaEvaluacion.php');
@@ -180,14 +164,12 @@
 					include('Vista/errorEvaluacion.php');
 				}
 			}else{
-				include('Vista/errorEvaluacion.php');
-							
-									
+				include('Vista/errorEvaluacion.php');						
 			}
 		
 		}
 		
-		public function consultaCalificacion(){
+		private function consultaCalificacion(){
 			if($this->esAlumno()){
 				$codigo = $_SESSION['user'];
 				$status = $this->model->consultaCalificacion($codigo);
@@ -197,30 +179,22 @@
 					//Aqui va la vista de error
 				}
 			}else if($this->esMaestro()){
-				if(isset($_POST['codigo']))
-					$codigo = $this->validaCodigo($_POST['codigo']);
-				else
-					$codigo = -1;
+				if(isset($_POST['codigo'])) $codigo = $verificador->validaCodigo($_POST['codigo']);
+				else $codigo = -1;
 					
-				if(isset($_POST['nrc']))
-					$nrc = $this->validaNRC($_POST['nrc']);
-				else
-					$nrc = false;
+				if(isset($_POST['nrc'])) $nrc = $verificador->validaNRC($_POST['nrc']);
+				else $nrc = false;
 					
-				if(isset($_POST['ciclo']))
-					$ciclo = $this->validaCiclo($_POST['ciclo']);
-				else
-					$ciclo = false;
+				if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
+				else $ciclo = false;
 					
 					
-				if($codigo && $nrc && $ciclo)
-					$status = true;
-				else
-					$status = false;
+				if($codigo && $nrc && $ciclo) $status = true;
+				else $status = false;
 					
 				if($status){
 					$arreglo = array('codigo' => $_POST['codigo'], 'nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo']);
-					$arreglo = $this->limpiaSQL($arreglo);
+					$arreglo = $verificador->limpiaSQL($arreglo);
 					
 					$status = $this->model->consultaCalificacion($arreglo);
 					
@@ -238,25 +212,19 @@
 		
 		}
 		
-		public function consultaListas(){
-			if(isset($_POST['ciclo']))
-				$ciclo = $this->validaCiclo($_POST['ciclo']);
-			else
-				$ciclo = false;
+		private function consultaListas(){
+			if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
+			else $ciclo = false;
 				
-			if(isset($_POST['nrc']))
-				$nrc = $this->validaNRC($_POST['nrc']);
-			else
-				$nrc = false;
+			if(isset($_POST['nrc'])) $nrc = $verificador->validaNRC($_POST['nrc']);
+			else $nrc = false;
 				
-			if($ciclo === true && $nrc === true)
-				$statuts = true;
-			else
-				$status = false;
+			if($ciclo === true && $nrc === true) $statuts = true;
+			else $status = false;
 				
 			if($status){
 				$consultaListas = array('ciclo' => $_POST['ciclo'], 'nrc' => $_POST['nrc']);
-				$consultaListas = $this->limpiaSQL($consultaListas);
+				$consultaListas = $verificador->limpiaSQL($consultaListas);
 				
 				$status = $this->model->consultarAlumnos($consultaListas);
 				if($status[0]){
@@ -272,35 +240,23 @@
 		
 		}
 		
-		public function clonarCurso(){
-			if (isset($_POST['cicloNuevo'])){
-				$ciclo = $this->validaCiclo($_POST['cicloNuevo']);
-			}else {
-				$ciclo = false;
-			}
+		private function clonarCurso(){
+			if (isset($_POST['cicloNuevo'])) $ciclo = $verificador->validaCiclo($_POST['cicloNuevo']);
+			else $ciclo = false;
 			
-			if(isset($_POST['nrc'])){
-				$curso = $this->validaCurso($_POST['nrc']);
-			}
-			else{
-				$curso = false;
-			}
+			if(isset($_POST['nrc'])) $curso = $verificador->validaCurso($_POST['nrc']);
+			 else $curso = false; 
 			
-			if(isset($_POST['cicloViejo'])){
-				$cicloViejo = $this->validaCiclo($_POST['cicloViejo']);
-			}else{
-				$cicloViejo = false;
-			}
+			if(isset($_POST['cicloViejo'])) $cicloViejo = $verificador->validaCiclo($_POST['cicloViejo']);
+			else $cicloViejo = false;
 			
-			if($ciclo === true && $curso === true && $cicloViejo === true)
-				$status = true;
-			else
-				$status = false;
+			if($ciclo === true && $curso === true && $cicloViejo === true) $status = true;
+			else $status = false;
 				
 			if($status){
 			
 				$datosCopiar = array('nrc' => $_POST['nrc'], 'cicloViejo'=> $_POST['cicloViejo'], 'cicloNuevo' => $_POST['cicloNuevo'], 'idmaestro' => $_SESSION['user'] );
-				$datosCopiar = $this->limpiaSQL($datosCopiar);
+				$datosCopiar = $verificador->limpiaSQL($datosCopiar);
 				$dias = $this->model->dameDias(array('ciclo'=>$_POST['cicloViejo'], 'nrc' =>$_POST['nrc']));
 				$datosCopiar['fechas'] = $this->generaClases($_POST['cicloNuevo'], $_POST['dias']);
 				$status = $this->model->clonarCurso($datosCopiar);
@@ -311,45 +267,29 @@
 				}
 			}else{
 				include('Vista/errorClonar.php');
-			}
-							
-		
+			}				
 		}
 		
-		public function capturaCalificacion(){//Method to update notes
-				if(isset($_POST['calificacion'])){
+		private function capturaCalificacion(){//Method to update notes
+				if(isset($_POST['calificacion']))$calificaciones = $verificador -> validaCalificaciones($_POST['calificacion']);
+				else  $calificaciones = false; 
+
+				if(isset($_POST['codigoestudiante'])) $codigo = $verificador ->validaCodigo($_POST['codigoestudiante']);
+				else $codigo = false;
 			
-					$calificaciones = $this -> validaCalificaciones($_POST['calificacion']);
-				}
-				else {
-					$calificaciones = false;
-				}
-				if(isset($_POST['codigoestudiante'])){//Code from the student
-					$codigo = $this ->validaCodigo($_POST['codigoestudiante']);
-				}
-				else {
-					$codigo = false;
-				}
-				if(isset($_POST['nrc'])){
-					$nrc = $this->validaNrc($_POST['nrc']);
-				}
-				else
-					$nrc = false;
-				if(isset($_POST['rubro'])){
-					$rubro = $this->validaRubro($_POST['rubro']);
-				}
-				else
-					$rubro = false;
+				if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
+				else $nrc = false;
+
+				if(isset($_POST['rubro'])) $rubro = $verificador->validaRubro($_POST['rubro']);
+				else $rubro = false;
 					
 			
-			if($calificaciones === true && $codigo === true && $nrc === true && $rubro === true)
-				$status = true;
-			else
-				$status = false;
+			if($calificaciones === true && $codigo === true && $nrc === true && $rubro === true) $status = true;
+			else $status = false;
 				
 			if($status){
 				$arreglo = array('calificacion' => $calificaciones, 'codigo' => $codigo, 'nrc'=> $nrc, 'rubro' => $rubro);
-				$arreglo = $this->limpiaSQL($arreglo);
+				$arreglo = $verificador->limpiaSQL($arreglo);
 				
 				$status = $this -> insertarCalificacion($arreglo);
 				if ($status[0]) {
@@ -364,77 +304,57 @@
 		}
 		
 		
-		public function altaCurso(){
+		private function altaCurso(){
+			require_once("Curso.php");
+			$curso = new Curso();
+
 			if($this->esMaestro() || $this->esAdmin()){
-				if(isset($_POST['nombrecurso'])){
-					$nombrecurso = $this->validaNombreCurso($_POST['nombrecurso']);
-				}else{
-					$nombrecurso = false;
-				}
+				if(isset($_POST['nombrecurso'])) $nombrecurso = $verificador->validaNombreCurso($_POST['nombrecurso']);
+				else $nombrecurso = false;
 							
-				if(isset($_POST['seccion'])){
-					$seccion = $this->validaSeccion($_POST['seccion']);
-				}else{
-					$seccion = false;
-				}
+				if(isset($_POST['seccion'])) $seccion = $verificador->validaSeccion($_POST['seccion']);
+				else $seccion = false; 
 				
-				if(isset($_POST['nrc'])){
-					$nrc = $this->validaNrc($_POST['nrc']);
-				}else{
-					$nrc = false;
-				}
-				if(isset($_POST['academia'])){
-					$academia = $this->validaAcademia($_POST['academia']);
-				}else{
-					$academia = false;
-				}
+				if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
+				else $nrc = false; 
+
+				if(isset($_POST['academia'])) $academia = $verificador->validaAcademia($_POST['academia']);
+				else $academia = false;
 							
-				if(isset($_POST['dias'])){
-					$dias = $this->array_walk($_POST['dias'],'validaDias');
-				}else{
-					$dias = false;
-				}
+				if(isset($_POST['dias'])) $dias = $this->array_walk($_POST['dias'],array($verificador,'validaDias');
+				else $dias = false;
 				
-				if(isset($_POST['cantidadhoras'])){
-					$horas = $this->validaHoras($_POST['cantidadhoras']);
-				}else{
-					$horas = false;
-				}
+				if(isset($_POST['cantidadhoras'])){ $horas = $this->validaHoras($_POST['cantidadhoras']);
+				else $horas = false;
 					
-				if(isset($_POST['horario'])){
-					$horario = $this->validaHorario($_POST['horario']);
-				}else{
-					$horario = false;
-				}
+				if(isset($_POST['horario'])) $horario = $verificador->validaHorario($_POST['horario']);
+				else $horario = false;
 				
-				if(isset($_POST['actividades'])){
-					$actividad = $this->array_walk($_POST['actividades'],'validaActividad');
-				}else{
-					$actividad = false;
-				}
+				if(isset($_POST['actividades'])) $actividad = $this->array_walk($_POST['actividades'],array($verificador,'validaActividad'));
+				else $actividad = false;
 				
-				if(isset($_POST['porcentajes'])){
-					$porcentaje = $this->array_walk($_POST['porcentajes'], 'validaPorcentaje');
-				}
-				else{
-					$porcentaje = false;
-				}
-				if(isset($_POST['ciclo'])){
-					$ciclo = $this->validaCiclo($_POST['ciclo']);
-				}else{
-					$ciclo = false;
-				}
+				if(isset($_POST['porcentajes'])) $porcentaje = $this->array_walk($_POST['porcentajes'], array($verificador,'validaPorcentaje'));
+				 else $porcentaje = false;
+			
+				if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
+				else $ciclo = false;
 				
-				if($nombrecurso && $seccion && $nrc && $academia && $dias && $horas && $horario && $actividad && $porcentaje && $ciclo)
-					$status = true;
-				else
-					$status = false;
+				if($nombrecurso && $seccion && $nrc && $academia && $dias && $horas && $horario && $actividad && $porcentaje && $ciclo) $status = true;
+				else $status = false;
 				
 				if($status){
 					$datoscurso = array('nombrecurso' => $_POST['nombrecurso'], 'seccion' => $_POST['seccion'], 'nrc' => $_POST['nrc'],
 										'academia' => $_POST['academia'],  'horas' => $_POST['horas'], 'horario' => $_POST['horario'],
 										 'ciclo' => $_POST['ciclo']);
-					$datoscurso = $this->limpiaSQL($datoscurso);
+					$datoscurso = $verificador->limpiaSQL($datoscurso);
+
+					$curso->setNombreCurso($datoscurso['nrc']);
+					$curso->setSeccion($datoscurso['nrc']);
+					$curso->setNRC($datoscurso['nrc']);
+					$curso->setAcademia($datoscurso['academia']);
+					$curso->setHoras($datoscurso['horas']);
+					$curso->setHorario($datoscurso['horario']);
+					$curso->setCiclo($datoscurso['ciclo']);
 					
 					$datoscurso['horario'] = date('H',strtotime($datoscurso['horario']));
 					$datoscurso['dias'] = $_POST['dias'];
@@ -471,39 +391,32 @@
 			}
 		}
 		
-		public function alta(){
+		private function alta(){
 			if($this->esMaestro() || $this->esAdmin()){
-				if(isset($_POST['nombre']))
-					$nombre = $this->validaNombre($_POST['nombre']);
-				else
-					$nombre = false;
-				if(isset($_POST['correo']))
-					$correo = $this->validaCorreo($_POST['correo']);
-				else
-					$correo = false;
-				if(isset($_POST['codigo']))
-					$codigo = $this->validaCodigo($_POST['codigo']);
-				else
-					$codigo = false;						
-				if(isset($_POST['contraseña']))
-					$contraseña = $this->validaPass($_POST['contraseña']);
-				else
-					$contraseña = false;
+				if(isset($_POST['nombre'])) $nombre = $verificador->validaNombre($_POST['nombre']);
+				else $nombre = false;
+
+				if(isset($_POST['correo'])) $correo = $verificador->validaCorreo($_POST['correo']);
+				else $correo = false;
+
+				if(isset($_POST['codigo'])) $codigo = $verificador->validaCodigo($_POST['codigo']);
+				else $codigo = false;	
+
+				if(isset($_POST['contraseña'])) $contraseña = $verificador->validaPass($_POST['contraseña']);
+				else $contraseña = false;
 			
-				if($nombre === true && $correo === true && $codigo === true && $contraseña === true)
-					$status = true;
-				else
-					$status = false;
+				if($nombre === true && $correo === true && $codigo === true && $contraseña === true) $status = true;
+				else $status = false;
 					
 				if($status){
 					$datosMaestro = array('nombre' => $_POST['nombre'], 'correo' => $_POST['correo'], 'codigo' => $_POST['codigo'], 'contraseña' => $_POST['contraseña']);
-					$datosMaestro = $this->limpiaSQL($datosMaestro);
+					$datosMaestro = $verificador->limpiaSQL($datosMaestro);
 					$insercion = $this->model->inserta($datosMaestro);
 					if($insercion[0]){
 						include('Vista/insercionMaestro.php');
 						
 						//Send email of up on the website
-						enviaCorreo($datosMaestro['correo'],$datosMaestro['nombre']); //enviaCorreo(email,name);
+						//enviaCorreo($datosMaestro['correo'],$datosMaestro['nombre']); //enviaCorreo(email,name);
 					}
 					else{
 						include('Vista/erroresMaestro.php');
@@ -522,7 +435,7 @@
 			}
 		}
 	
-	function generaClases($ciclo, $dias){
+	private function generaClases($ciclo, $dias){
 	
 		$dameFechas = $this->model->fechasCI($ciclo);
 		
@@ -531,7 +444,7 @@
 		return $clases;
 	}
 	
-	function dameDiasCurso($fechaInicial, $fechaFinal, $dias){
+	private function dameDiasCurso($fechaInicial, $fechaFinal, $dias){
 		$fechasClase = array();
 		$encuentroPrimerClase = false;
 		$clases = array();
@@ -586,15 +499,13 @@
 			return $clases;
 		}
 	}
-		public function baja(){
+		private function baja(){
 			if($this->esAdmin()){
-				if(isset($_POST['codigo']))
-					$codigo = $this->validaCodigo($_POST['codigo']);
-				else
-					$codigo = false;
+				if(isset($_POST['codigo'])) $codigo = $verificador->validaCodigo($_POST['codigo']);
+				else  $codigo = false;
 					
 				if($codigo){
-					$arreglo = $this->limpiaSQL(array('codigo' => $_POST['codigo']));
+					$arreglo = $verificador->limpiaSQL(array('codigo' => $_POST['codigo']));
 					$baja = $this->model->baja($arreglo);
 					
 					if($baja[0]){
@@ -617,57 +528,43 @@
 		
 		
 		}
-		public function modifica(){
+		private function modifica(){
 			if($this->esMaestro() || $this->esAdmin()){
 				if($this->esMaestro()){
 					$codigo = true; //He is logged, and he has an id for his session
-				}else if(isset($_POST['codigo']))
-					$codigo = $this->validaCodigo($_POST['codigo']);
-				else
-					$codigo = false;
+				}else if(isset($_POST['codigo'])) $codigo = $verificador->validaCodigo($_POST['codigo']);
+				else $codigo = false;
 					
-				if(isset($_POST['nombre']))
-					$nombre = $this->validaNombre($_POST['nombre']);
-				else
-					$nombre = false;
+				if(isset($_POST['nombre'])) $nombre = $verificador->validaNombre($_POST['nombre']);
+				else $nombre = false;
 					
-				if(isset($_POST['correo']))
-					$correo = $this->validaCorreo($_POST['correo']);
-				else
-					$correo = false;
+				if(isset($_POST['correo'])) $correo = $verificador->validaCorreo($_POST['correo']);
+				else $correo = false;
 				
-				if(isset($_POST['contraseña']))
-					$contraseña = $this->validaPass($_POST['contraseña']);
-				else
-					$contraseña = false;
+				if(isset($_POST['contraseña'])) $contraseña = $verificador->validaPass($_POST['contraseña']);
+				else $contraseña = false;
 					
 					
-				if($codigo !== -1 && $codigo !== false && $nombre !== -1 && $correo !== -1 && $contraseña !== -1)
-					$status = true;
-				else
-					$status = false;
+				if($codigo !== -1 && $codigo !== false && $nombre !== -1 && $correo !== -1 && $contraseña !== -1) $status = true;
+				else $status = false;
+
 				if($status){
-					if($nombre === false && $correo === false && $contraseña === false)
-						$status = false;
-					else
-						$status = true;
+					if($nombre === false && $correo === false && $contraseña === false) $status = false;
+					else $status = true;
+
 					if($status){
 						$nuevaInfo = array();
-						if($this->esMaestro())
-							$nuevaInfo['codigo'] = $_SESSION['user'];
-						else
-							$nuevaInfo['codigo'] = $_POST['codigo'];
+
+						if($this->esMaestro()) $nuevaInfo['codigo'] = $_SESSION['user'];
+						else $nuevaInfo['codigo'] = $_POST['codigo'];
 							
-						if($nombre !== false)
-							$nuevaInfo['nombre'] = $_POST['nombre'];
-						if($correo !== false)
-							$nuevaInfo['correo'] = $_POST['correo'];
-						if($contraseña !== false)
-							$nuevaInfo['contraseña'] = $_POST['contraseña'];
+						if($nombre !== false) $nuevaInfo['nombre'] = $_POST['nombre'];
+						if($correo !== false) $nuevaInfo['correo'] = $_POST['correo'];
+						if($contraseña !== false) $nuevaInfo['contraseña'] = $_POST['contraseña'];
 							
-						$nuevaInfo = $this->limpiaSQL($nuevaInfo);
-						
+						$nuevaInfo = $verificador->limpiaSQL($nuevaInfo);
 						$actualizado = $this->model->modifica($nuevaInfo);
+
 						if($actualizado[0]){
 							include('Vista/maestroModificado.php');
 						}else{
@@ -692,7 +589,8 @@
 			}
 		
 		}
-		public function consulta(){
+		
+		private function consulta(){
 			if($this->isLogged()){
 				if($this->esMaestro()){
 					$miStatus = $this->model->consulta(array('codigo' => $_SESSION['user']));
@@ -705,14 +603,12 @@
 				}
 				
 			}else if($this->esAlumno || $this->esAdmin()){//Search by a code
-				if(isset($_POST['codigo']))
-					$codigo = $this->validaCodigo($_POST['codigo']);
-				else
-					$codigo = false;
+				if(isset($_POST['codigo']))$codigo = $verificador->validaCodigo($_POST['codigo']);
+				else $codigo = false;
 				
 				if($codigo){//Succes with code, now we're going to search his / her grades or info
 					$arreglo = array('codigo' =>  $_POST['codigo']);
-					$arreglo = $this->limpiaSQL($arreglo);
+					$arreglo = $verificador->limpiaSQL($arreglo);
 					$status = $this->model->consulta($arreglo);
 					if($status[0]){
 						include('Vista/statusProfesor.php');
@@ -741,85 +637,5 @@
 		
 		}
 		
-				
-		public function validaCalificaciones($calificaciones){
-
-			foreach($calificaciones as $calificacion){
-				if($this->validaCalificacion($calificacion) === -1)
-					return -1;
-			}
-			return true;
-		}
-		
-		
-		
-		public function validaNombreCurso($nombrecurso){ //here we validate the syntaxis of the name of the course 
-			if (preg_match("/^[a-zA-Z ñÑáéíóúâêîôûàèìòùäëïöü]+/", $nombrecurso))
-				return true;
-			else 
-				return -1;
-		}
-		public function validaSeccion($seccion){//function to validate the name of the section
-			if(preg_match("/[A-Za-z]+[0-9]+\-D[0-9]+/",$seccion))
-				return true;
-			else
-				return -1;
-		}
-		public function validaNrc($nrc){//function to validate the nrc of the especific group
-			if(preg_match("/0[0-9]{4}/",$nrc))
-				return true;
-			else 
-				return -1;
-		}
-		public function validaAcademia($academia){//function to validate the syntaxis of the name of the academy
-			if (preg_match("/^[a-zA-Z ñÑáéíóúâêîôûàèìòùäëïöü]+/", $academia))
-				return true;
-			else 
-				return -1;
-		}
-		public function validaDias($dias){//function to validate the days of the class
-			if(preg_match("/[1-6]/",$dias))
-				return true;
-			else 
-				return -1;
-		}
-		
-		public function validaRubro($rubro){
-			if (preg_match("/^[a-zA-Z ñÑáéíóúâêîôûàèìòùäëïöü]+/", $rubro))
-				return true;
-			else 
-				return -1;
-		}
-		public function validaHoras($horas){//function to validate the hours of the class from 1 to 4
-			if(preg_match("/[1-4]/",$horas))
-				return true;
-			else
-				return -1;
-		}
-		public function validaHorario($horario){//function to validate the schedule of the class
-			if(preg_match("/[0-2][0-9]{3}/",$horario))
-				return true;
-			else
-				return -1;
-		}
-		
-		public function validaActividad($actividad){//function to validate the activity of evaluation
-			if (preg_match("/^[a-zA-Z ñÑáéíóúâêîôûàèìòùäëïöü]+/", $actividad))
-				return true;
-			else 
-				return -1;
-		}
-		public function validaPorcentaje($porcentaje){//function to validate the percentage of the activity
-			if (preg_match("/(100)|[0-9]{2}/", $porcentaje))
-				return true;
-			else 
-				return -1;
-		}
-		public function validaCalificacion($calificacion){//function to validate the qualification 0-10 and 1 decimal also accepts SD and NP
-			if(preg_match("/10|([0-9][.][0-9]{1})|SD|NP/",$calificacion))
-				return true;
-			else 
-				return -1;
-		}
 	}
 ?>
