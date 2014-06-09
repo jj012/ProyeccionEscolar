@@ -43,7 +43,25 @@
 				$alta[0] = false;
 				$alta[1] = $this->bd_driver->error;
 			}
+			
+			$this->bd_driver->close();
 			return $alta;
+		}
+		
+		public function eliminaDescanso($datos){
+			$miQuery = "DELETE FROM DIADESCANSO WHERE FECHA = '{$datos['fechaBorrar']}' AND Ciclo_idCiclo = '{$datos['ciclo']}'";
+			
+			$result = $this->bd_driver->query($miQuery);
+			
+			if($result && $this->bd_driver->affected_rows == 1){
+				$modifica[0] = true;
+			
+			}else{
+				$modifica[0] = false;
+				$modifica[1] = $this->bd_driver->error;
+			}
+			$this->bd_driver->close();
+			return $modifica;
 		}
 	
 		public function modificaCiclo($datos){
@@ -54,11 +72,12 @@
 			if($result && $this->bd_driver->affected_rows == 1){
 				$modifica[0] = true;
 				
-				$miQuery2 = "DELETE FROM ASISTENCIA WHERE fecha = '{$datos['fechaNueva']}' "; //DELETE DAYS OF REST
+				$miQuery2 = "DELETE FROM ASISTENCIA WHERE fecha = '{$datos['fechaNueva']}' "; //DELETE DAYS OF REST, we use the new day of rest because there no class to asistancs that's days
 				
 				$result = $this->bd_driver->query($miQuery2);
 				
 				if($this->bd_driver->error === NULL){
+					
 					$modifica[0] = false;
 					$modifica[1] = $this->bd_driver->error;
 				}
@@ -68,6 +87,8 @@
 				$modifica[1] = $this->bd_driver->error;
 			}
 			
+			
+			$this->bd_driver->close();
 			return $modifica;
 		}
 	}

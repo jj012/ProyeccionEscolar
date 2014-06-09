@@ -32,6 +32,9 @@
 							case 'modificaciclo':
 								$this->modificaCiclo();
 								break;
+								
+							case 'eliminaFechaDescansoCiclo':
+								$this->eliminaDescanso();
 							
 							default:
 								
@@ -42,6 +45,36 @@
 			else{
 				include('Vistas/errorPermisos.php');
 			}
+		}
+		
+		public function eliminaDescanso(){
+			if(isset($_POST['cicloescolar'])){
+				$ciclo = $this->validaCiclo($_POST['cicloescolar']);
+			}
+			else
+				$ciclo = false;
+				
+			if(isset($_POST['fechaBorrar'])){
+				$fechaBorra = $this->validaFecha($_POST['fechaBorrar']);
+			}
+			else
+				$fechaBorra = false;
+				
+			if($ciclo && $fechaBorra){
+				$datos = array();
+				$datos['fechaBorrar'] = $this->formatoFecha($_POST['fechaBorrar']);
+				$datos['ciclo'] = $this->limpiaDato($_POST['ciclo']);
+				
+				$elimina = $this->model->eliminaDescanso($datos);
+				
+				if($elimina[0]){
+					include('Vista/cicloModificado.php');
+				}else{
+					include('Vista/erroresCiclo.php');
+					falloModifica($elimina[1]);
+				}
+			}
+		
 		}
 		
 		public function altaCiclo(){
