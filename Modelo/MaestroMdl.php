@@ -84,9 +84,9 @@
 			
 			
 			if($result && $this->bd_driver->affected_rows == 1){//FIND THE COURSE, COPY AND CHANGE THE CYCLE
-				$miQuery = "INSERT INTO CURSO (NOMBRE, SECCION, NRC, ACADEMIA, IDMAESTRO, CICLO, HORAS) ";
-				$miQuery .= "VALUES('{$result['nombre']}', '{$result['seccion']}', '{$result['nrc']}', '{$result['academia]}', ";
-				$miQuery .= " {$clonarcurso['idmaestro']}, '{$clonarcurso[cicloNuevo]}', {$result['horas']} )";
+				$miQuery = "INSERT INTO CURSO (NOMBRE, SECCION, NRC, ACADEMIA, IDMAESTRO, CICLO, HORAS) ".
+				 "VALUES('{$result['nombre']}', '{$result['seccion']}', '{$result['nrc']}', '{$result['academia]}' ".
+				 "{$clonarcurso['idmaestro']} , '{$clonarcurso[cicloNuevo]}', {$result['horas']} )";
 				
 				$resultadoClonado = $this->bd_driver->query($miQuery);
 
