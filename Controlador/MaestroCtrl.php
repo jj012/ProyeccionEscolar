@@ -363,32 +363,54 @@
 					$horario = false;
 				}
 				
-				if(isset($_POST['actividad'])){
-					$actividad = $this->validaActividad($_POST['actividad']);
+				if(isset($_POST['actividades'])){
+					$actividad = $this->array_walk($_POST['actividades'],'validaActividad');
 				}else{
 					$actividad = false;
 				}
 				
-				if(isset($_POST['porcentaje'])){
-					$porcentaje = $this->validaPorcentaje($_POST['porcentaje']);
+				if(isset($_POST['porcentajes'])){
+					$porcentaje = $this->array_walk($_POST['porcentajes'], 'validaPorcentaje');
 				}
 				else{
 					$porcentaje = false;
 				}
+				if(isset($_POST['ciclo'])){
+					$ciclo = $this->validaCiclo($_POST['ciclo']);
+				}else{
+					$ciclo = false;
+				}
 				
-				if($nombrecurso && $seccion && $nrc && $academia && $dias && $horas && $horario && $actividad && $porcentaje)
+				if($nombrecurso && $seccion && $nrc && $academia && $dias && $horas && $horario && $actividad && $porcentaje && $ciclo)
 					$status = true;
 				else
 					$status = false;
 				
 				if($status){
 					$datoscurso = array('nombrecurso' => $_POST['nombrecurso'], 'seccion' => $_POST['seccion'], 'nrc' => $_POST['nrc'],
-										'academia' => $_POST['academia'], 'dias' => $_POST['dias'] , 'horas' => $_POST['horas'], 'horario' => $_POST['horario'],
-										'actividad' => $_POST['actividac'], 'porcentaje' => $_POST['porcentaje']);
+										'academia' => $_POST['academia'],  'horas' => $_POST['horas'], 'horario' => $_POST['horario'],
+										 'ciclo' => $_POST['ciclo']);
 					$datoscurso = $this->limpiaSQL($datoscurso);
+					
+					$datoscurso['horario'] = date('H',strtotime($datoscurso['horario']));
+					
+					//Genera las fecha clase y agregalas a $datoscuros
+					$ciclo = ltrim($_POST['ciclo']);
+					$ciclo = rtrim($ciclo);
+					$datoscurso['fechas'] = $this->generaClases($ciclo, $_POST['dias']);
 					$status = $this->model->nuevoCurso($datoscurso);
 					if($status[0]){
-						include('Vista/nuevoCurso.php');
+					
+						//NOW INSERT THE ACTIVITIES FOR THE CLASS
+						$status = $this->model->insertaEvaluacion(array('actividades' => $_POST['actividades'], 'porcentajes' => $_POST['porcentajes'],
+																		'idcurso' => $status[2]);
+						if($status){
+							include('Vista/nuevoCurso.php');
+						}
+						else{
+							include('Vista/errorCurso.php');
+							errorAlta($status[1]);
+						}
 					}else{
 						include('Vista/errorCurso.php');
 						errorAlta($status[1]);
@@ -454,6 +476,71 @@
 				faltaPermisos();
 			}
 		}
+	
+	function generaClases($curso, $dias){
+	
+		$dameFechas = $this->model->fechasCI($curso);
+		
+		$clases = $this->dameDiasCurso($dameFechas['fechaInicial'], $dameFechas['fechaFinal'], $dias);
+		
+		return $clases;
+	}
+	
+	function dameDiasCurso($fechaInicial, $fechaFinal, $dias){
+		$fechasClase = array();
+		$encuentroPrimerClase = false;
+		$clases = array();
+
+		$fechaInicial = str_replace('/', '-', $fechaInicial); //Change the format to adapt the string
+		$fechaFinal = str_replace('/','-',$fechaFinal);//Change the format too
+		$fechaFinal = date("d-m-Y",strtotime($fechaFinal));//We use to compare with the dates
+
+			for($i = 0; $i < count($dias); $i++){
+				$fechaInicial1 = date("d-m-Y",strtotime($fechaInicial));
+				while(!$encuentroPrimerClase){
+					if(date("N", strtotime($fechaInicial1)) == $dias[$i]){
+						$encuentroPrimerClase = true;
+						break;
+					}
+					else
+						$fechaInicial1 = date("d-m-Y",strtotime($fechaInicial1." +1 days"));
+				}
+				if($encuentroPrimerClase){
+					$fechasClase[] = $fechaInicial1;
+					$encuentroPrimerClase = false;
+				}
+			}
+			
+		for($i = 0; $i < count($fechasClase); $i++){
+			if(strtotime($fechasClase[$i]) <= strtotime($fechaFinal))
+				$clases[] = $fechasClase[$i];
+		}
+		
+		if(count($clases) == 0){//The date of beginning is not enough to create dates of class until the end
+			include('erroresCurso.php');
+			errorFecha(4);
+			return false;
+		}
+		else{//We begin to give the rest of classes
+			for($i = 0, $j = count($clases); $i < $j; $i++){//We use j instead of count to be a little more faster and not count each time
+				$nuevo = $clases[$i];
+				$nuevo = date("d-m-Y",strtotime($nuevo." +1 week"));
+				if(strtotime($nuevo) <= strtotime($fechaFinal)){
+					$clases[] = $nuevo;
+					$j++;//We add to j to follow the array
+				}
+				else
+					break;
+			}
+			
+			//Prepare the format Y-M-D
+			for(int i = 0, j = count($clases); i < j;i++){
+				$clases[i] = DateTime::createFromFormat('d-m-Y', $clases[i]);
+				$clases[i] = $clases[i]->format('Y-m-d');
+			}
+			return $clases;
+		}
+	}
 		public function baja(){
 			if($this->esAdmin()){
 				if(isset($_POST['codigo']))
