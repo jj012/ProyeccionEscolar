@@ -55,6 +55,15 @@
 			
 			if($result && $this->bd_driver->affected_rows == 1){
 				$modifica[0] = true;
+				
+				$miQuery2 = "UPDATE ASISTENCIA SET VISIBLE = 1 WHERE fecha = '{$datos['fechaBorrar']}' "; //UPDATE DAYS OF REST, we use the new day of rest because there no class to asistancs that's days
+				
+				$result = $this->bd_driver->query($miQuery2);
+				
+				if($this->bd_driver->error){
+					$modifica[0] = false;
+					$modifica[1] = $this->bd_driver->error;
+				}
 			
 			}else{
 				$modifica[0] = false;
@@ -71,13 +80,21 @@
 			
 			if($result && $this->bd_driver->affected_rows == 1){
 				$modifica[0] = true;
-				
-				$miQuery2 = "DELETE FROM ASISTENCIA WHERE fecha = '{$datos['fechaNueva']}' "; //DELETE DAYS OF REST, we use the new day of rest because there no class to asistancs that's days
+				//First we 'erase' the days of clase
+				$miQuery2 = "UPDATE ASISTENCIA SET VISIBLE = 0 WHERE fecha = '{$datos['fechaNueva']}' "; //UPDATE DAYS OF REST, we use the new day of rest because there no class to asistancs that's days
 				
 				$result = $this->bd_driver->query($miQuery2);
 				
-				if($this->bd_driver->error === NULL){
+				if(!$this->bd_driver->error){
+					//Show now the days affected with class now
+					$miQuery3 = "UPDATE ASISTENCIA SET VISIBLE = 1 WHERE fecha = '{$datos['fechaModificar']}' "; 
 					
+					$result = $this->bd_driver->query($miQuery3);
+					if($result && $this->bd_driver->affected_rows == 1){
+						$modifica[0] = true;
+					}
+					
+				}else{
 					$modifica[0] = false;
 					$modifica[1] = $this->bd_driver->error;
 				}
