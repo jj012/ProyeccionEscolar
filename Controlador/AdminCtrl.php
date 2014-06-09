@@ -180,15 +180,6 @@
 		
 		}
 		
-		
-		public function validaCiclo($ciclo){//validating the year and period of the scholar cicle, assuming less than 100 years this will only accept
-			$ciclo = $this->limpiaDato($ciclo);
-			if(preg_match("/20([0-9]{2})[A|B]/",$ciclo))//between 2000 and 2099
-				return true;
-			else 
-				return false;
-		}
-		
 		public function limpiaDato($dato){
 			$dato = ltrim($dato);
 			$dato = rtrim($dato);

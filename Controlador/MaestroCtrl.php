@@ -69,16 +69,10 @@
 						break;
 						
 						case 'evaluacion':
-							if(isset($_POST['actividad'])){
-								$actividad = $this->validaActividad($_POST['actividad']);
-							} else{
-								$actividad = false;
-							}
-							if(isset($_POST['porcentaje'])){
-								$porcentaje = $this->validaPorcentaje($_POST['porcentaje']);
-							} else{
-								$porcentaje = false;
-							}
+							$this->agregaEvaluacion();
+							break;
+							
+							
 							///para las hojas extras de evaluacion
 							if(isset($_POST['actividad']['hojaextra'])){
 								$hoja = $this->validaHoja($_POST['hoja']);
@@ -144,6 +138,54 @@
 				}
 			}
     	}
+		
+		public function agregaEvaluacion(){
+			if(isset($_POST['nrc'])){
+				$nrc = $this->validaNrc($_POST['nrc']);
+			}
+			else
+				$nrc = false;
+				
+			if(isset($_POST['ciclo'])){
+				$ciclo = $this->validaCiclo($_POST['ciclo']);
+			}
+			else
+				$ciclo = false;
+				
+			if(isset($_POST['actividad'])){
+				$actividad = $this->validaActividad($_POST['actividad']);
+			}
+			else
+				$actividad = false;
+			
+			if(isset($_POST['porcentaje'])){
+				$porcentaje = $this->validaPorcentaje($_POST['porcentaje']);
+			}
+			else
+				$porcentaje = false;
+				
+				
+			if($nrc && $ciclo && $actividad && $porcentaje)
+				$status = true;
+			else
+				$status = false;
+				
+			if($status){
+				$arreglo = array('nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo'], 'actividad' => $_POST['actividad'], 'porcentaje' => $_POST['porcentaje');
+				$arreglo = $this->limpiaSQL($arreglo);
+				$insertaEvaluacion = $this->model->insertaEvaluacion($arreglo);
+				if($insertaEvaluacion[0]){
+					include('Vista/insertaEvaluacion.php');
+				}else{
+					include('Vista/errorEvaluacion.php');
+				}
+			}else{
+				include('Vista/errorEvaluacion.php');
+							
+									
+			}
+		
+		}
 		
 		public function consultaCalificacion(){
 			if($this->esAlumno()){
@@ -259,8 +301,10 @@
 			
 				$datosCopiar = array('nrc' => $_POST['nrc'], 'cicloViejo'=> $_POST['cicloViejo'], 'cicloNuevo' => $_POST['cicloNuevo'], 'idmaestro' => $_SESSION['user'] );
 				$datosCopiar = $this->limpiaSQL($datosCopiar);
+				$dias = $this->model->dameDias(array('ciclo'=>$_POST['cicloViejo'], 'nrc' =>$_POST['nrc']));
+				$datosCopiar['fechas'] = $this->generaClases($_POST['cicloNuevo'], $_POST['dias']);
 				$status = $this->model->clonarCurso($datosCopiar);
-				if($status){
+				if($status[0]){
 					include('Vista/clonarCurso.php');
 				}else{
 					include('Vista/errorClonar.php');
@@ -393,8 +437,9 @@
 					$datoscurso = $this->limpiaSQL($datoscurso);
 					
 					$datoscurso['horario'] = date('H',strtotime($datoscurso['horario']));
+					$datoscurso['dias'] = $_POST['dias'];
 					
-					//Genera las fecha clase y agregalas a $datoscuros
+					//Generate the dates of class, add to $datoscurso
 					$ciclo = ltrim($_POST['ciclo']);
 					$ciclo = rtrim($ciclo);
 					$datoscurso['fechas'] = $this->generaClases($ciclo, $_POST['dias']);
@@ -402,7 +447,7 @@
 					if($status[0]){
 					
 						//NOW INSERT THE ACTIVITIES FOR THE CLASS
-						$status = $this->model->insertaEvaluacion(array('actividades' => $_POST['actividades'], 'porcentajes' => $_POST['porcentajes'],
+						$status = $this->model->insertaEvaluacionA(array('actividades' => $_POST['actividades'], 'porcentajes' => $_POST['porcentajes'],
 																		'idcurso' => $status[2]);
 						if($status){
 							include('Vista/nuevoCurso.php');
@@ -477,9 +522,9 @@
 			}
 		}
 	
-	function generaClases($curso, $dias){
+	function generaClases($ciclo, $dias){
 	
-		$dameFechas = $this->model->fechasCI($curso);
+		$dameFechas = $this->model->fechasCI($ciclo);
 		
 		$clases = $this->dameDiasCurso($dameFechas['fechaInicial'], $dameFechas['fechaFinal'], $dias);
 		

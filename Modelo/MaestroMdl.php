@@ -55,8 +55,16 @@
 						}
 						
 					}
-
-
+					
+					foreach($datosCurso['dias'] as $dias){//INSERT DAYS
+								$miQuery = "INSERT INTO DIAS VALUES({$dias}, {$todo['idcurso']})";
+								$this->bd_driver->query($miQuery);
+								if($this->bd_driver->error){
+									$status[0] = false;
+									$status[1] = $this->bd_driver->error;
+									break;
+								}
+					}
 				
 				}else{
 					$status[0] = false;
@@ -73,6 +81,17 @@
 			$this->bd_driver->close();
 			return $status;
 
+		}
+		
+		function dameDias($datos){
+			$miQuery = "SELECT DIA FROM DIA WHERE CURSO = (SELECT IDCURSO FROM CURSO WHERE CICLO_ciclo= '{$datos['ciclo']}' AND NRC = {$datos['nrc']})";
+			
+			$result = this->bd_driver->query($miQuery);
+			$todo = array();
+			while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+				$todo[] = $a;
+				
+			return $todo;
 		}
 
 
@@ -92,6 +111,46 @@
 
 				if($resultadoClonado && $this->bd_driver->affected_rows == 1){
 					$status[0] = true;
+									//SELECT THIS COURSE
+				
+				$miQuery2 ="SELECT IDCURSO FROM CURSO WHERE NRC = '{$datosCurso['nrc']}' AND CICLO ='{$datosCurso['ciclo']}'";
+				$result = $this->bd_driver->query($miQuery2);
+			
+				if($result && $this->bd_driver->affected_rows == 1){
+					
+					$todo = array();
+					while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+						$todo[] = $a;
+					
+					$todo = $todo[0]; //This will be the id
+					
+						//ADD THE DATES OF CLASSES
+					$fechas = $datosCurso['fechas'];
+					$status[0] = true;
+					$status[2] = $todo['idcurso'];
+					foreach($fechas as $fecha){
+						$miQuery = "INSERT INTO HORARIO (FECHA,HORAINICIO,Curso_idCurso) values('{$fecha}', ";
+						$miQuery .= "'{$datoscurso['horario']}', {$todo['idcurso']} )";
+						
+						$this->bd_driver->query($miQuery);
+						if($this->bd_driver->error !== NULL){
+							$status[0] = false;
+							$status[1] = $this->bd_driver->error;
+							break;
+						}
+						
+					}
+					
+					foreach($datosCurso['dias'] as $dias){//INSERT DAYS
+								$miQuery = "INSERT INTO DIAS VALUES({$dias}, {$todo['idcurso']})";
+								$this->bd_driver->query($miQuery);
+								if($this->bd_driver->error){
+									$status[0] = false;
+									$status[1] = $this->bd_driver->error;
+									break;
+								}
+					}
+				
 				}
 				else{
 					$status[0] = false;
@@ -186,10 +245,61 @@
 			return $status;
 		}
 		
-		function insertaEvaluacion($datos){//in case it just evaluates the activity 
+		function fechasCI($ciclo){
+			$miQuery = "SELECT * FROM CICLO WHERE CICLO = '{$ciclo}'";
+			
+			$result = $this->bd_driver->query($miQuery);
+			
+			if($result){
+				$todo = array();
+				while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+					$todo[] = $a;
+					
+				$status = $todo[0];
+				
+			}else{
+				$status[0] = false;
+				$status[1] = $this->bd_driver->error;
+			}
+			
+				$this->bd_driver->close();
+				return $todo;
+		}
+		
+		function insertaEvaluacion($datos){
+			$miQuery = "SELECT idcurso from curso where ciclo_ciclo = '{$datos['ciclo']}' and nrc = {$datos['nrc']}";
+			
+			$result = $this->bd_driver->query($miQuery);
+			
+			if($result){
+				$todo = array();
+				while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+					$todo[] = $a;
+					
+				$todo = $todo[0];//idcurso
+				
+				$miQuery = "INSERT INTO EVALUACION (NOMBRE, PORCENTAJE, CURSO_IDCURSO) VALUES ";
+				$miQuery .= "( '{$datos['actividad']}', {$datos['porcentaje']},{$todo['idcurso'] } )";
+				$result = $this->bd_driver->query($miQuery);
+				
+				if($result && $this->bd_driver->affected_rows == 1){
+					$status[0] = true;
+				}else{
+					$status[0] = false;
+					$status[1] = $this->bd_driver->error;
+				}
+			
+			}else{
+			
+				$status[0] = false;
+				$status[1] = $this->bd_driver->error;
+			}
+			$this->bd_driver->close();
+			return $status;
+		}
+		function insertaEvaluacionA($datos){//in case it just evaluates the activity 
 			$porcentajes = $datos['porcentajes'];
 			foreach($datos['actividades'] as $actividad){
-				if
 				$miQuery = "INSERT INTO EVALUACION (NOMBRE, PORCENTAJE,CURSO_IDCURSO) VALUES ";
 				$miQuery .= " ( '{$actividad}', {$porcentajes[0]}, {$datos['idcurso']})";
 				$this->bd_driver->query($miQuery);
