@@ -14,7 +14,6 @@
 		public $model;
 		
 		public function __construct(){//Charge the model Alumno
-			$verificador = new Verificador;
 			require('Modelo/LoginMdl.php');
 			$this->model = new LoginModel();
 		}
@@ -53,7 +52,7 @@
 							break;
 						}
 						else{
-							include('Vista/erroresLogueo.php');
+							//include('Vista/erroresLogueo.php');
 							header("Location: index.php");
 						}
 					break;
@@ -238,6 +237,14 @@
 		session_unset();
 		session_destroy();
 		setcookie(session_name(), '', time() - 3600);
+	}
+
+	
+	public function validaPass($p){ //Function to validate the pass with a lenght of 6-20 characters
+		if(preg_match("/^[A-Za-z0-9_\-]{6,20}/", $p))
+			return true;
+		else
+			return -1;
 	}
 
 }

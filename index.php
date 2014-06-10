@@ -32,9 +32,12 @@
 		session_start();
 
 		if(!isset($_SESSION['user']))
+			require('Vista\login.html');
+		else {
 			require('Vista\index.html');
+		}
 
-	}
+	 }
 	
 	 	  
 	  if(isset($_GET['usuario'])){//Check if in POST exists the user

@@ -6,6 +6,7 @@
  * @version:2
  * Methods to verify the user is logued or not
  **/
+ 
 require_once ("Verificador.php");
 abstract class CtrlEstandar {
 
@@ -79,7 +80,7 @@ abstract class CtrlEstandar {
 
 		}
 	}
-<<<<<<< HEAD
+
 	
 	protected function validaCorreo($correo){//Function to validate the syntax of email
 		$correo = ltrim($correo);
@@ -91,8 +92,8 @@ abstract class CtrlEstandar {
 	}
 
 
-};
-=======
 }
+
+
 ?>
->>>>>>> origin/master
+

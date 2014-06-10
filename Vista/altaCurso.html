@@ -19,13 +19,13 @@
 						<tr class="rubro">
 							
 							<td>
-								<input type="text" name="actividades"   />
+								<input type="text" name="actividades" required  />
 							</td>
 							<td>
-								<input type="number" name="actividades" onkeyup="calcularTotal(this)" />
+								<input type="number" name="actividades" required onkeyup="calcularTotal(this)" />
 							</td>
 							<td>
-								<input type="checkbox" name="actividades" onchange="hojaExtra(this)"/>
+								<input type="checkbox" name="actividades"  onchange="hojaExtra(this)"/>
 							</td>
 						
 						</tr>
@@ -37,7 +37,7 @@
 							</td>
 							
 							<td>
-								<input type="number" id="total" disabled min="0" max="100" />
+								<input type="number" required id="total" disabled min="0" max="100" />
 							</td>
 						</tr>
 					</tbody>
@@ -48,21 +48,22 @@
 			<fieldset>
 				<button type="button" onclick="agregaRubro()">Agrega Rubro</button>
 				<button type="button" onclick="eliminaRubro()">Elimina Rubro</button>
-			</fieldset>
-			
-		<div id="hoja">	
+			</fieldset>	
 		</div>	
-			
+		<div class="hoja">
+			<div>
+				
+			</div>	
 		</div>
 			
 		
 		<script type="text/javascript">
 			 var $rubro;
-			 var $cont;
+			 var $cont,$cont2=0;
 			 var extra; 
 			(function(){
 				$rubro = $("#tablaRubro tbody tr.rubro:first-child").clone();
-				extra  = '<table id="tablaExtra"><thead><th>SubActividad</th><th>Porcentaje</th></thead><tbody><tr class="rubro"><td><input type="text" name="actividades"   /></td><td><input type="number" name="actividades" onkeyup="calcularTotal(this)" /></td></td></tr></tbody><tbody><tr id="final"><td><input disabled value="Total" /></td><td><input type="number" id="total" disabled min="0" max="100" /></td></tr></tbody></table>';
+				extra  = '<table class="tablaExtra"><thead><th>SubActividad</th><th>Porcentaje</th></thead><tbody><tr class="rubro"><td><input type="text" name="actividades" /></td><td><input type="number" name="actividades" onkeyup="calcularTotal(this)" /></td></td></tr></tbody><tbody><tr id="final"><td><input disabled value="Total" /></td><td><input type="number" id="total" disabled min="0" max="100" /></td></tr></tbody></table>';
 				
 				$cont = 1;
 			})();
@@ -78,42 +79,61 @@
 			
 			function eliminaRubro(){
 				if($cont>1){
-				$("#tablaRubro tbody:last-child").prev().remove();
+				$(" tbody:last-child").prev().remove();
 				$cont--;
 				console.log($cont);
+				calcularTotal();
 				}
 			}
 			
 			function calcularTotal(actividades){
 				
 				var $valor=0;
-				$('.rubro td:nth-child(2) input').each(
+				$('#tablaRubro .rubro td:nth-child(2) input').each(
 					function(index,value){
 						$valor = $valor + eval($(this).val());
 						console.log($valor);
 					}
 				);
-				$('#total').text($valor);					
+				$('#total').attr('value',$valor);
+				
 				
 			}	
 			
 			function hojaExtra(hoja){
 				var aux = new Array();
-				var i = 0;	
-				$('.rubro td:nth-child(3) input').each(
+				var i = 0;			
+				
+				console.log($cont2);
+				if(!$(this).prop('checked')){
+					$('div.hoja div').after(extra).prev();
+				}
+				else{
+					$('div.hoja:last-child').prev().remove();
+				}
+				/*$('#tablaRubro .rubro td:nth-child(3) input').each(
 					function(index,value){
-						if($(this).prop('checked')){
+						if(){
+							$cont2++;
+							if($cont==$cont2){
 							console.log(this);
-							$('#hoja').after(extra);
-							aux[1]= 1;
-							console.log('aquiestoy');
 							
+							$('div.hoja div').after(extra).prev();
+							console.log('aquiestoy');
+							}
 						}
 						else{
-							console.log('borrando hoja');
+							$cont2--;
+							$('div.hoja:last-child').prev().remove();
+							/*if(!$(this).prop('checked')==true){
+							console.log(this);
+							$('#hoja').after(extra);
+							console.log('aca tambien');
+							
+							}
 						}
 					}
-				);
+				);*/
 			}
 			
 			
