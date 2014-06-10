@@ -112,6 +112,10 @@
 						case 'consultaCurso':
 							$this->consultaCurso();
 							break;
+							
+						case 'modificaCurso':
+							$this->modificaCurso();
+							break;
 						
 						case 'alta':
 						$this->alta();
@@ -140,6 +144,62 @@
 				}
 			}
     	}
+		
+		private function modificaCurso(){
+			if($this->esMaestro(){
+				if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
+				else $nrc = false;
+					
+				if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
+				else $ciclo = false;
+				
+				if($nrc && $ciclo){
+					if(isset($_POST['nombrecurso'])) $nombrecurso = $verificador->validaNombreCurso($_POST['nombrecurso']);
+					else $nombrecurso = false;
+							
+					if(isset($_POST['seccion'])) $seccion = $verificador->validaSeccion($_POST['seccion']);
+					else $seccion = false; 
+					
+					if(isset($_POST['academia'])) $academia = $verificador->validaAcademia($_POST['academia']);
+					else $academia = false;
+				
+					if($nombrecurso && $seccion && $academia){
+						$status = true;
+					}
+					else $status = false;
+					
+					if($status){
+						$arreglo = array('nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo']);
+						if($nombrecurso)
+							$arreglo['nombrecurso'] = $_POST['nombrecurso'];
+						if($seccion)
+							$arreglo['seccion']  = $_POST['seccion'];
+						if($academia)
+							$arreglo['academia'] = $_POST['academia'];
+						
+						$arreglo = $verificador->limpiaSQL($arreglo);
+						
+						$modifica = $this->modeL->modificaCurso($arreglo);
+						if($modifica[0]){
+							//CHARGE A SUCCCESS MODIFY
+						}else{
+							//CHARGE THE ERROR WITH $MODIFICA[1]
+						}
+					}else{
+							//NOTHING TO CHANGE
+					
+					}
+				
+				
+				}else{
+					//ERROR
+				}
+			}else{
+				include('Vista/erroresLogueo.php');
+				faltaPermisos();
+			}
+		
+		}
 		
 		//CONSULT A COURSE
 		private function consultaCurso(){

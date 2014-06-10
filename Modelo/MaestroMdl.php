@@ -190,6 +190,36 @@
 			$this->bd_driver->close();
 			return $status;
 		}
+		
+		//Modify the course
+		function modificaCurso($arreglo){
+			$miQuery = "UPDATE CURSO SET ";
+			if(isset($arreglo['nombrecurso']))
+				$miQuery .= "nombre = '{$arreglo['nombrecurso']}' ,";
+				
+			if(isset($arreglo['seccion']))
+				$miQuery .= "seccion = '{$arreglo['seccion']}' ,";
+			
+			if(isset($arreglo['academia']))
+				$miQuery .= "academia = '{$arreglo['academia']}' ,";
+	
+			$miQuery = substr($miQuery, 0, strlen($miQuery) - 1);
+			
+			$miQuery .= "WHERE NRC = {$arreglo['nrc']} AND CICLO_CICLO = '{$arreglo['ciclo']}'";
+			
+			$result = $this->bd_driver->query($miQuery);
+			
+			if($result && $this->bd_driver->affected_rows == 1){
+				$status[0] = true;
+			
+			}else{
+				$status[0] = false;
+				$status[1] = $this->bd_driver->error:
+			}
+		
+			$this->bd_driver->close();
+			$return $status;
+		}
 
 		
 		function actualizaAsistencia($datos){
