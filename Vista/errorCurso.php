@@ -8,7 +8,7 @@
 	
 		foreach($datos as $llave => $valor){
 			if($valor === -1)
-				echo "{$llave]} incorrecto </br>";
+				echo "{$llave} incorrecto </br>";
 			else if($valor === false)
 				echo "{$llave} no agregada </br>";
 		}

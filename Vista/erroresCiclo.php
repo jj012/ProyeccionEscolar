@@ -2,19 +2,19 @@
 	
 	function datosErroneos($datos){
 	
-		if(isset($datos['ciclo'] === false)
+		if(isset($datos['ciclo']) === false)
 			echo "No se ha enviado el ciclo </br>";
-		else if(isset($datos['ciclo'] === -1)
+		else if(isset($datos['ciclo']) === -1)
 			echo "Formato de Ciclo erroneo </br>";
 		
-		if(isset($datos['fechaInicio'] === false))
+		if(isset($datos['fechaInicio']) === false)
 			echo "Fecha de Inicio no enviada </br>";
-		else if(isset($datos['fechaInicio'] === -1))
+		else if(isset($datos['fechaInicio']) === -1)
 			echo "Fecha de inicio erronea </br>";
 			
-		if(isset($datos['fechaFin'] === false))
+		if(isset($datos['fechaFin']) === false)
 			echo "Fecha de fin no enviada </br> ";
-		else if(isset($datos['fechaFin'] === -1))
+		else if(isset($datos['fechaFin']) === -1)
 			echo "Fecha Erronea </br>";
 			
 		if(isset($datos['fechasDescanso']) === -1)

@@ -42,11 +42,11 @@
 			return $ciclo;
 		}
 
-		public function setNombre($nombre){
+		public function setNombre($nom){
 			if(empty($nombre)){
 				echo 'nombre vacio error';
 			}else{
-				this->$nombre=$nombre;
+				this.$nombre=$nomb;
 			}
 			
 		}
@@ -55,7 +55,7 @@
 			if(empty($seccion)){
 				echo 'seccion vacio error';
 			}else{
-				this->$seccion=$seccion;
+				this.$seccion=$seccion;
 			}
 		}
 
@@ -63,7 +63,7 @@
 			if(empty($nrc)){
 				echo 'nrc vacio error';
 			}else{
-				this->$nrc=$nrc;
+				this.$nrc=$nrc;
 			}
 		}
 
@@ -71,7 +71,7 @@
 			if(empty($academia)){
 				echo 'academia vacio error';
 			}else{
-				this->$academia=$academia;
+				this.$academia=$academia;
 			}
 		}
 
@@ -79,7 +79,7 @@
 			if(empty($dias)){
 				echo 'dias vacio error';
 			}else{
-				this->$dias=$dias;
+				this.$dias=$dias;
 			}
 		}
 
@@ -87,7 +87,7 @@
 			if(empty($horas)){
 				echo "horas vacia error";
 			}else{
-				this->$horas=$horas;
+				this.$horas=$horas;
 			}
 		}
 
@@ -95,7 +95,7 @@
 			if(empty($horario)){
 				echo "horario vacio error";
 			}else{
-				this->$horario=$horario;
+				this.$horario=$horario;
 			}
 		}
 
@@ -103,7 +103,7 @@
 			if(empty($ciclo)){
 				echo "ciclo vacio error";
 			}else{
-				this->$ciclo=$ciclo;
+				this.$ciclo=$ciclo;
 			}
 		}
 	}

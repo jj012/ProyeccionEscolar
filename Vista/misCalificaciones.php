@@ -1,6 +1,6 @@
 <?php
 
-	public function calificaciones($cursosResultados){
+	 function calificaciones($cursosResultados){
 	
 	
 	}

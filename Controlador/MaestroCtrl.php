@@ -52,6 +52,7 @@
     	private $model;
 		
 		public function __construct(){//Charge the model Alumno
+			$verificador = new Verificador;
 			require_once('Modelo/MaestroMdl.php');
 			$this->model = new MaestroMdl();
 		}
@@ -155,7 +156,7 @@
 			else $status = false;
 				
 			if($status){
-				$arreglo = array('nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo'], 'actividad' => $_POST['actividad'], 'porcentaje' => $_POST['porcentaje');
+				$arreglo = array('nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo'], 'actividad' => $_POST['actividad'], 'porcentaje' => $_POST['porcentaje']);
 				$arreglo = $verificador->limpiaSQL($arreglo);
 				$insertaEvaluacion = $this->model->insertaEvaluacion($arreglo);
 				if($insertaEvaluacion[0]){
@@ -321,10 +322,10 @@
 				if(isset($_POST['academia'])) $academia = $verificador->validaAcademia($_POST['academia']);
 				else $academia = false;
 							
-				if(isset($_POST['dias'])) $dias = $this->array_walk($_POST['dias'],array($verificador,'validaDias');
+				if(isset($_POST['dias'])) $dias = $this->array_walk($_POST['dias'],array($verificador,'validaDias'));
 				else $dias = false;
 				
-				if(isset($_POST['cantidadhoras'])){ $horas = $this->validaHoras($_POST['cantidadhoras']);
+				if(isset($_POST['cantidadhoras'])) $horas = $this->validaHoras($_POST['cantidadhoras']);
 				else $horas = false;
 					
 				if(isset($_POST['horario'])) $horario = $verificador->validaHorario($_POST['horario']);
@@ -368,7 +369,7 @@
 					
 						//NOW INSERT THE ACTIVITIES FOR THE CLASS
 						$status = $this->model->insertaEvaluacionA(array('actividades' => $_POST['actividades'], 'porcentajes' => $_POST['porcentajes'],
-																		'idcurso' => $status[2]);
+																		'idcurso' => $status[2]));
 						if($status){
 							include('Vista/nuevoCurso.php');
 						}
@@ -492,9 +493,9 @@
 			}
 			
 			//Prepare the format Y-M-D
-			for(int i = 0, j = count($clases); i < j;i++){
-				$clases[i] = DateTime::createFromFormat('d-m-Y', $clases[i]);
-				$clases[i] = $clases[i]->format('Y-m-d');
+			for($i = 0, $j = count($clases); $i < $j;$i++){
+				$clases[$i] = DateTime::createFromFormat('d-m-Y', $clases[$i]);
+				$clases[$i] = $clases[$i]->format('Y-m-d');
 			}
 			return $clases;
 		}
