@@ -584,17 +584,30 @@
 			
 				if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
 				else $nrc = false;
+				
+				if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
+				else $ciclo = false;
 
 				if(isset($_POST['rubro'])) $rubro = $verificador->validaRubro($_POST['rubro']);
 				else $rubro = false;
+				
+				if(isset($_POST['esPárcial'])){
+					if($_POST['esParcial'] == 1|| $_POST['esParcial'] == 0)
+						$parcial = true;
+					 else
+						$parcial = -1;
+				}else
+					$parcial = false;
 					
 			
-			if($calificaciones === true && $codigo === true && $nrc === true && $rubro === true) $status = true;
+			if($calificaciones === true && $codigo === true && $nrc === true && $rubro === true || $ciclo === true || $esParcial === true) $status = true;
 			else $status = false;
 				
 			if($status){
-				$arreglo = array('calificacion' => $calificaciones, 'codigo' => $codigo, 'nrc'=> $nrc, 'rubro' => $rubro);
+				$arreglo = array('calificacion' => $_POST['calificacion'], 'codigo' => $:POST['codigo'],
+									'nrc'=> $_POST['nrc'], 'rubro' => $_POST['rubro']);
 				$arreglo = $verificador->limpiaSQL($arreglo);
+				$arreglo['esParcial'] = $_POST['esParcial'];
 				
 				$status = $this -> insertarCalificacion($arreglo);
 				if ($status[0]) {

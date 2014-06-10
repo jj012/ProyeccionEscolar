@@ -582,17 +582,35 @@
 		}
 		
 		function insertaCalificacion($calificacion){
-			$miQuery = "INSERT INTO CALIFICACION VALUES('{$calificacion['calificacion']}', '{$calificacion['codigo']}', {$calificacion['nrc']} ,'{$calificacion['rubro']}')";
+			$miQuery = "SELECT IDCURSO FROM CURSO WHERE NRC = {$arreglo['nrc']} AND CICLO_CICLO = '{$arreglo['ciclo']}'";
 			
 			$result = $this->bd_driver->query($miQuery);
 			
-			
 			if($result && $this->bd_driver->affected_rows == 1){
-				$status[0] = true;
+			
+				$todo = array();
+				while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+					$todo[] = $a;
+				
+				$todo = $todo[0];//idcurso
+		
+				$miQuery = "INSERT INTO CALIFICACION VALUES('{$calificacion['calificacion']}', '{$calificacion['codigo']}', {$todo['idcurso']} ,";
+				$miQuery .= " '{$calificacion['rubro']}', {$calificacion['esParcial']})";
+				
+				$result = $this->bd_driver->query($miQuery);
+				
+				
+				if($result && $this->bd_driver->affected_rows == 1){
+					$status[0] = true;
+				}
+				else{
+					$status[0] = false;
+					$status[1] = $this->bd_driver->error;
+				}
 			}
 			else{
-				$status[0] = false;
-				$status[1] = $this->bd_driver->error;
+					$status[0] = false;
+					$status[1] = $this->bd_driver->error;
 			}
 			
 			$this->bd_driver->close();
