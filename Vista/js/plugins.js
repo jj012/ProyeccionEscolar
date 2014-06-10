@@ -53,7 +53,7 @@
 			$.ajax({
 				type:'POST',
 				url:'http://localhost/proyeccionescolar/index.php?usuario=login&accion=login',
-				data: "{'user :' "+usuario+", 'pass' :" +pass+"}",
+				data: "{'user :' "+usuario+", 'pass' :"+pass+"}",
 				success: function(html){
 					console.log('hola');
 				}

@@ -39,7 +39,6 @@
 								if($this->login($codigo, $_POST['pass'])){
 									if($this->esAlumno())
 										header('Location: Vista/MenuAlumno.html');
-									incorrecto();//Data incorrect
 								}
 								else{
 									include('Vista/erroresLogueo.php');
