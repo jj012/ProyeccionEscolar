@@ -166,6 +166,30 @@
 			return $status;
 
 		}
+		
+		//Extract the course from the database
+		function consultaCurso($datos){
+			$miQuery =  "SELECT C.*, H.horaInicio from CURSO C INNER JOIN HORARIO H ON C.idcurso = H.Curso_idcurso ";
+			$miQuery .= "WHERE C.NRC = {$datos['nrc']} AND C.CICLO = '{$datos['ciclo']}'";
+			
+			$result = $this->bd_driver->query($miQuery);
+			if($result && $this->bd_driver->affected_rows == 1){
+					
+					$todo = array();
+					while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+						$todo[] = $a;
+					
+					$status[0] = true;
+					$status[1] = $todo;
+			}else{
+				$status[0] = false;
+				$status[1] = $this->bd_driver->error;
+			}
+			
+		
+			$this->bd_driver->close();
+			return $status;
+		}
 
 		
 		function actualizaAsistencia($datos){

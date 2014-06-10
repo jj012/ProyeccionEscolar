@@ -109,6 +109,10 @@
 							$this->consultaListas();
 						break;
 						
+						case 'consultaCurso':
+							$this->consultaCurso();
+							break;
+						
 						case 'alta':
 						$this->alta();
 						break;
@@ -136,6 +140,34 @@
 				}
 			}
     	}
+		
+		//CONSULT A COURSE
+		private function consultaCurso(){
+			if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
+			else $nrc = false;
+				
+			if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
+			else $ciclo = false;
+			
+			if($nrc && $ciclo)
+				$status = true;
+			else
+				$status = false;
+				
+			if($status){
+				$arreglo = $verificador->limpiaSQL(array('nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo']));
+				
+				$consultaCurso = $this->model->consultaCurso($arreglo);
+				if($consultaCurso[0]){
+					//Charge the data with $consultaCurso[1]
+				}else{
+					//Charge an error, the error is on $consultaCurso[1]
+				}
+				
+			}else{
+				//Charge an error
+			}
+		}
 		
 		private function agregaEvaluacion(){
 			if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
