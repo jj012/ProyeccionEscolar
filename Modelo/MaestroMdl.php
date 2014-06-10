@@ -319,20 +319,37 @@
 		}
 
 		
-		function actualizaAsistencia($datos){
-			$miQuery = "UPDATE ASISTENCIA SET VALOR = ${datos['valor']} WHERE ALUMNO_CODIGO = '{$datos['codigoAlumno']}' AND ID_CURSO = {$datos['nrc']}";
-			
+		function capturaAsistencia($datos){
+		
+			$miQuery = "SELECT IDCURSO FROM CURSO WHERE NRC = '{$datos['nrc']}' AND CICLO_CICLO = '{$datos['ciclo']}' ";
 			
 			$result = $this->bd_driver->query($miQuery);
+			if($result && $this->bd_driver->affected_rows == 1){
+			
+				$todo = array();
+				while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+					$todo[] = $a;
+					
+				$todo = $todo[0];//IDCURSO
+			
+				$miQuery = "UPDATE ASISTENCIA SET VALOR = ${datos['valor']} WHERE ALUMNO_CODIGO = '{$datos['codigo']}' AND ID_CURSO = {$todo['idcurso']}";
 				
-				if($result && $this->bd_driver->affected_rows == 1){
-					$status[0] = true;
-				}
-				else{
-					$status[0] = false;
-					$status[1] = $this->bd_driver->error;
-				}
 				
+				$result = $this->bd_driver->query($miQuery);
+					
+					if($result && $this->bd_driver->affected_rows == 1){
+						$status[0] = true;
+					}
+					else{
+						$status[0] = false;
+						$status[1] = $this->bd_driver->error;
+					}
+			}else{
+				$status[0] = false;
+				$status[1] = $this->bd_driver->error;
+			}
+				
+			$this->bd_driver->close();
 			return $status;
 		}
 		

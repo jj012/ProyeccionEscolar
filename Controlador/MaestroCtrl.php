@@ -120,10 +120,57 @@
 						case 'consultaCalificacion':
 							$this->consultaCalificacion();
 						break;
+						
+						case 'capturaAsistencia':
+							$this->capturaAsistencia();
+							break;
 					}	
 				}
 			}
     	}
+		
+		private function capturaAsistencia(){
+			if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
+			else $nrc = false;
+					
+			if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
+			else $ciclo = false;
+			
+			if(isset($_POST['codigo'])) $codigo = $verificador->validaCodigo($_POST['codigo']);
+			else $codigo = false;
+					
+			if(isset($_POST['fecha'])) $fecha = $verificador->validaFecha($_POST['fecha']);
+			else $fecha = false;
+			
+			if(isset($_POST['valor'])){
+				if($_POST['valor'] == 1 || $_POST['valor'] == 0)
+					$valor = true;
+				else
+					$valor = -1;
+			}else{
+				$valor = false;
+			}
+			
+			if($nrc && $ciclo && $codigo && $fecha && $valor){
+				$status = true;
+			}else
+				$status = false;
+				
+			if($status){
+				$arreglo = array('nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo'], 'codigo' => $_POST['codigo'], 'valor' =>$_POST['valor'], 'fecha' => $_POST['fecha']);
+				$arreglo = $verificador->limpiaSQL($arreglo);
+				
+				$capturarA = $this->model->capturaAsistencia($arreglo);
+				
+				if($capturaA[0]){
+					//View of succesful
+				}else{
+					//ERROR
+				}
+			}else{
+				//ERROR
+			}
+		}
 		//ADD A table from evaluacion
 		private function evaluacionExtra(){
 			
