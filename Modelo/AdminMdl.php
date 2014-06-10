@@ -108,6 +108,6 @@
 			$this->bd_driver->close();
 			return $modifica;
 		}
-	}
+	};
 	
 ?>

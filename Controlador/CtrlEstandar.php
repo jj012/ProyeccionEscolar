@@ -79,7 +79,7 @@ abstract class CtrlEstandar {
 
 		}
 	}
-<<<<<<< HEAD
+
 	
 	protected function validaCorreo($correo){//Function to validate the syntax of email
 		$correo = ltrim($correo);
@@ -92,7 +92,6 @@ abstract class CtrlEstandar {
 
 
 };
-=======
-}
+
 ?>
->>>>>>> origin/master
+

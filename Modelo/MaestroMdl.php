@@ -772,5 +772,6 @@
 			return $consulta;
 		
 		}
+	};
     
 ?>
