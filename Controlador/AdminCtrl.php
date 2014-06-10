@@ -16,6 +16,7 @@
     	public $model;
 		
 		public function __construct(){//Charge the model Admin
+			$verificador = new Verificador;
 			require('Modelo/AdminMdl.php');
 			$this->model = new AdminMdl();
 		}
@@ -37,7 +38,7 @@
 								$this->eliminaDescanso();
 							
 							default:
-								
+								include('Vistas/errorOperacion.php');
 								break;
 						}
 					}
@@ -49,21 +50,21 @@
 		
 		public function eliminaDescanso(){
 			if(isset($_POST['cicloescolar'])){
-				$ciclo = $this->validaCiclo($_POST['cicloescolar']);
+				$ciclo = $verificador>validaCiclo($_POST['cicloescolar']);
 			}
 			else
 				$ciclo = false;
 				
 			if(isset($_POST['fechaBorrar'])){
-				$fechaBorra = $this->validaFecha($_POST['fechaBorrar']);
+				$fechaBorra = $verificador->validaFecha($_POST['fechaBorrar']);
 			}
 			else
 				$fechaBorra = false;
 				
 			if($ciclo && $fechaBorra){
 				$datos = array();
-				$datos['fechaBorrar'] = $this->formatoFecha($_POST['fechaBorrar']);
-				$datos['ciclo'] = $this->limpiaDato($_POST['ciclo']);
+				$datos['fechaBorrar'] = $verificador->formatoFecha($_POST['fechaBorrar']);
+				$datos['ciclo'] = $verificador->limpiaDato($_POST['ciclo']);
 				
 				$elimina = $this->model->eliminaDescanso($datos);
 				
@@ -79,7 +80,7 @@
 		
 		public function altaCiclo(){
 			if(isset($_POST['cicloescolar'])){
-				$ciclo = $this->validaCiclo($_POST['cicloescolar']);
+				$ciclo = $verificador->validaCiclo($_POST['cicloescolar']);
 			}else{
 				$ciclo = false;
 			}
@@ -102,13 +103,13 @@
 			if($ciclo && $fechaInicio && fechaFin && $fechasDescanso !== -1)
 				$status = true;
 			else
-				$status = false
+				$status = false;
 			if($status){
 				//Procced to verify the range with the dates.
 				$fechasClase = array ('inicio' => $_POST['fechaInicio'], 'fin' => $_POST['fechaFin']);
 				if($fechasDescanso)//Dates of resting
-					$fechasClase['festivos'] = $_POST['fechasDescanso']
-					$status = $this->verificaRangoFechas($fechasClase);
+					$fechasClase['festivos'] = $_POST['fechasDescanso'];
+					$status = $verificador->verificaRangoFechas($fechasClase);
 					if($status[0]){//Prepare the data;
 						$datos = array();
 						$datos['fechaInicio'] = $this->formatoFecha($_POST['fechaInicio']);
@@ -173,7 +174,7 @@
 				}
 			
 			}else{
-				$errores = array('ciclo' => $ciclo, , 'fechaVieja' => $fechaModificar, 'fechaNueva' => $fechaNueva);
+				$errores = array('ciclo' => $ciclo, 'fechaVieja' => $fechaModificar, 'fechaNueva' => $fechaNueva);
 				include('Vista/erroresCiclo.php');
 				datosModificar($errores);
 			}
@@ -202,56 +203,6 @@
 				$arreglo[] = $fecha;
 			}
 			return $arreglo;
-		}
-		
-		public function validaFecha($fecha){ //Function to validate the date
-			$fecha = $this->limpiaDato($fecha);
-			$expresion = "/([123]0|[012][1-9]|31)\/(0[1-9]|1[012])\/(19[0-9]{2}|2[0-9]{3})/";
-			if(preg_match($expresion, $fecha))
-				return true
-			else
-				return -1;
-		}
-			
-		public function validaGrupoFecha($fechas){//Same function but to validate more dates
-			foreach($fechas as $fecha){
-				if($this->validaFecha($fecha) === -1){
-					return -1;
-				}
-			}
-			return true;
-		}
-		
-		public function verificaRangoFechas($fechasCiclo){
-			$fechaInicio =  DateTime::createFromFormat('d/m/Y', $fechasCiclo['fechaInicial']);
-			$fechaFin =  DateTime::createFromFormat('d/m/Y', $fechaCiclo['fechaFin']);
-			$fechaActual = new DateTime("NOW");
-			if(isset($fechasCiclo['festivos'])){
-				$asuetos = $fechasCiclo['festivos'];
-				$asuestosFormato = array();
-				foreach($asuetos as $dia);{
-					$asuetosFormato[] =  DateTime::createFromFormat('d/m/Y', $dia);
-				}
-			}
-		
-			$validacion = array(0 => false);
-			if($fechaInicio > $fechaFin){
-				$validacion[1] = "inicioMayor";
-			}
-			else if($fechaActual > $fechaInicio || $fechaActual > $fechaFin){
-				$validacion[1] = "fechasPasadas";
-			}
-			else if(isset($asuetosFormato)){
-				foreach($asuetosFormato as $asueto){
-					if($asueto < $fechaInicio){
-						$validacion[1] = "festivosFueraRango";
-						break;
-					}
-				}
-			}else{
-				$validacion[0] = true;
-			}
-			return $validacion;
 		}
 	}
 ?>

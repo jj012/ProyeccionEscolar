@@ -25,7 +25,7 @@
 								<input type="number" name="actividades" onkeyup="calcularTotal(this)" />
 							</td>
 							<td>
-								<input type="checkbox" name="actividades" />
+								<input type="checkbox" name="actividades" onchange="hojaExtra(this)"/>
 							</td>
 						
 						</tr>
@@ -33,10 +33,11 @@
 					<tbody>
 						<tr id="final">
 							<td colspan="2">
-								<label>Total</label>
+								<input disabled value="Total" />
 							</td>
+							
 							<td>
-								<label id="total"></label>
+								<input type="number" id="total" disabled min="0" max="100" />
 							</td>
 						</tr>
 					</tbody>
@@ -45,9 +46,12 @@
 		</form>
 		<div class="formProfes">
 			<fieldset>
-				<button type="button" onclick="agregaRubro()">+</button>
-				<button type="button" onclick="eliminaRubro()">-</button>
+				<button type="button" onclick="agregaRubro()">Agrega Rubro</button>
+				<button type="button" onclick="eliminaRubro()">Elimina Rubro</button>
 			</fieldset>
+			
+		<div id="hoja">	
+		</div>	
 			
 		</div>
 			
@@ -55,8 +59,11 @@
 		<script type="text/javascript">
 			 var $rubro;
 			 var $cont;
+			 var extra; 
 			(function(){
 				$rubro = $("#tablaRubro tbody tr.rubro:first-child").clone();
+				extra  = '<table id="tablaExtra"><thead><th>SubActividad</th><th>Porcentaje</th></thead><tbody><tr class="rubro"><td><input type="text" name="actividades"   /></td><td><input type="number" name="actividades" onkeyup="calcularTotal(this)" /></td></td></tr></tbody><tbody><tr id="final"><td><input disabled value="Total" /></td><td><input type="number" id="total" disabled min="0" max="100" /></td></tr></tbody></table>';
+				
 				$cont = 1;
 			})();
 				
@@ -78,15 +85,38 @@
 			}
 			
 			function calcularTotal(actividades){
-				var $i,$valor=0;
-				for($i=0;$i<$cont-1;$i++){
-					var $seleccion = $('#tablaRubro tbody tr:nth-child($i) td:last-child').prev();
-					console.log($('#tablaRubro tbody tr:nth-child(1) td:last-child').prev());
-					$valor=$valor+parseInt($seleccion.value,10);
-					console.log($valor);
-				}
+				
+				var $valor=0;
+				$('.rubro td:nth-child(2) input').each(
+					function(index,value){
+						$valor = $valor + eval($(this).val());
+						console.log($valor);
+					}
+				);
+				$('#total').text($valor);					
 				
 			}	
+			
+			function hojaExtra(hoja){
+				var aux = new Array();
+				var i = 0;	
+				$('.rubro td:nth-child(3) input').each(
+					function(index,value){
+						if($(this).prop('checked')){
+							console.log(this);
+							$('#hoja').after(extra);
+							aux[1]= 1;
+							console.log('aquiestoy');
+							
+						}
+						else{
+							console.log('borrando hoja');
+						}
+					}
+				);
+			}
+			
+			
 		</script>
 		
 		
