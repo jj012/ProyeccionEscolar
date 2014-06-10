@@ -191,6 +191,68 @@
 			return $status;
 		}
 		
+		function matricular($arreglo){
+			$miQuery = "SELECT IDCURSO FROM CURSO WHERE NRC = {$arreglo['nrc']} AND CICLO_CICLO = '{$arreglo['ciclo']}' ";
+
+			$result = $this->bd_driver->query($miQuery);
+			
+			if($result && $this->bd_driver->affected_rows == 1){
+				$status[0] = true;
+				//Now with the id we insert the student on this class and give his /her assitances
+				$todo = array();
+				while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+					$todo[] = $a;
+				$todo = $todo[0] //idcurso
+				$miQuery = "INSERT INTO CURSANDO (ALUMNO_CODIGO, CURSO_IDCURSO) VALUES('{$arreglo['codigo']}', {$todo['idcurso']})";
+				
+				$result = $this->bd_driver->query($miQuery);
+				
+				if($result && $this->bd_driver->affected_rows == 1){
+					//AT LAST WE INSERT THE ASSISTANCES 
+					//FIRST GET THE DATES OF CLASS 
+					$miQuery = "SELECT FECHA FROM HORARIO WHERE CURSO_IDCURSO = {$todo['idcurso']}";
+					
+					$result = $this->bd_driver->query($miQuery);
+					
+					if($result && $this->bd_driver->affected_rows == 1){
+						$diasclase = array();
+						while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+						$diasclase[] = $a;
+						
+						//Now insert the assistances
+						foreach($diasclase as $dia){
+							$miQuery = "INSERT INTO ASISTENCIA(FECHA, ALUMNO_CODIGO, ID_CURSO) VALUES('{$dia}', '{$arreglo['codigo']}', {$todo['idcurso']})";
+							$result = $this->bd_driver->query($miQuery);
+							
+							if(!($result && $this->bd_driver->affected_rows == 1)){
+								$status[0] = false;
+								$status[1] = $this->bd_driver->error;
+								break;
+							}
+						
+						}
+					
+					}else{
+						$status[0] = false;
+						$status[1] = $this->bd_driver->error;
+					}
+					
+				}else{
+					$status[0] = false;
+					$status[1] = $this->bd_driver->error;
+				}
+				
+			
+			}else{
+				$status[0] = false;
+				$status[1] = $this->bd_driver->error;
+			}
+		
+			$this->bd_driver->close();
+			$return $status;
+		
+		}
+		
 		//Modify the course
 		function modificaCurso($arreglo){
 			$miQuery = "UPDATE CURSO SET ";
