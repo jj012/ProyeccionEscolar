@@ -124,6 +124,10 @@
 						case 'capturaAsistencia':
 							$this->capturaAsistencia();
 							break;
+							
+						case 'consultaasistencia':
+							$this->consultaAsistencia();
+							break;
 					}	
 				}
 			}
@@ -476,45 +480,67 @@
 		
 		private function consultaCalificacion(){
 			if($this->esAlumno()){
-				$codigo = $_SESSION['user'];
-				$status = $this->model->consultaCalificacion($codigo);
-				if($status[0]){
-					//Aqui cargamos calificaciones propias
-				}else{
-					//Aqui va la vista de error
-				}
-			}else if($this->esMaestro()){
-				if(isset($_POST['codigo'])) $codigo = $verificador->validaCodigo($_POST['codigo']);
-				else $codigo = -1;
-					
-				if(isset($_POST['nrc'])) $nrc = $verificador->validaNRC($_POST['nrc']);
+				if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
 				else $nrc = false;
-					
+						
 				if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
 				else $ciclo = false;
-					
-					
-				if($codigo && $nrc && $ciclo) $status = true;
-				else $status = false;
-					
+				
+				$codigo = $_SESSION['user'];
+				
+				if($nrc && $ciclo){
+					$status = true;
+				}else{
+					$status = false;
+				}
+				
 				if($status){
-					$arreglo = array('codigo' => $_POST['codigo'], 'nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo']);
-					$arreglo = $verificador->limpiaSQL($arreglo);
+					$arreglo = $verificador->limpiaSQL(array('nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo']));
+					$arreglo['codigo'] = $codigo;
 					
-					$status = $this->model->consultaCalificacion($arreglo);
+					$consultaAlumno = $this->model->misCalificaciones($arreglo);
 					
-					if($status[0]){
-					
-						//CARGAMOS LAS CALIFICACIONES
+					if($consultaAlumno[0]){
+						//Assistances on $consultaAlumno[1]
 					}else{
-						//ERROR
+						//Error on $consultaAlumno[0]
 					}
 					
+					
 				}else{
-					//Cargamos error
+					//CHARGE AN ERROR
 				}
+			}else{
+				if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
+				else $nrc = false;
+						
+				if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
+				else $ciclo = false;
+				
+				
+				if($nrc && $ciclo){
+					$status = true;
+				}else{
+					$status = false;
+				}
+				
+				if($status){
+					$arreglo = $verificador->limpiaSQL(array('nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo']));
+					
+					$consulta = $this->model->calificacionesClase($arreglo);
+					
+					if($consultaAlumno[0]){
+						//Assistances on $consulta[1]
+					}else{
+						//Error on $consulta[0]
+					}
+					
+					
+				}else{
+					//CHARGE AN ERROR
+				}
+			
 			}
-		
 		}
 		
 		private function consultaListas(){

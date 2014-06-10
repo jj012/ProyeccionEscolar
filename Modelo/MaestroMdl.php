@@ -391,6 +391,83 @@
 			return $status;
 		}
 		
+		function misCalificaciones($arreglo){
+			$miQuery = "SELECT IDCURSO FROM CURSO WHERE NRC = {$arreglo['nrc']} AND CICLO_CICLO = '{$arreglo['ciclo']}' ";
+
+			$result = $this->bd_driver->query($miQuery);
+			
+			if($result && $this->bd_driver->affected_rows == 1){
+				$status[0] = true;
+				//Now with the id we insert the student on this class and give his /her assitances
+				$todo = array();
+				while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+					$todo[] = $a;
+				$todo = $todo[0] //idcurso
+				
+				$miQuery = "SELECT C.*, E.* FROM CALIFICACION C INNER JOIN EVALUACION E  ON C.CURSO = E.CURSO_IDCURSO WHERE C.ALUMNO_codigo = '{$arreglo['codigo']}' AND C.ID_CURSO = {$todo['idcurso']}";
+				
+				$result = $this->bd_driver->query($miQuery);
+				
+				if($result && $this->bd_driver->affected_rows == 1){
+					$todo = array();
+					while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+						$todo[] = $a;
+					$status[0] = true;
+					$status[1] = $todo;
+				}else{
+					$status[0] = false;
+					$status[1] = $this->bd_driver->error;
+				}
+				
+			}else{
+				$status[0] = false;
+				$status[1] = $this->bd_driver->error;
+			}
+
+
+			$this->bd_driver->close();
+			return $status;
+		
+		}
+		
+		function calificacionesClase($arreglo){
+			$miQuery = "SELECT IDCURSO FROM CURSO WHERE NRC = {$arreglo['nrc']} AND CICLO_CICLO = '{$arreglo['ciclo']}' ";
+
+			$result = $this->bd_driver->query($miQuery);
+			
+			if($result && $this->bd_driver->affected_rows == 1){
+				$status[0] = true;
+				//Now with the id we insert the student on this class and give his /her grades
+				$todo = array();
+				while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+					$todo[] = $a;
+				$todo = $todo[0] //idcurso
+				
+				$miQuery = "SELECT C.*, E.* FROM CALIFICACION C INNER JOIN EVALUACION E  ON C.CURSO = E.CURSO_IDCURSO WHERE  C.ID_CURSO = {$todo['idcurso']}";
+				
+				$result = $this->bd_driver->query($miQuery);
+				
+				if($result && $this->bd_driver->affected_rows == 1){
+					$todo = array();
+					while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+						$todo[] = $a;
+					$status[0] = true;
+					$status[1] = $todo;
+				}else{
+					$status[0] = false;
+					$status[1] = $this->bd_driver->error;
+				}
+				
+			}else{
+				$status[0] = false;
+				$status[1] = $this->bd_driver->error;
+			}
+
+
+			$this->bd_driver->close();
+			return $status;
+		}
+		
 		function asistenciasClase($arreglo){
 			$miQuery = "SELECT IDCURSO FROM CURSO WHERE NRC = {$arreglo['nrc']} AND CICLO_CICLO = '{$arreglo['ciclo']}' ";
 
@@ -430,27 +507,6 @@
 		
 		}
 
-		
-		function consultarCalificacion($datos){//Falta esta
-			if(is_array($datos)){
-				$miQuery = "SELECT * FROM CALIFICACION WHERE ALUMNO = '{$datos}'";
-				
-				$result = $this->bd_driver->query($miQuery);
-				
-				if($result && $this->bd_driver->affected_rows == 1){
-					$status[0] = true;
-				}
-				else{
-					$status[0] = false;
-					$status[1] = $this->bd_driver->error;
-				}
-			}else{
-				$miQuer = "SELECT * FROM CALIFICACION WHERE ALUMNO = '{$datos['codigo']}' AND N";
-
-			$this->bd_driver->close();
-			return $status;
-
-		}
 		function consultarAlumnos($datos){//Mystic query D: BE CAREFUL
 			$miQuery = "SELECT A.* FROM ALUMNOS A, CURSANDO C, CURSO U WHERE A.CODIGO = C.ALUMNO AND C.CURSO = U.NRC AND U.CICLO = '{$datos['ciclo']}' ";
 			$miQuery = " AND U.NRC = '{$datos['ciclo']}' ";
