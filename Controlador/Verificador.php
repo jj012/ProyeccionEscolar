@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 	class Verificador{
 		
 		public function validaCalificaciones($calificaciones){
@@ -10,6 +10,13 @@
 			return true;
 		}
 		
+		public function validaColumnas($columnas){
+			if(preg_match("/[1-9]{1,2}/",$columnas))
+				return true;
+			else 
+				return -1;
+
+		}
 		
 		
 		public function validaNombreCurso($nombrecurso){ //here we validate the syntaxis of the name of the course 

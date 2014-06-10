@@ -351,6 +351,7 @@
 				}
 		
 		}
+		
 		function consultarCalificacion($datos){//Falta esta
 			if(is_array($datos)){
 				$miQuery = "SELECT * FROM CALIFICACION WHERE ALUMNO = '{$datos}'";
@@ -465,9 +466,42 @@
 			return true;	
 		}
 		
-		function insertaEvaluacionExtra($actividad,$porcentaje,$subactividad,$subporcentaje){//in case the teacher needs an extra page for evaluation
-			return true;
+		function insertaEvaluacionExtra($arreglo){//in case the teacher needs an extra page for evaluation
+			$miQuery = "SELECT IDCURSO FROM CURSO WHERE NRC = {$arreglo['nrc']} AND CICLO_CICLO = '{$arreglo['ciclo']}'";
+			
+			$result = $this->bd_driver->query($miQuery);
+			
+			if($result && $this->bd_driver->affected_rows == 1){
+				$todo = array();
+				while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+					$todo[] = $a;
+				
+				$todo = $todo[0];//idcurso
+				$query = "CREATE TABLE {$todo['idcurso']}{$arreglo['actividad']}extra{$arreglo['numExtra']} ";
+				$query .="(ID INT AUTO INCREMENT PRIMARY KEY, ";
+
+				for($i = 1; $i <= $_POST['columnas']; $i++){
+					$query .= "c{$i} FLOAT ,";
+				}
+				
+				$query = substr($query, 0, strlen($query) - 1);
+					
+				$query .= ")engine=innodb";
+
+				$this->bd_driver->query($query);
+
+				if($this->bd_driver->errno){
+					die("No se pudo crear la tabla");
+				}
+				$status[0] = true;
+			}else{
+				$status[0] = false;
+			}
+			
+				$this->bd_driver->close();
+				return $status;
 		}
+		
 		function insertaCalificacion($calificacion){
 			$miQuery = "INSERT INTO CALIFICACION VALUES('{$calificacion['calificacion']}', '{$calificacion['codigo']}', {$calificacion['nrc']} ,'{$calificacion['rubro']}')";
 			

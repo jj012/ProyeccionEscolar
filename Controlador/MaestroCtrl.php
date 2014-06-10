@@ -69,40 +69,11 @@
 						break;
 						
 						case 'evaluacion':
-							$this->agregaEvaluacion();							
+							$this->agregaEvaluacion();
+							break;
 							
-							///para las hojas extras de evaluacion
-							if(isset($_POST['actividad']['hojaextra'])){
-								$hoja = $verificador->validaHoja($_POST['hoja']);
-								if(isset($_POST['subactividad'])){
-									$subactividad = $verificador->validaActividad($_POST['porcentaje']);
-								} else{
-									$subactividad = false;
-								}
-								if(isset($_POST['subporcentaje'])){
-									$subporcentaje = $verificador->validaPorcentaje($subporcentaje);
-								} else{
-									$subporcentaje = false;
-								}
-								$datosevaluacion=array($actividad,$porcentaje,$subactividad,$subporcentaje);
-								$status = $this -> insertaEvaluacionExtra($datosevaluacion);
-								if ($status) {
-									include('Vista/insertaEvaluacion.php');
-								} else {
-									include('Vista/errorEvaluacion.php');
-								}
-									
-							} else{
-								$hoja = false;
-							}
-							$datosevaluacion = array($actividad,$porcentaje);
-							$status = $this -> insertaEvaluacion($datosevaluacion);
-							if ($status) {
-								include('Vista/insertaEvaluacion.php');
-							} else {
-								include('Vista/errorEvaluacion.php');
-							}
-								
+						case 'evaluacionextra':
+							$this->evaluacionExtra();								
 						break;
 						
 						case 'consultalistas':
@@ -152,6 +123,57 @@
 				}
 			}
     	}
+		//ADD A table from evaluacion
+		private function evaluacionExtra(){
+			
+			//mipagina.com/?ctrl=curso & act=evaluacionextra
+			/*
+				post................
+				columnas: n
+				curso:
+				rubro:
+			*/
+			
+			if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
+			else $nrc = false;
+					
+			if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
+			else $ciclo = false;
+			
+			if(isset($_POST['columnas'])) $columnas = $verificador->validaColumnas($_POST['columnas']);
+			else 	$columnas = false;
+			
+			if(isset($_POST['actividad'])) 	$actividad = $verificador->validaActividad($_POST['actividad']);
+			else	$actividad = false;
+			
+			if(isset($_POST['numExtra'])) $extra = $verificador->validaColumnas($_POST['numExtra']); //I KNOW, ITS THE SAME BUT THE VAL A NUMBER OF TWO DIGITS
+				$extra = false;
+			
+			if($nrc && $ciclo && $columnas && $actividad && $extra !== -1)
+				$status = true;
+			else
+				$status = false;
+				
+			if($status){
+				$arreglo = array('ciclo' => $_POST['ciclo'], 'nrc' => $_POST['nrc'], 'columnas' => $_POST['columnas'], 'actividad' => $_POST['actividad']);
+				$arreglo = $verificador->limpiaSQL($arreglo);
+				if($extra)
+					$arreglo['numExtra'] = $_POST['numExtra'];
+				else
+					$arreglo['numExtra'] = '1';
+				
+				$creaExtra = $this->model->insertaEvaluacionExtra($arreglo);
+				
+				if($creaExtra[0]){
+					//Charge a succesful view
+				}else{
+					//CHARGE THE ERROR WITH $creaExtra[1]
+				}
+			
+			}else{
+				//ERROR
+			}
+		}
 		
 		//DELETE A STUDENT FROM THE CLASS
 		private function darseBaja(){
