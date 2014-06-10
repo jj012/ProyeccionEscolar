@@ -37,7 +37,8 @@
 								$codigo = $arreglo[0];
 								//$p = crypt($_POST['pass']);//We use a hash to encrypt the password
 								if($this->login($codigo, $_POST['pass'])){
-									include('Vista/erroresLogueo.php');
+									if($this->esAlumno())
+										header('Location: Vista/MenuAlumno.html');
 									incorrecto();//Data incorrect
 								}
 								else{
