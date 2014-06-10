@@ -129,6 +129,45 @@
 			}
     	}
 		
+		private function consultaAsistencia(){
+			if($this->esAlumno()){
+				if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
+				else $nrc = false;
+						
+				if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
+				else $ciclo = false;
+				
+				$codigo = $_SESSION['user'];
+				
+				if($nrc && $ciclo){
+					$status = true;
+				}else{
+					$status = false;
+				}
+				
+				if($status){
+					$arreglo = $verificador->limpiaSQL(array('nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo']));
+					$arreglo['codigo'] = $codigo;
+					
+					$consultaAlumno = $this->model->misAsistencias($arreglo);
+					
+					if($consultaAlumno){
+						//Assistances on $consultaAlumno[1]
+					}else{
+						//Error on $consultaAlumno[0]
+					}
+					
+					
+				}else{
+					//CHARGE AN ERROR
+				}
+			}else{
+			
+			
+			}
+		
+		}
+		
 		private function capturaAsistencia(){
 			if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
 			else $nrc = false;

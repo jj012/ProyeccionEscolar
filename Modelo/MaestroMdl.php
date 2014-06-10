@@ -353,21 +353,44 @@
 			return $status;
 		}
 		
-		function insertaAsistencia($datos){//We use this to update the assistences
-			$miQuery = "INSERT INTO ASISTENCIA('FECHA','ALUMNO_CODIGO','ID_CODIGO') VALUES( '{$datos['fecha']}', '{$datos['codigoAlumno']}' AND ID_CURSO ={$datos['nrc']}";
+		function misAsistencias($arreglo){
+			$miQuery = "SELECT IDCURSO FROM CURSO WHERE NRC = {$arreglo['nrc']} AND CICLO_CICLO = '{$arreglo['ciclo']}' ";
+
+			$result = $this->bd_driver->query($miQuery);
 			
-			
-		$result = $this->bd_driver->query($miQuery);
+			if($result && $this->bd_driver->affected_rows == 1){
+				$status[0] = true;
+				//Now with the id we insert the student on this class and give his /her assitances
+				$todo = array();
+				while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+					$todo[] = $a;
+				$todo = $todo[0] //idcurso
+				
+				$miQuery = "SELECT * FROM ASISTENCIA WHERE ALUMNO_codigo = '{$arreglo['codigo']}' AND ID_CURSO = {$todo['idcurso']} AND VISIBLE = 1";
+				
+				$result = $this->bd_driver->query($miQuery);
 				
 				if($result && $this->bd_driver->affected_rows == 1){
+					$todo = array();
+					while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+						$todo[] = $a;
 					$status[0] = true;
-				}
-				else{
+					$status[1] = $todo;
+				}else{
 					$status[0] = false;
 					$status[1] = $this->bd_driver->error;
 				}
-		
+				
+			}else{
+				$status[0] = false;
+				$status[1] = $this->bd_driver->error;
+			}
+
+
+			$this->bd_driver->close();
+			return $status;
 		}
+
 		
 		function consultarCalificacion($datos){//Falta esta
 			if(is_array($datos)){
