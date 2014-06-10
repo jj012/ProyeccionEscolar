@@ -110,6 +110,22 @@
 							$this->consultaListas();
 						break;
 						
+						case 'matricularcurso':
+							$this->matricularse();
+						break;
+						
+						case 'darsebaja':
+							$this->darseBaja();
+							break;
+						
+						case 'consultaCurso':
+							$this->consultaCurso();
+							break;
+							
+						case 'modificaCurso':
+							$this->modificaCurso();
+							break;
+						
 						case 'alta':
 						$this->alta();
 						break;
@@ -137,6 +153,159 @@
 				}
 			}
     	}
+		
+		//DELETE A STUDENT FROM THE CLASS
+		private function darseBaja(){
+			if(isset($_POST['codigo']))
+				$codigo = $verificador->validaNrc($_POST['nrc']);
+			else
+				$codigo = false;
+				
+			if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
+			else $nrc = false;
+					
+			if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
+			else $ciclo = false;
+			
+			if($codigo && $nrc && $ciclo)
+				$status = true;
+			else
+				$status = false;
+				
+			if($status){
+				$arreglo = array('codigo' => $_POST['codigo'], 'nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo']);
+				$arreglo = $verificador->limpiaSQL($arreglo);
+				
+				$baja = $this->model->bajaCurso($arreglo);
+				
+				if($baja[0]){
+					//CHARGE A SUCCESS VIEW
+				}else{
+					//CHARGE THE ERROR WITH $baja[1] 
+				}
+			}else{
+				//CHARGE AN ERROR
+			}
+		
+		}
+		//UPDATE A STUDENT ON THIS CLASS
+		private function matricularse(){
+			if(isset($_POST['codigo']))
+				$codigo = $verificador->validaNrc($_POST['nrc']);
+			else
+				$codigo = false;
+				
+			if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
+			else $nrc = false;
+					
+			if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
+			else $ciclo = false;
+			
+			if($codigo && $nrc && $ciclo)
+				$status = true;
+			else
+				$status = false;
+				
+			if($status){
+				$arreglo = array('codigo' => $_POST['codigo'], 'nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo']);
+				$arreglo = $verificador->limpiaSQL($arreglo);
+				
+				$matricula = $this->model->matricular($arreglo);
+				
+				if($matricula[0]){
+					//CHARGE A SUCCESS VIEW
+				}else{
+					//CHARGE THE ERROR WITH $matricula[1] 
+				}
+			}else{
+				//CHARGE AN ERROR
+			}
+		
+		}
+		
+		private function modificaCurso(){
+			if($this->esMaestro(){
+				if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
+				else $nrc = false;
+					
+				if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
+				else $ciclo = false;
+				
+				if($nrc && $ciclo){
+					if(isset($_POST['nombrecurso'])) $nombrecurso = $verificador->validaNombreCurso($_POST['nombrecurso']);
+					else $nombrecurso = false;
+							
+					if(isset($_POST['seccion'])) $seccion = $verificador->validaSeccion($_POST['seccion']);
+					else $seccion = false; 
+					
+					if(isset($_POST['academia'])) $academia = $verificador->validaAcademia($_POST['academia']);
+					else $academia = false;
+				
+					if($nombrecurso && $seccion && $academia){
+						$status = true;
+					}
+					else $status = false;
+					
+					if($status){
+						$arreglo = array('nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo']);
+						if($nombrecurso)
+							$arreglo['nombrecurso'] = $_POST['nombrecurso'];
+						if($seccion)
+							$arreglo['seccion']  = $_POST['seccion'];
+						if($academia)
+							$arreglo['academia'] = $_POST['academia'];
+						
+						$arreglo = $verificador->limpiaSQL($arreglo);
+						
+						$modifica = $this->modeL->modificaCurso($arreglo);
+						if($modifica[0]){
+							//CHARGE A SUCCCESS MODIFY
+						}else{
+							//CHARGE THE ERROR WITH $MODIFICA[1]
+						}
+					}else{
+							//NOTHING TO CHANGE
+					
+					}
+				
+				
+				}else{
+					//ERROR
+				}
+			}else{
+				include('Vista/erroresLogueo.php');
+				faltaPermisos();
+			}
+		
+		}
+		
+		//CONSULT A COURSE
+		private function consultaCurso(){
+			if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
+			else $nrc = false;
+				
+			if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
+			else $ciclo = false;
+			
+			if($nrc && $ciclo)
+				$status = true;
+			else
+				$status = false;
+				
+			if($status){
+				$arreglo = $verificador->limpiaSQL(array('nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo']));
+				
+				$consultaCurso = $this->model->consultaCurso($arreglo);
+				if($consultaCurso[0]){
+					//Charge the data with $consultaCurso[1]
+				}else{
+					//Charge an error, the error is on $consultaCurso[1]
+				}
+				
+			}else{
+				//Charge an error
+			}
+		}
 		
 		private function agregaEvaluacion(){
 			if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
