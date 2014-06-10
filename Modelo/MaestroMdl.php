@@ -390,6 +390,45 @@
 			$this->bd_driver->close();
 			return $status;
 		}
+		
+		function asistenciasClase($arreglo){
+			$miQuery = "SELECT IDCURSO FROM CURSO WHERE NRC = {$arreglo['nrc']} AND CICLO_CICLO = '{$arreglo['ciclo']}' ";
+
+			$result = $this->bd_driver->query($miQuery);
+			
+			if($result && $this->bd_driver->affected_rows == 1){
+				$status[0] = true;
+				//Now with the id we insert the student on this class and give his /her assitances
+				$todo = array();
+				while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+					$todo[] = $a;
+				$todo = $todo[0] //idcurso
+				
+				$miQuery = "SELECT * FROM ASISTENCIA WHERE ID_CURSO = {$todo['idcurso']} AND VISIBLE = 1";
+				
+				$result = $this->bd_driver->query($miQuery);
+				
+				if($result && $this->bd_driver->affected_rows == 1){
+					$todo = array();
+					while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+						$todo[] = $a;
+					$status[0] = true;
+					$status[1] = $todo;
+				}else{
+					$status[0] = false;
+					$status[1] = $this->bd_driver->error;
+				}
+				
+			}else{
+				$status[0] = false;
+				$status[1] = $this->bd_driver->error;
+			}
+
+
+			$this->bd_driver->close();
+			return $status;
+		
+		}
 
 		
 		function consultarCalificacion($datos){//Falta esta

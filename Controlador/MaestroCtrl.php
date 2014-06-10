@@ -151,7 +151,7 @@
 					
 					$consultaAlumno = $this->model->misAsistencias($arreglo);
 					
-					if($consultaAlumno){
+					if($consultaAlumno[0]){
 						//Assistances on $consultaAlumno[1]
 					}else{
 						//Error on $consultaAlumno[0]
@@ -162,7 +162,34 @@
 					//CHARGE AN ERROR
 				}
 			}else{
-			
+				if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
+				else $nrc = false;
+						
+				if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
+				else $ciclo = false;
+				
+				
+				if($nrc && $ciclo){
+					$status = true;
+				}else{
+					$status = false;
+				}
+				
+				if($status){
+					$arreglo = $verificador->limpiaSQL(array('nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo']));
+					
+					$consulta = $this->model->asistenciasClase($arreglo);
+					
+					if($consultaAlumno[0]){
+						//Assistances on $consulta[1]
+					}else{
+						//Error on $consulta[0]
+					}
+					
+					
+				}else{
+					//CHARGE AN ERROR
+				}
 			
 			}
 		
