@@ -113,6 +113,10 @@
 							$this->matricularse();
 						break;
 						
+						case 'darsebaja':
+							$this->darseBaja();
+							break;
+						
 						case 'consultaCurso':
 							$this->consultaCurso();
 							break;
@@ -148,6 +152,41 @@
 				}
 			}
     	}
+		
+		//DELETE A STUDENT FROM THE CLASS
+		private function darseBaja(){
+			if(isset($_POST['codigo']))
+				$codigo = $verificador->validaNrc($_POST['nrc']);
+			else
+				$codigo = false;
+				
+			if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
+			else $nrc = false;
+					
+			if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
+			else $ciclo = false;
+			
+			if($codigo && $nrc && $ciclo)
+				$status = true;
+			else
+				$status = false;
+				
+			if($status){
+				$arreglo = array('codigo' => $_POST['codigo'], 'nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo']);
+				$arreglo = $verificador->limpiaSQL($arreglo);
+				
+				$baja = $this->model->bajaCurso($arreglo);
+				
+				if($baja[0]){
+					//CHARGE A SUCCESS VIEW
+				}else{
+					//CHARGE THE ERROR WITH $baja[1] 
+				}
+			}else{
+				//CHARGE AN ERROR
+			}
+		
+		}
 		//UPDATE A STUDENT ON THIS CLASS
 		private function matricularse(){
 			if(isset($_POST['codigo']))

@@ -253,6 +253,41 @@
 		
 		}
 		
+		//DELETE FROM THE COURSE
+		function bajaCurso($arreglo){
+			$miQuery = "SELECT IDCURSO FROM CURSO WHERE NRC = {$arreglo['nrc']} AND CICLO_CICLO = '{$arreglo['ciclo']}' ";
+
+			$result = $this->bd_driver->query($miQuery);
+			
+			if($result && $this->bd_driver->affected_rows == 1){
+				//Now with the id we're going to search his / her class and delete from it
+				$todo = array();
+				while($a = $result->fetch_assoc())//fetch_assoc(MYSQL_NUM) OR MYSQL_ASSOC
+					$todo[] = $a;
+				$todo = $todo[0] //idcurso
+				$miQuery = "DELETE FROM CURSANDO WHERE ALUMNO_CODIGO = '{$arreglo['codigo']}' AND  CURSO_IDCURSO = {$todo['idcurso']}";
+				
+				$result = $this->bd_driver->query($miQuery);
+				
+				if($result && $this->bd_driver->affected_rows == 1){
+					$status[0] = true;
+					
+				}else{
+					$status[0] = false;
+					$status[1] = $this->bd_driver->error;
+				}
+				
+			
+			}else{
+				$status[0] = false;
+				$status[1] = $this->bd_driver->error;
+			}
+		
+			$this->bd_driver->close();
+			$return $status;
+		
+		}
+		
 		//Modify the course
 		function modificaCurso($arreglo){
 			$miQuery = "UPDATE CURSO SET ";
