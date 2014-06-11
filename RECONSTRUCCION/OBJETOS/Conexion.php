@@ -27,5 +27,17 @@
 		function cerrarConexion(){
 			$db_driver->close();
 		}
+		
+		function limpiaSQL($variables) {//Posibility to use with the other controllers because is more standard this function
+			foreach ($variables as $llave => $valor) {
+				if (is_string($valor)) {
+					$valor = ltrim($valor);
+					$valor = rtrim($valor);
+					$variables[$llave] = $valor;
+				}
+			}//Look this wonderful code :D we are gonna to use to another controllers to clean the values.
+
+			return $variables;
+		}
 	}
 ?>

@@ -1,8 +1,8 @@
 ﻿<?php
 	/**
-	 * @author: J. Rizo Orozco & Jesus Alberto Ley Ayón
+	 * @author: J. Rizo Orozco & Jesus Alberto Ley Ayón & Jorge Eduardo Garza
 	 * @since: 27/Feb/2014
-	 * @version Alpha
+	 * @version 1.5
 	 * Project J&J ProyeccionEscolar
 	 * In this project we are going to make a Online Qualifications Systems for some school 
 	 * trying to cover the most important task that concerns teachers, admins and students
@@ -29,8 +29,9 @@
 	 $_POST['accion']['equipo'] = 'J&J';
 	 */
 	 
-	 if (!isset($_SESSION)){ //We ask first of the session 
+	if (!isset($_SESSION)) {
 		session_start();
+<<<<<<< HEAD
 
 		if(!isset($_SESSION['user']))
 			require('Vista\login.html');
@@ -51,29 +52,43 @@
 				case 'maestro':
 					require('Controlador/MaestroCtrl.php');
 					$controlador = new MaestroCtrl();
+=======
+	} else {
+		if (isset($_SESSION['user']) && isset($_SESSION['tipo'])) {
+			switch($_SESSION['tipo']) {
+				case 1 :
+					require_once ('VISTAS/COMUNES/indexAdministrador.htlm');
+>>>>>>> origin/master
 					break;
-				case 'login'://Controller for Login
-					require('Controlador/LoginCtrl.php');
-					$controlador = new LoginCtrl();
+	
+				case 2 :
+					require_once ('VISTAS/COMUNES/indexMaestro.htlm');
 					break;
-				case 'admin':
-					require('Controlador/AdminCtrl.php');
-					$controlador = new AdminCtrl();
-					break;					
-				default: //The user still need to login, we can't do anything if he / she is not logged
-					header('Location: Vista/login.html');
+	
+				case 3 :
+					require_once ('VISTAS/COMUNES/indexAlumnohtlm');
 					break;
 			}
-			//if(isset($ctrlAlumno))
-			if(isset($controlador))
-				//$ctrlAlumno->ejecutar();
-				$controlador->ejecutar();
+	
+			if (isset($_GET['ctrl']) && preg_match("/[A-Za-z]+/", $_GET['usuario'])) {
+				$controlador = $_GET['ctrl'] . 'Ctrl';
+	
+				if (file_exists("ctrls/{$controlador}.php")) {
+					require_once ("ctrls/{$controlador}.php");
+					$ctrl = new $controlador();
+	
+				} else {
+					$error = "{$_GET['ctrl']} no es un controlador valido";
+					require_once ('VISTAS/ERRORES/opcionInvalida.html');
+				}
+	
+			} else {
+				//ctrl default
+				require_once ('ctrls/alumnosCtrl.php');
+				$ctrl = new alumnosCtrl();
+			}
+		} else {
+			require_once ("VISTAS/FORMULARIOS/login.html");
 		}
-		else{
-			header('Location: Vista/login.html');
-		}
-	  }
-	  else{
-			header('Location: Vista/login.html');
-	  }
+	}
 ?>
