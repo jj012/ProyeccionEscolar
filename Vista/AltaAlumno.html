@@ -1,4 +1,10 @@
-
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Proyeccion Escolar</title>
 
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 		
@@ -51,12 +57,12 @@
 					
 					<div class ="input">
 						<label for="Contraseña"> Ingrese su contraseña</label>
-						<input type="pass" id="pass1" name="pass1" required/>
+						<input type="password" id="pass1" name="pass1" required/>
 					</div>
 					
 					<div class ="input">
 						<label for="Contraseña2"> Vuelva a introducir la contraseña </label>
-						<input type="pass" oninput="comparaContrasenia()" id="pass2" name="pass2" required/>
+						<input type="password" oninput="comparaContrasenia()" id="pass2" name="pass2" required/>
 					</div>
 
 					
@@ -65,13 +71,8 @@
 						<input type="email" id="correo" name="correo" required/>
 					</div>
 
-					<div class ="input">
-						<label id="textarea2" for="textarea">Comentarios</label>
-						<textarea id="textarea" name="textarea"wrap="hard">Escribe aqu&iacute;...</textarea>
-					</div>
-					
 					<div class ="input">	
-						<button type="submit">Enviar</button>			
+						<button type="submit" onclick="enviar()">Enviar</button>			
 					</div>
 				
 				</form>
@@ -102,5 +103,10 @@
 					}
 				}
 			}
+			
+			function enviar(){
+			
+			}
 		</script>
 		
+</html>
