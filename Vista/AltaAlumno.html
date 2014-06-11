@@ -13,36 +13,41 @@
 			<section id="FORMALUMNO">
 				<h1>Formulario Alumno</h1>
 			<div>
-				<form method="post" action="index.php?usuario=alumno&accion=alta">
+				<form method="post" id="formularioAlumno" action="http://localhost/ProyeccionEscolar/index.php?usuario=alumno&accion=alta">
 				
 					<div class ="input">
 						<label for="nombre">Ingrese su Nombre</label>
-						<input type="text" id="nombre" name="nombre" >
+						<input type="text" maxlength="25" id="nombre" name="nombre" >
 					</div>
 					
 					<div class ="input">
 						<label for="aMaterno">Ingrese su Apellido Materno</label>
-						<input type="text" id="aMaterno" name="aMaterno" required >
+						<input type="text" id="aMaterno" maxlength="25" name="aMaterno" required >
 					</div>
 					
 					<div class ="input">
 						<label for="aPaterno">Ingrese su Apellido Paterno </label>
-						<input type="text" id="aPaterno" name="aPaterno" required>
+						<input type="text" id="aPaterno"  maxlength="25" name="aPaterno" required>
 					</div>
 					
 					<div class="input">
 						<label for="Codigo">Ingrese codigo </label>
-						<input type="text" id="codigo" name="codigo" required>
+						<input type="text" id="codigo" maxlength="10" name="codigo" required>
 					</div>
 
 					<div class ="input">
-						<label for="github"> Url de Github </label>
-						<input type="url" id="github" name="github" />
+						<label for="github">Github </label>
+						<input type="text" id="github" maxlength="25"  name="github" />
+					</div>
+					
+					<div class ="input">
+						<label for="url">URL</label>
+						<input type="url" id="url" maxlength="50" name="url" />
 					</div>
 					
 					<div class ="input">
 						<label for="telefono">Ingrese tu tel&eacute;fono</label>
-						<input type="tel" id="telefono" name="telefono" required/>
+						<input type="tel" id="telefono" maxlength="10" name="telefono" required/>
 					</div>
 					
 					<div class="input">
@@ -57,30 +62,30 @@
 					
 					<div class ="input">
 						<label for="Contraseña"> Ingrese su contraseña</label>
-						<input type="password" id="pass1" name="pass1" required/>
+						<input type="password" id="pass1" maxlength="16" name="pass1" required/>
 					</div>
 					
 					<div class ="input">
 						<label for="Contraseña2"> Vuelva a introducir la contraseña </label>
-						<input type="password" oninput="comparaContrasenia()" id="pass2" name="pass2" required/>
+						<input type="password" oninput="comparaContrasenia()" maxlength="16" id="pass2" name="pass2" required/>
 					</div>
 
 					
 					<div class ="input">
 						<label for="correo">Ingresa tu correo</label>
-						<input type="email" id="correo" name="correo" required/>
+						<input type="email" id="correo" maxlength="25" name="correo" required/>
 					</div>
 
 					<div class ="input">	
-						<button type="submit" onclick="enviar()">Enviar</button>			
+						<button type="submit">Enviar</button>			
 					</div>
 				
 				</form>
 			</div>
 			</section>
 		</div>
-		
-		
+
+			<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script type="text/javascript">
 			function comparaContrasenia(){
 				contra1 = document.getElementById('pass1');
@@ -104,9 +109,24 @@
 				}
 			}
 			
-			function enviar(){
+			$("#formularioAlumno").submit(function(event){
+				dataEnviar = $("#formularioAlumno").serialize() + '&accion=alta&usuario=alumno'
+				console.log(dataEnviar);
+				    $.ajax({
+					   type: "POST",
+					   url: "http://localhost/ProyeccionEscolar/index.php?usuario=alumno&accion=alta",
+					   data: dataEnviar,// serializes the form's elements.
+					   success: function(dataEnviar)
+					   {
+						   console.log(dataEnviar); // show response from the php script.
+					   }
+					 });
+			 
+			 });
 			
-			}
+			
 		</script>
+			
+
 		
 </html>

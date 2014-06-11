@@ -1,4 +1,4 @@
-
+﻿
 ﻿<?php
 	class Verificador{
 		
@@ -48,54 +48,10 @@
 			if(preg_match("/[1-6]/",$dias))
 				return true;
 			else 
-=======
-<?php
-class Verificador {
 
-	public function validaCalificaciones($calificaciones) {
-
-		foreach ($calificaciones as $calificacion) {
-			if ($this -> validaCalificacion($calificacion) === -1)
->>>>>>> origin/master
 				return -1;
 		}
-		return true;
-	}
 
-	public function validaNombreCurso($nombrecurso) {//here we validate the syntaxis of the name of the course
-		if (preg_match("/^[a-zA-Z ñÑáéíóúâêîôûàèìòùäëïöü]+/", $nombrecurso))
-			return true;
-		else
-			return -1;
-	}
-
-	public function validaSeccion($seccion) {//function to validate the name of the section
-		if (preg_match("/[A-Za-z]+[0-9]+\-D[0-9]+/", $seccion))
-			return true;
-		else
-			return -1;
-	}
-
-	public function validaNrc($nrc) {//function to validate the nrc of the especific group
-		if (preg_match("/0[0-9]{4}/", $nrc))
-			return true;
-		else
-			return -1;
-	}
-
-	public function validaAcademia($academia) {//function to validate the syntaxis of the name of the academy
-		if (preg_match("/^[a-zA-Z ñÑáéíóúâêîôûàèìòùäëïöü]+/", $academia))
-			return true;
-		else
-			return -1;
-	}
-
-	public function validaDias($dias) {//function to validate the days of the class
-		if (preg_match("/[1-6]/", $dias))
-			return true;
-		else
-			return -1;
-	}
 
 	public function validaRubro($rubro) {
 		if (preg_match("/^[a-zA-Z ñÑáéíóúâêîôûàèìòùäëïöü]+/", $rubro))
@@ -265,26 +221,6 @@ class Verificador {
 			return false;
 	}
 
-	function validaNombre($cadena) {//Function to validate the syntax of name
-
-		$cadena = ltrim($cadena);
-		$cadena = rtrim($cadena);
-		//We clean the name first
-		if (preg_match("/^[A-Za-z\sñÑáéíóúâêîôûàèìòùäëïöü]+/", $cadena)) {
-			return true;
-		} else
-			return -1;
-	}
-
-	function validaCorreo($correo) {//Function to validate the syntax of email
-		$correo = ltrim($correo);
-		$correo = rtrim($correo);
-		//We clean the email first
-		if (preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/", $correo))
-			return true;
-		else
-			return -1;
-	}
 
 	public function validaFecha($fecha) {//Function to validate the date
 		$fecha = $this -> limpiaDato($fecha);

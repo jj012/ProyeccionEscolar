@@ -24,7 +24,6 @@ abstract class CtrlEstandar {
 	abstract function modifica();
 	abstract function consulta();
 	abstract function procesaPlantilla();
-	abstract function enviarMail($correo, $usuario, $msn);
 
 	function isLogged() {
 		//We verify the user is in the

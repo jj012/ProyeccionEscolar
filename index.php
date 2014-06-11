@@ -14,7 +14,7 @@
 	 * if theres no valid user or actions, appears a error message
 	 */
 	 //$_POST['accion']['ctrl']='alumno';
-	 
+	 /*
 	 $_POST['accion']['usuario'] ='alumno';
 	 $_POST['accion']['acccion']='listar';
 	 $_POST['accion']['grupo']='CC001';
@@ -27,6 +27,7 @@
 	 $_POST['accion']['git']='bewtenue123';
 	 $_POST['accion']['celular']='3313845969';
 	 $_POST['accion']['equipo'] = 'J&J';
+	 */
 	 
 	 if (!isset($_SESSION)){ //We ask first of the session 
 		session_start();
@@ -38,8 +39,7 @@
 		}
 
 	 }
-	
-	 	  
+	 
 	  if(isset($_GET['usuario'])){//Check if in POST exists the user
 		if(preg_match("/[A-Za-z]+/",$_GET['usuario'])){ // The string must be alphabetic
 			switch($_GET['usuario']){

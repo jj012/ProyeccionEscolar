@@ -88,7 +88,6 @@
 							}
 							else
 								$this->alta();
-								$this->enviarmail();
 							
 						break;
 						case 'baja':
@@ -107,6 +106,7 @@
 						default:// Case rare
 						include('Vista/erroresAlumno.php');
 						falloControlador(2);
+						var_dump($_POST);
 						break;
 						////////////
 					}
@@ -122,6 +122,8 @@
 				falloControlador(2);
 			}
 	}
+	
+	public function procesaPlantilla(){}
 	
 	public function alta(){//INSERT
 		if($this->isLogged()){
