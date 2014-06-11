@@ -8,7 +8,7 @@
  **/
  
 require_once ("Verificador.php");
-abstract class CtrlEstandar {
+interface CtrlEstandar {
 
 	protected $model;
 	protected $diccionarioEstandar;
@@ -18,13 +18,13 @@ abstract class CtrlEstandar {
 		$verificador = new Verificador;
 	}
 
-	abstract function ejecutar();
-	abstract function alta();
-	abstract function baja();
-	abstract function modifica();
-	abstract function consulta();
-	abstract function procesaPlantilla();
-	abstract function enviarMail($correo, $usuario, $msn);
+	function ejecutar();
+	function alta();
+	function baja();
+	function modifica();
+	function consulta();
+	function procesaPlantilla();
+	function enviarMail($correo, $usuario, $msn);
 
 	function isLogged() {
 		//We verify the user is in the
@@ -32,18 +32,6 @@ abstract class CtrlEstandar {
 			return true;
 		else
 			return false;
-	}
-
-	function limpiaSQL($variables) {//Posibility to use with the other controllers because is more standard this function
-		foreach ($variables as $llave => $valor) {
-			if (is_string($valor)) {
-				$valor = ltrim($valor);
-				$valor = rtrim($valor);
-				$variables[$llave] = $valor;
-			}
-		}//Look this wonderful code :D we are gonna to use to another controllers to clean the values.
-
-		return $variables;
 	}
 
 	function enviaCorreo($correo, $usuario, $msn) {
@@ -80,10 +68,6 @@ abstract class CtrlEstandar {
 
 		}
 	}
-<<<<<<< HEAD
-=======
-
->>>>>>> e1769813632b5ab78ba489a7508a3554895204b3
 	
 	protected function validaCorreo($correo){//Function to validate the syntax of email
 		$correo = ltrim($correo);
@@ -94,14 +78,10 @@ abstract class CtrlEstandar {
 			return -1;
 	}
 
-
-<<<<<<< HEAD
-};
-=======
-
 }
 
->>>>>>> e1769813632b5ab78ba489a7508a3554895204b3
+
+
 
 ?>
 

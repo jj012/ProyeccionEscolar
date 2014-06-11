@@ -1,7 +1,7 @@
 <?php
 
 	
-	abstract class MdlEstandar{
+	interface MdlEstandar{
 		protected $bd_driver;
 		
 			function __construct(){
