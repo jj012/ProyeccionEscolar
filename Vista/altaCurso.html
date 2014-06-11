@@ -6,7 +6,58 @@
 		
 		
 		<form method="post" action="index.php?usuario=maestro&accion=altaCurso">
-			<table id="tablaRubro">
+			
+			<header class="formProfes">
+				Formato de Evaluacion de Curso
+			</header>
+			<div id="mainform">
+				<fieldset class="formEvaluacion">
+					<table class="tablasRubros">
+						<thead>
+							<th>Rubro</th>
+							<th>Porcentaje</th>
+							<th>Hoja Extra</th>
+						</thead>
+						<tbody>
+							<tr class="rubro">
+	
+								<td>
+								<input type="text" name="actividad" required  />
+								</td>
+								<td>
+								<input type="number" name="porcentaje" value="0" onkeyup="calcularTotal(this)" />
+								</td>
+								<td>
+								<input type="checkbox" name="hojaextra[]" value="0"  onchange="hojaExtra(this)"/>
+								</td>
+	
+							</tr>
+						</tbody>
+						
+	
+					</table>
+				</fieldset>
+				
+			</div>
+			
+			<table id="totalActividades">
+				<tr id="final">
+					<td colspan="2">
+						<input disabled value="Total" />
+					</td>
+					<td>
+						<input type="number" required id="total" disabled value="0"  min="0" max="100" />
+					</td>
+				</tr>
+			</table>
+			
+			
+			
+			
+			
+			
+			
+			<!--<table id="tablaRubro">
 				<caption>Formato de Evaluacion de Curso</caption>
 					
 					<thead>
@@ -42,12 +93,12 @@
 						</tr>
 					</tbody>
 					
-			</table>
+			</table>-->
 		</form>
 		<div class="formProfes">
 			<fieldset>
 				<button type="button" onclick="agregaRubro()">Agrega Rubro</button>
-				<button type="button" onclick="eliminaRubro()">Elimina Rubro</button>
+				<button type="button" onclick="eliminaRubro() ">Elimina Rubro</button>
 			</fieldset>	
 		</div>	
 		<div class="hoja">
@@ -61,9 +112,12 @@
 			 var $rubro;
 			 var $cont,$cont2=0;
 			 var extra; 
+			 var col;
+			 
 			(function(){
-				$rubro = $("#tablaRubro tbody tr.rubro:first-child").clone();
-				extra  = '<table class="tablaExtra"><thead><th>SubActividad</th><th>Porcentaje</th></thead><tbody><tr class="rubro"><td><input type="text" name="actividades" /></td><td><input type="number" name="actividades" onkeyup="calcularTotal(this)" /></td></td></tr></tbody><tbody><tr id="final"><td><input disabled value="Total" /></td><td><input type="number" id="total" disabled min="0" max="100" /></td></tr></tbody></table>';
+				$rubro = $("div#mainform fieldset.formEvaluacion").clone();
+				extra  = '<table class="tablaExtra"><thead><th>SubActividad</th><th>Porcentaje</th></thead><tbody><tr class="rubro"><td><input type="text" name="actividades" /></td><td><input type="number" name="actividades" onkeyup="calcularTotal(this)" /></td></td></tr></tbody><tbody><tr id="final"><td><input disabled value="Total" /></td><td><input type="number" id="total" value="0" disabled min="0" max="100" /></td></tr></tbody></table>';
+				col = '<td class="columnaextra"><input type="number" required id="total" min="0" value="0" /></td>';
 				
 				$cont = 1;
 			})();
@@ -71,7 +125,7 @@
 						
 			function agregaRubro(){
 				$rubro2 = $rubro.clone();
-				$rubro2.insertBefore($('#tablaRubro tbody:last-child'));
+				$rubro2.insertAfter($('#mainform fieldset.formEvaluacion:last-child'));
 				$cont++;
 				console.log($cont);
 				
@@ -79,7 +133,7 @@
 			
 			function eliminaRubro(){
 				if($cont>1){
-				$(" tbody:last-child").prev().remove();
+				$("#mainform fieldset.formEvaluacion:last-child").prev().remove();
 				$cont--;
 				console.log($cont);
 				calcularTotal();
@@ -87,30 +141,46 @@
 			}
 			
 			function calcularTotal(actividades){
-				
 				var $valor=0;
-				$('#tablaRubro .rubro td:nth-child(2) input').each(
+				$('#mainform fieldset.formEvaluacion .tablasRubros td:nth-child(2) input').each(
 					function(index,value){
+						if($(this).value == null){
+							$valor = 0;
+						}
+						else{
 						$valor = $valor + eval($(this).val());
 						console.log($valor);
+						}
 					}
 				);
 				$('#total').attr('value',$valor);
-				
-				
 			}	
 			
 			function hojaExtra(hoja){
-				var aux = new Array();
-				var i = 0;			
-				
-				console.log($cont2);
-				if(!$(this).prop('checked')){
-					$('div.hoja div').after(extra).prev();
+				if($(hoja).prop('checked')==true && $('#mainform fieldset.formEvaluacion .tablasRubros td:nth-child(4) input').value!='0'){
+					if($('#mainform fieldset.formEvaluacion .tablasRubros td:nth-child(4) input').value!='0'){
+						$('#mainform fieldset.formEvaluacion .tablasRubros td:nth-child(3)').after(col);
+					}
 				}
 				else{
-					$('div.hoja:last-child').prev().remove();
+					if($(hoja).prop('checked')==false){
+						$('#mainform fieldset.formEvaluacion .tablasRubros td:nth-child(4)').not($('td')).remove();
+					}
 				}
+				/*var aux = new Array();
+				//console.log('1');			
+				//console.log($cont2);
+				if($(this).prop('checked')==true){
+					console.log('1');
+					$('div.hoja div').after(extra).prev();
+					
+				}
+				else{
+					if($(this).prop('checked')==false){
+					//$(this).removeAttr('')
+					$('div.hoja:last-child').prev().remove();
+					}
+				}*/
 				/*$('#tablaRubro .rubro td:nth-child(3) input').each(
 					function(index,value){
 						if(){
