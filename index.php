@@ -51,19 +51,21 @@
 				case 'maestro':
 					require('Controlador/MaestroCtrl.php');
 					$controlador = new MaestroCtrl();
-	} else {
+					break;
+			}
+	}else {
 		if (isset($_SESSION['user']) && isset($_SESSION['tipo'])) {
 			switch($_SESSION['tipo']) {
 				case 1 :
-					require_once ('VISTAS/COMUNES/indexAdministrador.htlm');
+					require_once ('VISTAS/COMUNES/indexAdministrador.html');
 					break;
 	
 				case 2 :
-					require_once ('VISTAS/COMUNES/indexMaestro.htlm');
+					require_once ('VISTAS/COMUNES/indexMaestro.html');
 					break;
 	
 				case 3 :
-					require_once ('VISTAS/COMUNES/indexAlumnohtlm');
+					require_once ('VISTAS/COMUNES/indexAlumno.html');
 					break;
 			}
 	
