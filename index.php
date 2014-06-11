@@ -31,7 +31,6 @@
 	 
 	if (!isset($_SESSION)) {
 		session_start();
-<<<<<<< HEAD
 
 		if(!isset($_SESSION['user']))
 			require('Vista\login.html');
@@ -52,13 +51,11 @@
 				case 'maestro':
 					require('Controlador/MaestroCtrl.php');
 					$controlador = new MaestroCtrl();
-=======
 	} else {
 		if (isset($_SESSION['user']) && isset($_SESSION['tipo'])) {
 			switch($_SESSION['tipo']) {
 				case 1 :
 					require_once ('VISTAS/COMUNES/indexAdministrador.htlm');
->>>>>>> origin/master
 					break;
 	
 				case 2 :
