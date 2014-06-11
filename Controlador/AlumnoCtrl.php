@@ -88,12 +88,15 @@
 							}
 							else
 								$this->alta();
-								$this->enviarmail();
 							
 						break;
 						case 'baja':
 							$this->baja();
 						break;
+						
+						case'cargaMasiva':
+							$this->cargaArchivo();
+							break;
 						
 						case 'modifica':
 							$this->modifica();
@@ -107,6 +110,7 @@
 						default:// Case rare
 						include('Vista/erroresAlumno.php');
 						falloControlador(2);
+						var_dump($_POST);
 						break;
 						////////////
 					}
@@ -122,6 +126,24 @@
 				falloControlador(2);
 			}
 	}
+	
+	public function cargaMasiva(){
+		if (is_uploaded_file($_FILES['nombre_archivo_cliente']['tmp_name'])){
+			 $nombreDirectorio = "/directorio_archivos_movidos";
+			 $nombreFichero = $_FILES['nombre_archivo_cliente']['name'];
+			 
+			 $nombreCompleto = $nombreDirectorio . $nombreFichero;
+			 if (is_file($nombreCompleto)){
+				 $idUnico = time();
+				 $nombreFichero = $idUnico . "-" . $nombreFichero;
+			 }
+			 
+			move_uploaded_file($_FILES['nombre_archivo_cliente']['tmp_name'], $nombreDirectorio.$nombreFichero);
+		}else
+			echo "No se ha podido subir el fichero";
+	}
+	
+	public function procesaPlantilla(){}
 	
 	public function alta(){//INSERT
 		if($this->isLogged()){

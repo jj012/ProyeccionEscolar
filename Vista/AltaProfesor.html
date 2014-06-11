@@ -10,8 +10,8 @@
 		
 		<div>
 
-			<section id="FORMALUMNO">
-				<h1>Formulario Alumno</h1>
+			<section id="FORMPROFESOR">
+				<h1>Formulario Profesor</h1>
 			<div>
 				<form method="post" id="formularioAlumno" action="http://localhost/ProyeccionEscolar/index.php?usuario=alumno&accion=alta">
 				
@@ -33,31 +33,6 @@
 					<div class="input">
 						<label for="Codigo">Ingrese codigo </label>
 						<input type="text" id="codigo" maxlength="10" name="codigo" required>
-					</div>
-
-					<div class ="input">
-						<label for="github">Github </label>
-						<input type="text" id="github" maxlength="25"  name="github" />
-					</div>
-					
-					<div class ="input">
-						<label for="url">URL</label>
-						<input type="url" id="url" maxlength="50" name="url" />
-					</div>
-					
-					<div class ="input">
-						<label for="telefono">Ingrese tu tel&eacute;fono</label>
-						<input type="tel" id="telefono" maxlength="10" name="telefono" required/>
-					</div>
-					
-					<div class="input">
-						<label for="Carrera"> Elija la carrera </label>
-						<select name="Carrera" size="5">
-						  <option>1.Ingenieria en Computacion</option>
-						  <option>2.Ingenieria en Informatica</option>
-						  <option>3.Ingenieria en Electronica</option>
-						  <option>4.Ingenieria en Tacos</option>
-						</select>
 					</div>
 					
 					<div class ="input">
@@ -109,12 +84,12 @@
 				}
 			}
 			
-			$("#formularioAlumno").submit(function(event){
-				dataEnviar = $("#formularioAlumno").serialize() + '&accion=alta&usuario=alumno'
+			$("#formularioMaestro").submit(function(event){
+				dataEnviar = $("#formularioAlumno").serialize() + '&accion=alta&usuario=maestro'
 				console.log(dataEnviar);
 				    $.ajax({
 					   type: "POST",
-					   url: "http://localhost/ProyeccionEscolar/index.php?usuario=alumno&accion=alta",
+					   url: "http://localhost/ProyeccionEscolar/index.php?usuario=maestro&accion=alta",
 					   data: dataEnviar,// serializes the form's elements.
 					   success: function(dataEnviar)
 					   {

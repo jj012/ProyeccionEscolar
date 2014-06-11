@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Proyeccion Escolar</title>
+
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		
+		<div>
+
+			<section id="CARGAMASIVA">
+				<h1>Carga de Alumnos</h1>
+				<form action="index.php?usuario=alumno&accion=cargaMasiva" method="post" enctype="multipart/form-data">
+ 
+					<input type="file" name="nombre_archivo_cliente" /><br />
+					 
+					<input type="submit" name="enviar" value="Enviar" />
+					 
+					</form>
+		
+			</section>
+		</div>
+
+			<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script type="text/javascript">
+			function comparaContrasenia(){
+				contra1 = document.getElementById('pass1');
+				contra2 = document.getElementById('pass2');
+
+				if(contra1.value !== contra2.value){
+					if(document.getElementById('errorPass') == undefined){
+						var span = document.createElement("span");
+						span.setAttribute("id","errorPass");
+						var contenido = document.createTextNode("Contraseñas no iguales");
+						span.appendChild(contenido);
+						contra2.parentNode.appendChild(span);
+					}
+				}
+				else{
+					var error = document.getElementById('errorPass');
+					if(error !== undefined){
+						console.log("No debe entrar aqui");
+						contra2.parentNode.removeChild(error);
+					}
+				}
+			}
+			
+			$("#formularioMaestro").submit(function(event){
+				dataEnviar = $("#formularioAlumno").serialize() + '&accion=alta&usuario=maestro'
+				console.log(dataEnviar);
+				    $.ajax({
+					   type: "POST",
+					   url: "http://localhost/ProyeccionEscolar/index.php?usuario=maestro&accion=alta",
+					   data: dataEnviar,// serializes the form's elements.
+					   success: function(dataEnviar)
+					   {
+						   console.log(dataEnviar); // show response from the php script.
+					   }
+					 });
+			 
+			 });
+			
+			
+		</script>
+			
+
+		
+</html>

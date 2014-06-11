@@ -14,7 +14,7 @@
 	 * if theres no valid user or actions, appears a error message
 	 */
 	 //$_POST['accion']['ctrl']='alumno';
-	 
+	 /*
 	 $_POST['accion']['usuario'] ='alumno';
 	 $_POST['accion']['acccion']='listar';
 	 $_POST['accion']['grupo']='CC001';
@@ -27,22 +27,45 @@
 	 $_POST['accion']['git']='bewtenue123';
 	 $_POST['accion']['celular']='3313845969';
 	 $_POST['accion']['equipo'] = 'J&J';
+	 */
 	 
 	if (!isset($_SESSION)) {
 		session_start();
-	} else {
+
+		if(!isset($_SESSION['user']))
+			require('Vista\login.html');
+		else {
+			require('Vista\index.html');
+		}
+
+	 }
+	 
+	  if(isset($_GET['usuario'])){//Check if in POST exists the user
+		if(preg_match("/[A-Za-z]+/",$_GET['usuario'])){ // The string must be alphabetic
+			switch($_GET['usuario']){
+				case 'alumno':
+					require('Controlador/AlumnoCtrl.php');
+					//$ctrlAlumno = new AlumnoCtrl();
+					$controlador = new AlumnoCtrl();
+					break;
+				case 'maestro':
+					require('Controlador/MaestroCtrl.php');
+					$controlador = new MaestroCtrl();
+					break;
+			}
+	}else {
 		if (isset($_SESSION['user']) && isset($_SESSION['tipo'])) {
 			switch($_SESSION['tipo']) {
 				case 1 :
-					require_once ('VISTAS/COMUNES/indexAdministrador.htlm');
+					require_once ('VISTAS/COMUNES/indexAdministrador.html');
 					break;
 	
 				case 2 :
-					require_once ('VISTAS/COMUNES/indexMaestro.htlm');
+					require_once ('VISTAS/COMUNES/indexMaestro.html');
 					break;
 	
 				case 3 :
-					require_once ('VISTAS/COMUNES/indexAlumnohtlm');
+					require_once ('VISTAS/COMUNES/indexAlumno.html');
 					break;
 			}
 	
