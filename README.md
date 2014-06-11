@@ -90,16 +90,16 @@ www.proyeccionescolar.co.nf/index.php
 >Cambio de Contraseña
 
 ========================================================================================================================
-##Datos para probar el inicio de sesión
-Maestros
-idMaestro   Nombre                              Correo                      Password
-20000001 	Nancy Michelle Torres Villanueva 	lic.nancy.torres@gmail.com 	maestra
-20000000 	Abelardo Gomez Andrade 	            automatum@gmail.com 	    graficosAutomaticos
-20000002 	Luis Alberto Casillas Santillan 	casillasia@gmail.com 	    sistemas
+##Alcances Realizados Restantes
+>Generacion de correo para enviar en caso de alta alumno/profesor
+>Algunas plantillas
+>Codigo html con javascript, jquery, ajax haciendo validaciones y comprobaciones para enviar al servidor y recibir respuestas
 
-Admin
-idAdmin     Nombre                      Correo                  Password
-3000000 	Miguel Angel Ochoa Vazquez 	ochoadmin@hotmail.com 	pudin12345
+========================================================================================================================
+##Puntos importantes a terminar
+>Parte del Front end, armado y comunicacion entre Front-back
+>Generacion de archivos.
+>Funcionamiento en Servidor
 
 ========================================================================================================================
 ##Funcionalidad
@@ -112,6 +112,6 @@ variables a usar por POST
 
 * Esqueleto del MVC               |  16 de marzo 
 * Base de Datos y Sesiones        |  30 de marzo
-* Maquetado Web y Correos         |  Fecha Pendiente
+* Maquetado Web y Correos         |  13 Abril?
 * Frontend Dinamico               |  23 mayo
 * Generación y uso de Documentos  |  6 junio
