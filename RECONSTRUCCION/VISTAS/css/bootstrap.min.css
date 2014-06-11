@@ -31,18 +31,12 @@ div.input > label{
 	
 }
 
-div.select{
-	float:right;
-	witdth: 50%;
-	text-align:right;
-}
-
 div.input{
 	margin:10px 0;
 }
 
 input,textarea{
-	width 40%;
+	width 40%
 }
 form{
 	width:80%;

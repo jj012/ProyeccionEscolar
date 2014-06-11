@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="es" class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Practica HTML</title>
+        <meta name="description" content="Prueba de maquetado">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+		<link rel="icon" href="favicon.ico">
+		
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Add your site or application content here -->
+        <!-- <p>Hello world! This is HTML5 Boilerplate.</p> -->
+		<div>
+			<header id="LOGO">
+				LOGO
+			</header>
+			<aside id="MENU-IZQUIERDO">MENU IZQUIERDO
+			   <nav>
+				  <li class="parent"><a href="#">Cristalab</a>
+					 <ul>
+						<li><a href="#">Blogs</a></li>
+						<li><a href="#">Foros</a></li>
+						<li><a href="#">Tutoriales</a></li>
+						<li ><a href="#">Cursos</a></li>
+					 </ul>
+				  </li>
+				  <li><a href="#">Mejorando.la</a></li>
+				  <li><a href="#">L4C</a></li>
+				  <li class="parent"><a href="#">Mas de Cristalab</a>
+					 <ul>
+						<li><a href="#">Publica un tutorial</a></li>
+						<li><a href="#">¿Qué es Cristalab?</a></li>
+						<li><a href="#">Anime</a></li>
+					 </ul>
+				  </li>
+			   </nav>
+			</aside>
+			<section id="CONTENIDO">CONTENIDO DE TU SITIO
+			<div>
+				<ol>
+					<li>Realiza tu practica </li>
+					<li>Agrega href </li>
+					<li>Agrega Botones </li>
+				</ol>
+				
+				<table>
+					<caption>Jueves 1 de Noviembre</caption>
+					<thead>
+						<tr>
+							<th>Hora</th>
+							<th>Salon1</th>
+							<th>Salon2</th>
+							<th>Salon3</th>
+							<th>Salon4</th>
+							<th>Salon5<th>
+						</tr>	
+					</thead>	
+					<tbody>
+						<colgroup>
+							<tr>
+								<td>9:00</td>
+								<td colspan="5" id="mi1">Blabla</td> 
+							</tr>
+							<tr>
+								<td>10:00</td>
+							</tr>
+							<tr>
+								<td>11:00</td>
+							</tr>
+						</colgroup>
+						<tr>
+							<td>12:00</td>
+						</tr>
+						<tr>
+							<td>13:00</td>
+						</tr>
+						<tr>
+							<td>14:00</td>
+						</tr>
+						<tr>
+							<td>15:00</td>
+						</tr>
+						<tr>
+							<td>16:00</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			</section>
+			<aside id="MENU-DERECHO">MENU DERECHO
+				<div>
+					<ol>
+						<li><a href="https://www.facebook.com/" target="_blank"> Facebook </a></li>
+						<li><a href="https://twitter.com/" target="_blank"> Twitter </a></li>
+						<li><a href="https://linkedin.com/‎" target="_blank"> Linkedin </a></li>
+					</ol>
+				</div>
+			</aside>
+			<footer id="Pie">PIE
+			<div>
+				<ul>
+				   <li><a href="index.html" title="Enlace genérico">Elemento 1</a></li>
+				   <li><a href="index.html" title="Enlace genérico">Elemento 2</a></li>
+				   <li><a href="index.html" title="Enlace genérico">Elemento 3</a></li>
+				   <li><a href="index.html" title="Enlace genérico">Elemento 4</a></li>
+				   <li><a href="index.html" title="Enlace genérico">Elemento 5</a></li>
+				   <li><a href="index.html" title="Enlace genérico">Elemento 6</a></li>
+				</ul>
+				<li><a href="index.html" target="_blank" class="Inicio"> Ir al Inicio </a></li>
+			</div>
+			</footer>
+		</div>
+		
+		<script type="text/javascript">
+			function mostrarAlumno(id){
+				$.ajax({
+					type:'POST',
+					data: {idalumno.id},
+					url: 'datosAlumno.php',
+					dataType: 'json',
+					
+					success: function(json){
+						console.log(json);
+					}
+				
+				}
+			
+			
+			
+			}
+			
+			function muestra(){
+				$.ajax({
+					url:'consulta.php',
+					dataType: 'json',
+					success: function(json){
+						var select = document.getElementById("lista");
+						for(i in json){
+							var texto = document.createTextNode(json[i].nombre);
+							var 
+						}
+					}
+				}
+			}
+		</script>
+		
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+        <script src="js/plugins.js"></script>
+        <script src="js/main.js"></script>
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='//www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-XXXXX-X');ga('send','pageview');
+        </script>
+    </body>
+</html>

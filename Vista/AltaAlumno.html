@@ -1,4 +1,10 @@
-
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Proyeccion Escolar</title>
 
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 		
@@ -24,33 +30,11 @@
 						<input type="text" id="aPaterno" name="aPaterno" required>
 					</div>
 					
-					<div class ="input">
-						<label for="genero">G&eacute;nero: </label>
-						<fieldset>
-							<div>
-								<input type="radio" name="genero" value="Masculino" required/>Masculino
-							</div>
-							<div>
-								<input type="radio" name="genero" value="Femenino" required/>Femenino
-							</div>
-						</fieldset>
+					<div class="input">
+						<label for="Codigo">Ingrese codigo </label>
+						<input type="text" id="codigo" name="codigo" required>
 					</div>
-					
-					<div class ="input">
-						<label for="transporte"> Medio de Transporte: </label>
-						<fieldset>
-							<div>
-								<input type="checkbox" name="transporte" value="Bici" /> Bici
-							</div>
-							<div>
-								<input type="checkbox" name="transporte" value="Carro" />Carro
-							</div>
-							<div>
-								<input type="checkbox" name="transporte" value="Camion" />Camion
-							</div>
-						</fieldset>
-					</div>
-					
+
 					<div class ="input">
 						<label for="github"> Url de Github </label>
 						<input type="url" id="github" name="github" />
@@ -61,45 +45,34 @@
 						<input type="tel" id="telefono" name="telefono" required/>
 					</div>
 					
-					<div class ="input">
-						<label for="celphone">Ingresa tu num de cel</label>
-						<input type="tel" id="celphone" name="celphone" />
+					<div class="input">
+						<label for="Carrera"> Elija la carrera </label>
+						<select name="Carrera" size="5">
+						  <option>1.Ingenieria en Computacion</option>
+						  <option>2.Ingenieria en Informatica</option>
+						  <option>3.Ingenieria en Electronica</option>
+						  <option>4.Ingenieria en Tacos</option>
+						</select>
 					</div>
+					
+					<div class ="input">
+						<label for="Contraseña"> Ingrese su contraseña</label>
+						<input type="password" id="pass1" name="pass1" required/>
+					</div>
+					
+					<div class ="input">
+						<label for="Contraseña2"> Vuelva a introducir la contraseña </label>
+						<input type="password" oninput="comparaContrasenia()" id="pass2" name="pass2" required/>
+					</div>
+
 					
 					<div class ="input">
 						<label for="correo">Ingresa tu correo</label>
 						<input type="email" id="correo" name="correo" required/>
 					</div>
-					
-					<div class ="input">
-						<label for="edad">Ingresa tu edad</label>
-						<input type="number" id="edad" name="edad" min="1" max="75" required/>
-					</div>
-					
-					<div class ="input">
-						<label for="nacimiento">Fecha de Cumplea&ntilde;os</label> 
-						<input type="date" id="nacimiento" name="nacimiento" required />
-					</div>
-					
-					<div class ="input">
-						<label for="inteligencia">Elija su nivel de IQ</label>
-						<input type="range" id="inteligencia" name="inteligencia" min="0" max="5" />
-						<p id=int1>0</p> <p id=int2>5</p>
-					</div>
-					
-					<div class ="input">
-						<label id=imagen2 for="imagen">Sube tu foto </label>
-						<input id="imagen" name="imagen" type="file"
-						accept="image/*" />
-					</div>
-					
-					<div class ="input">
-						<label id=textarea2 for="textarea">Comentarios</label>
-						<textarea id="textarea" name="textarea"wrap="hard">Escribe aqu&iacute;...</textarea>
-					</div>
-					
+
 					<div class ="input">	
-						<button type="submit">Enviar</button>			
+						<button type="submit" onclick="enviar()">Enviar</button>			
 					</div>
 				
 				</form>
@@ -108,11 +81,32 @@
 		</div>
 		
 		
-<script type ="text/javascript">
+		<script type="text/javascript">
+			function comparaContrasenia(){
+				contra1 = document.getElementById('pass1');
+				contra2 = document.getElementById('pass2');
 
-	function algo(variable){
-		variable = variable.toUpperCase();
-	}
-
-</script>
+				if(contra1.value !== contra2.value){
+					if(document.getElementById('errorPass') == undefined){
+						var span = document.createElement("span");
+						span.setAttribute("id","errorPass");
+						var contenido = document.createTextNode("Contraseñas no iguales");
+						span.appendChild(contenido);
+						contra2.parentNode.appendChild(span);
+					}
+				}
+				else{
+					var error = document.getElementById('errorPass');
+					if(error !== undefined){
+						console.log("No debe entrar aqui");
+						contra2.parentNode.removeChild(error);
+					}
+				}
+			}
+			
+			function enviar(){
+			
+			}
+		</script>
 		
+</html>
