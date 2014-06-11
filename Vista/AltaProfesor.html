@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Proyeccion Escolar</title>
+
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		
+		<div>
+
+			<section id="FORMPROFESOR">
+				<h1>Formulario Profesor</h1>
+			<div>
+				<form method="post" id="formularioAlumno" action="http://localhost/ProyeccionEscolar/index.php?usuario=alumno&accion=alta">
+				
+					<div class ="input">
+						<label for="nombre">Ingrese su Nombre</label>
+						<input type="text" maxlength="25" id="nombre" name="nombre" >
+					</div>
+					
+					<div class ="input">
+						<label for="aMaterno">Ingrese su Apellido Materno</label>
+						<input type="text" id="aMaterno" maxlength="25" name="aMaterno" required >
+					</div>
+					
+					<div class ="input">
+						<label for="aPaterno">Ingrese su Apellido Paterno </label>
+						<input type="text" id="aPaterno"  maxlength="25" name="aPaterno" required>
+					</div>
+					
+					<div class="input">
+						<label for="Codigo">Ingrese codigo </label>
+						<input type="text" id="codigo" maxlength="10" name="codigo" required>
+					</div>
+					
+					<div class ="input">
+						<label for="Contraseña"> Ingrese su contraseña</label>
+						<input type="password" id="pass1" maxlength="16" name="pass1" required/>
+					</div>
+					
+					<div class ="input">
+						<label for="Contraseña2"> Vuelva a introducir la contraseña </label>
+						<input type="password" oninput="comparaContrasenia()" maxlength="16" id="pass2" name="pass2" required/>
+					</div>
+
+					
+					<div class ="input">
+						<label for="correo">Ingresa tu correo</label>
+						<input type="email" id="correo" maxlength="25" name="correo" required/>
+					</div>
+
+					<div class ="input">	
+						<button type="submit">Enviar</button>			
+					</div>
+				
+				</form>
+			</div>
+			</section>
+		</div>
+
+			<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script type="text/javascript">
+			function comparaContrasenia(){
+				contra1 = document.getElementById('pass1');
+				contra2 = document.getElementById('pass2');
+
+				if(contra1.value !== contra2.value){
+					if(document.getElementById('errorPass') == undefined){
+						var span = document.createElement("span");
+						span.setAttribute("id","errorPass");
+						var contenido = document.createTextNode("Contraseñas no iguales");
+						span.appendChild(contenido);
+						contra2.parentNode.appendChild(span);
+					}
+				}
+				else{
+					var error = document.getElementById('errorPass');
+					if(error !== undefined){
+						console.log("No debe entrar aqui");
+						contra2.parentNode.removeChild(error);
+					}
+				}
+			}
+			
+			$("#formularioMaestro").submit(function(event){
+				dataEnviar = $("#formularioAlumno").serialize() + '&accion=alta&usuario=maestro'
+				console.log(dataEnviar);
+				    $.ajax({
+					   type: "POST",
+					   url: "http://localhost/ProyeccionEscolar/index.php?usuario=maestro&accion=alta",
+					   data: dataEnviar,// serializes the form's elements.
+					   success: function(dataEnviar)
+					   {
+						   console.log(dataEnviar); // show response from the php script.
+					   }
+					 });
+			 
+			 });
+			
+			
+		</script>
+			
+
+		
+</html>
