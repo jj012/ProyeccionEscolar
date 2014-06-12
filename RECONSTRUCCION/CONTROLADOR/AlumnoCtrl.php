@@ -199,22 +199,28 @@
 				if($status){
 					$datosAlumno = array('nombre'=>$_POST['nombre'], 'correo'=> $_POST['correo'], 'carrera' => $_POST['carrera'], 'codigo' => $_POST['codigo'], 'contraseña' => $_POST['contraseña']);
 					if($url)
-						$datosAlumno['url'] = $_POST['url'];
+						$alumno.setWeb($_POST['url']);
 					else
-						$datosAlumno['url'] = false;
+						$alumno.setWeb(false);
 					if($git)
-						$datosAlumno['git'] = $_POST['git'];
+						$alumno.setGit($_POST['git']);
 					else
-						$datosAlumno['git'] = false;
+						$alumno.setGit(false);
 					if($celular)
-						$datosAlumno['celular'] = $_POST['celular'];
+						$alumno.setCelular($_POST['celular']);
 					else
-						$datosAlumno['celular'] = false;
+						$alumno.setCelular(false);
 						
 					$alumno.setNombre($_POST['nombre']);
-					$alumno.setC
+					$alumno.setApellidoP($_POST['apellidoP']);
+					$alumno.setApellidoM($_POST['apellidoM']);
+					$alumno.setCorreo($_POST['correo']);
+					$alumno.setCarrerra($_POST['carrera']);
+					$alumno.setId($_POST['codigo']);
+					$alumno.setContrasena($_POST['contraseña']);
+		
 
-					$status = $this->model->insertaAlumno($datosAlumno);
+					$status = $this->model->insertaAlumno($alumno);
 					if($status[0]){//On this part the query of insert in the database is done correctly
 						include('Vista/insercionAlumno.php');
 						//Send email of up on the website
