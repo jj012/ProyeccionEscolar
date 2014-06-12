@@ -6,19 +6,19 @@
 		private $nombreAcademia;
 		
 		public function getId(){
-			return $id;
+			return $this->id;
 		}
 		
 		public function getNombre(){
-			return $nombre;
+			return $this->nombre;
 		}
 		
 		public function getClave(){
-			return $clave;
+			return $this->clave;
 		}
 		
 		public function getAcademia(){
-			return $nombreAcademia;	
+			return $this->nombreAcademia;	
 		}
 		
 		public function setId($id){

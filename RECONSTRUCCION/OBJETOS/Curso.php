@@ -11,15 +11,15 @@
 
 		
 		public function getIdCurso(){
-			return $idCurso;
+			return $this->idCurso;
 		}
 		
 		public function getSeccion(){
-			return $seccion;
+			return $this->seccion;
 		}
 
 		public function getNRC(){
-			return $nrc;
+			return $this->nrc;
 		}
 
 		public function setIdCurso($idCurso){

@@ -28,23 +28,23 @@
 		}
 		
 		public function getIdAlumno(){
-			return $idAlumno;
+			return $this->idAlumno;
 		}
 		
 		public function getCarrera(){
-			return $carrera;
+			return $this->carrera;
 		}
 		
 		public function getCelular(){
-			return $celular;
+			return $this->celular;
 		}
 		
 		public function getGit(){
-			return $github;
+			return $this->github;
 		}
 		
 		public function getWeb(){
-			return $web;
+			return $this->web;
 		}
 	}
 ?>

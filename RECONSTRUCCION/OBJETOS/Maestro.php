@@ -4,7 +4,7 @@
 		private $idMaestro;
 		
 		public function getIdMaestro(){
-			return $idMaestro;
+			return $this->idMaestro;
 		}
 		
 		public function set($idMaestro){

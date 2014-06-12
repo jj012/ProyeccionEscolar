@@ -8,7 +8,7 @@
 		}
 		
 		public function get(){
-			return $idAdministrador;
+			return $this->idAdministrador;
 		}
 	}
 ?>

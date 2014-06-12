@@ -6,19 +6,19 @@
 		protected $salida;
 		
 		public function getIdHorario(){
-			return $idHorario;
+			return $this->idHorario;
 		}
 		
 		public function getDia(){
-			return $dia;
+			return $this->dia;
 		}
 		
 		public function getEntrada(){
-			return $entrada;
+			return $this->entrada;
 		}
 		
 		public function getSalida(){
-			return $salida;
+			return $this->salida;
 		}
 		
 		public function setIdHorario($idHorario){

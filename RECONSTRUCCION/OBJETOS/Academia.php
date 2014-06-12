@@ -4,11 +4,11 @@ class Academia {
 	private $nombre;
 
 	public function getId() {
-		return $id;
+		return $this->id;
 	}
 
 	public function getNombre() {
-		return $nombre;
+		return $this->nombre;
 	}
 
 	public function setId($id) {

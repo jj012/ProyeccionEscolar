@@ -9,31 +9,31 @@
 		protected $correo;
 		
 		public function getId(){
-			return $idUsuario;
+			return $this->idUsuario;
 		}
 		
 		public function getNombre(){
-			return $nombre;
+			return $this->nombre;
 		}
 		
 		public function getApellidoP(){
-			return $apellidop;
+			return $this->apellidop;
 		}
 		
 		public function getApellidoM(){
-			return $apellidom;
+			return $this->apellidom;
 		}
 		
 		public function getCodigo(){
-			return $codigo;
+			return $this->codigo;
 		}
 		
 		public function getContrasena(){
-			return $contrasena;
+			return $this->contrasena;
 		}
 		
 		public function getCorreo(){
-			return $correo;
+			return $this->correo;
 		}
 		
 		public function setId($idUsuario){

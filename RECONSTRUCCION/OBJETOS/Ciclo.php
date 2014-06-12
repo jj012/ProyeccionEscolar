@@ -22,19 +22,19 @@
 		}
 		
 		public function getId(){
-			return $id;	
+			return $this->id;	
 		}
 		
 		public function getCiclo(){
-			return $ciclo;
+			return $this->ciclo;
 		}
 		
 		public function getInicio(){
-			return $inicio;
+			return $this->inicio;
 		}
 		
 		public function getFin(){
-			return $fin;
+			return $this->fin;
 		}
 	}
 ?>
