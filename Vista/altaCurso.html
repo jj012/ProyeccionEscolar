@@ -11,34 +11,18 @@
 				Formato de Evaluacion de Curso
 			</header>
 			<div id="mainform">
-				<fieldset class="formEvaluacion">
-					<table class="tablasRubros">
-						<thead>
-							<th>Rubro</th>
-							<th>Porcentaje</th>
-							<th>Hoja Extra</th>
-						</thead>
-						<tbody>
-							<tr class="rubro">
-	
-								<td>
-								<input type="text" name="actividad" required  />
-								</td>
-								<td>
-								<input type="number" name="porcentaje" value="0" onkeyup="calcularTotal(this)" />
-								</td>
-								<td>
-								<input type="checkbox" name="hojaextra[]" value="0"  onchange="hojaExtra(this)"/>
-								</td>
-	
-							</tr>
-						</tbody>
-						
-	
-					</table>
-				</fieldset>
+				<div id="acomodo">
+				</div>
 				
 			</div>
+			
+			<div class="formProfes">
+				<fieldset>
+					<button type="button" onclick="agregaRubro()">Agrega Rubro</button>
+					<button type="button" onclick="eliminaRubro() ">Elimina Rubro</button>
+				</fieldset>	
+			</div>	
+			
 			
 			<table id="totalActividades">
 				<tr id="final">
@@ -95,119 +79,110 @@
 					
 			</table>-->
 		</form>
-		<div class="formProfes">
-			<fieldset>
-				<button type="button" onclick="agregaRubro()">Agrega Rubro</button>
-				<button type="button" onclick="eliminaRubro() ">Elimina Rubro</button>
-			</fieldset>	
-		</div>	
-		<div class="hoja">
+		
+		<div class="submit">
 			<div>
-				
+				<button type="button">Enviar</button>
 			</div>	
 		</div>
 			
 		
 		<script type="text/javascript">
-			 var $rubro;
-			 var $cont,$cont2=0;
-			 var extra; 
-			 var col;
-			 
-			(function(){
-				$rubro = $("div#mainform fieldset.formEvaluacion").clone();
-				extra  = '<table class="tablaExtra"><thead><th>SubActividad</th><th>Porcentaje</th></thead><tbody><tr class="rubro"><td><input type="text" name="actividades" /></td><td><input type="number" name="actividades" onkeyup="calcularTotal(this)" /></td></td></tr></tbody><tbody><tr id="final"><td><input disabled value="Total" /></td><td><input type="number" id="total" value="0" disabled min="0" max="100" /></td></tr></tbody></table>';
-				col = '<td class="columnaextra"><input type="number" required id="total" min="0" value="0" /></td>';
-				
-				$cont = 1;
-			})();
-				
-						
-			function agregaRubro(){
-				$rubro2 = $rubro.clone();
-				$rubro2.insertAfter($('#mainform fieldset.formEvaluacion:last-child'));
+			var $rubro;
+			var $cont = 1, $cont2 = 0;
+			var extra;
+			var col;
+			var i = 0;
+			var field = 'field1';
+			var nameid;
+			
+			function agregaRubro() {
+				field = 'field' + $cont;
+				//$rubro = '<fieldset id="'+field+' class="formEvaluacion"><tableclass="tablasRubros"><thead><th>Rubro</th><th>Porcentaje</th><th>Hoja Extra</th></thead><tbody><trclass="rubro"><td><input type="text"name="actividad" required  /></td><td><inputtype="number" name="porcentaje" value="0"onkeyup="calcularTotal(this)" /></td><td><inputtype="checkbox" name="hojaextra[]" value="0"onchange="hojaExtra(this)"/></td></tr></tbody></table></fieldset>';
+				$rubro = '<fieldset id="' + field + '" class="formEvaluacion"><table class="tablasRubros"><thead><th>Rubro</th><th>Porcentaje</th>	<th>Hoja Extra</th></thead><tbody><tr class="rubro"><td><input type="text" name="actividad" required  /></td><td><input type="number" name="porcentaje" value="0" onkeyup="calcularTotal(this)" /></td><td><input type="checkbox" name="hojaextra[]" value="0"  onchange="hojaExtra(this)"/></td></tr></tbody></table></fieldset>';
+				$rubro2 = $rubro;
+				$('#mainform div#acomodo').before($rubro2);
 				$cont++;
-				console.log($cont);
-				
+				console.log($('#' + field + ''));
+
 			}
-			
-			function eliminaRubro(){
-				if($cont>1){
-				$("#mainform fieldset.formEvaluacion:last-child").prev().remove();
-				$cont--;
-				console.log($cont);
-				calcularTotal();
+
+			function eliminaRubro() {
+				if ($cont > 1) {
+					$("#acomodo").prev().remove();
+					$cont--;
+					console.log($cont);
+					calcularTotal();
 				}
 			}
-			
-			function calcularTotal(actividades){
-				var $valor=0;
-				$('#mainform fieldset.formEvaluacion .tablasRubros td:nth-child(2) input').each(
-					function(index,value){
-						if($(this).value == null){
-							$valor = 0;
-						}
-						else{
+
+			function calcularTotal(actividades) {
+				//var $valor = 0;
+				$('#mainform fieldset.formEvaluacion .tablasRubros td:nth-child(2) input').each(function(index, value) {
+					if (Number($(actividades).val())) {
+						//$valor = 0;
 						$valor = $valor + eval($(this).val());
-						console.log($valor);
+						//console.log(actividades);
+					} else {
+						//$('#total').attr();
+						return true;
+						//console.log($valor);
+					}
+				});
+				$('#total').attr('value', $valor);
+			}
+
+			function hojaExtra(hoja) {
+				nameid = 'total' + i;
+				//var nameid2= ;
+				//console.log(nameid);
+				col = '<td class="columnaextra"><div><input id="' + nameid + '" type="number" min="0" value="0" onkeyup="agregaSubRubro(event,this)" /> </div> </td>';
+				col2 = col;
+				//console.log($('#mainform fieldset.formEvaluacion .tablasRubros td:nth-child(4) input#'+nameid+'').prop('id'));
+				//console.log($('#'+nameid+''));
+				//$('#mainform fieldset.formEvaluacion .tablasRubros td:nth-child(4) input#'+nameid+'').prop('id','nameid');
+				if ($(hoja).prop('checked') == true) {
+					//$(hoja).after(col2);
+					aux = $(hoja).parent().after(col2);
+					//console.log(aux);
+					i++;
+					//console.log($('#'+nameid+''));
+				}
+				if ($(hoja).prop('checked') == false) {
+
+					aux = $(hoja).parent().next().remove();
+					$(hoja).parent().parent().parent().parent().parent().children().not($('.tablasRubros')).remove();
+					//.remove();
+					console.log(aux);
+					i--;
+					//console.log($('#'+nameid+''));
+				}
+			}
+
+			function agregaSubRubro(evt,Sub) {
+				var subrub ='<table class="subrubros"><thead><th>Actividad</th><th>Porcentaje del Rubro</th></thead><tbody><tr class="rubro"><td><input type="text" name="subactividad" required  /></td><td><input type="number" name="subporcentaje" value="0" onkeyup="calcularSubTotal(this)" /></td><td></td></tr></tbody></table>';
+				var aux= $(Sub).prop('id');
+				//var ajd= false;
+				//var value = Number($(Sub).val());
+				
+					if(Number($(Sub).val())){
+						for(var i=0;i<$(Sub).val();i++){
+							$('#'+aux+'').parent().parent().parent().parent().parent().after(subrub);
+							console.log($('#'+aux+'').parent().parent().parent().parent().parent());	
 						}
-					}
-				);
-				$('#total').attr('value',$valor);
-			}	
-			
-			function hojaExtra(hoja){
-				if($(hoja).prop('checked')==true && $('#mainform fieldset.formEvaluacion .tablasRubros td:nth-child(4) input').value!='0'){
-					if($('#mainform fieldset.formEvaluacion .tablasRubros td:nth-child(4) input').value!='0'){
-						$('#mainform fieldset.formEvaluacion .tablasRubros td:nth-child(3)').after(col);
-					}
-				}
-				else{
-					if($(hoja).prop('checked')==false){
-						$('#mainform fieldset.formEvaluacion .tablasRubros td:nth-child(4)').not($('td')).remove();
-					}
-				}
-				/*var aux = new Array();
-				//console.log('1');			
-				//console.log($cont2);
-				if($(this).prop('checked')==true){
-					console.log('1');
-					$('div.hoja div').after(extra).prev();
+						//console.log($(Sub).val().children());
+					}else{
+						asd=$('#'+aux+'').parent().parent().parent().parent().parent().parent().children().not($('.tablasRubros')).remove();
+						console.log(asd);
+					}	
 					
 				}
-				else{
-					if($(this).prop('checked')==false){
-					//$(this).removeAttr('')
-					$('div.hoja:last-child').prev().remove();
-					}
-				}*/
-				/*$('#tablaRubro .rubro td:nth-child(3) input').each(
-					function(index,value){
-						if(){
-							$cont2++;
-							if($cont==$cont2){
-							console.log(this);
-							
-							$('div.hoja div').after(extra).prev();
-							console.log('aquiestoy');
-							}
-						}
-						else{
-							$cont2--;
-							$('div.hoja:last-child').prev().remove();
-							/*if(!$(this).prop('checked')==true){
-							console.log(this);
-							$('#hoja').after(extra);
-							console.log('aca tambien');
-							
-							}
-						}
-					}
-				);*/
+				
+			function calcularSubTotal(subtotal){
+				
 			}
 			
-			
-		</script>
+	</script>
 		
 		
 		
