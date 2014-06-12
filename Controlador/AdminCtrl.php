@@ -16,7 +16,7 @@
     	public $model;
 		
 		public function __construct(){//Charge the model Admin
-			$verificador = new Verificador;
+			$verificador = new Verificador();
 			require('Modelo/AdminMdl.php');
 			$this->model = new AdminMdl();
 		}
@@ -86,17 +86,17 @@
 			}
 								
 			if(isset($_POST['fechaInicio']))
-				$fechaInicio = $this->validaFecha($_POST['fechaInicio']);
+				$fechaInicio = $verificador->validaFecha($_POST['fechaInicio']);
 			else
 				$fechaInicio = false;
 									
 			if(isset($_POST['fechaFin']))
-				$fechaFin = $this->validaFecha($_POST['fechaFinal']);
+				$fechaFin = $verificador->validaFecha($_POST['fechaFinal']);
 			else
 				$fechaFin = false;
 									
 			if(isset($_POST['fechasDescanso']))
-				$fechasDescanso = $this->validaGrupoFecha($_POST['fechasDescanso']);
+				$fechasDescanso = $verificador->validaGrupoFecha($_POST['fechasDescanso']);
 			else
 				$fechasDescanso = false;
 									
@@ -114,7 +114,7 @@
 						$datos = array();
 						$datos['fechaInicio'] = $this->formatoFecha($_POST['fechaInicio']);
 						$datos['fechaFin'] = $this->formatoFecha($_POST['fechaFin']);
-						$datos['ciclo'] = $this->limpiaDato($_POST['ciclo']);
+						$datos['ciclo'] = $verificador->limpiaDato($_POST['ciclo']);
 						$datos['usuario'] = $_SESSION['user'];
 										
 						if($fechaDescanso){
@@ -144,17 +144,17 @@
 		
 		public function modificaCiclo(){
 			if(isset($_POST['fechaModificar']))
-				$fechaModificar = $this->validaFecha($_POST['fechaModificar']);
+				$fechaModificar = $verificador->validaFecha($_POST['fechaModificar']);
 			else
 				$fechaModificar = false;
 			
 			if(isset($_POST['ciclo']))
-				$ciclo = $this->validaCiclo($_POST['ciclo']);
+				$ciclo = $verificador->validaCiclo($_POST['ciclo']);
 			else
 				$ciclo = false;
 				
 			if(isset($_POST['fechaNueva']))
-				$fechaNueva = $this->validaFecha($_POST['fechaNueva']);
+				$fechaNueva = $verificador->validaFecha($_POST['fechaNueva']);
 			else
 				$fechaNueva = false;
 				
@@ -162,7 +162,7 @@
 				$datos = array();
 				$datos['fechaVieja'] = $this->formatoFecha($_POST['fechaModificar']);
 				$datos['fechaNueva'] = $this->formatoFecha($_POST['fechaNueva']);
-				$datos['ciclo'] = $this->limpiaDato($_POST['ciclo']);
+				$datos['ciclo'] = $verificador->limpiaDato($_POST['ciclo']);
 				
 				$modifica = $this->model->modificaCiclo($datos);
 				
@@ -180,15 +180,9 @@
 			}
 		
 		}
-		
-		public function limpiaDato($dato){
-			$dato = ltrim($dato);
-			$dato = rtrim($dato);
-			return $dato;
-		}
-		
+
 		public function formatoFecha($fecha){
-			$fecha = $this->limpiaDato($fecha);
+			$fecha = $verificador->limpiaDato($fecha);
 			$fecha = DateTime::createFromFormat('d/m/Y', $fecha);
 			$fecha = $fecha->format('Y-m-d');
 			

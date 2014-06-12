@@ -220,6 +220,14 @@
 		else
 			return false;
 	}
+	
+			
+		public function limpiaDato($dato){
+			$dato = ltrim($dato);
+			$dato = rtrim($dato);
+			return $dato;
+		}
+		
 
 
 	public function validaFecha($fecha) {//Function to validate the date
