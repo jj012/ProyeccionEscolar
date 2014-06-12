@@ -22,19 +22,19 @@
 		}
 		
 		public function setIdHorario($idHorario){
-			this.$idHorario=$idHorario;
+			$this->idHorario=$idHorario;
 		}
 		
 		public function setDia($dia){
-			this.$dia=$dia;
+			$this->dia=$dia;
 		}
 		
 		public function setEntrada($entrada){
-			this.$entrada=$entrada;
+			$this->entrada=$entrada;
 		}
 		
 		public function set($salida){
-			this.$salida=$salida;
+			$this->salida=$salida;
 		}
 	}
 ?>

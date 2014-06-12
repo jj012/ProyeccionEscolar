@@ -4,7 +4,7 @@
 		private $idAdministrador;
 		
 		public function setIdAdministrador($idAdministrador){
-			this.$idAdministrador=$idAdministrador;
+			$this->idAdministrador=$idAdministrador;
 		}
 		
 		public function get(){

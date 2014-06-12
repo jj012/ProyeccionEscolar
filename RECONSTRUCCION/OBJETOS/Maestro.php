@@ -8,7 +8,7 @@
 		}
 		
 		public function set($idMaestro){
-			this.$idMaestro=$idMaestro;
+			$this->idMaestro=$idMaestro;
 		}
 	}
 ?>
