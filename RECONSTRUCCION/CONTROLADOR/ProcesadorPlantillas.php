@@ -27,12 +27,9 @@
 		$filename = 'RECONSTRUCCION/VISTAS/PLANTILLAS/consultaAcademias.html';
 		$tabla = '';
 		$academia = new Academia;
-
-		echo "pidiendo archivo $filename";
+		
 		if (file_exists($filename)) {
 			$plantilla = file_get_contents($filename);
-			var_dump($plantilla);
-			echo 'GENERANDO SECCION DE TABLA';
 			foreach ($academias as $academia) {
 				$id=$academia->getId();
 				$nombre=$academia->getNombre();
@@ -44,14 +41,35 @@
 			}
 	
 			$plantilla=str_replace('{{REPITE_ACADEMIAS}}', $tabla, "$plantilla");
-			//$pagina = $encabezado + $plantilla + $pie;
- 			var_dump($plantilla);
+			$pagina = "$encabezado" + "$plantilla" + "$pie";
 			echo "$plantilla";
-			//$pagina=$plantilla;
-			//echo $pagina;
 		} else {
 			echo "ERROR NO SE ENCONTRO EL ARCHIVO";
 		}
 	
 	}
+	
+	function procesaPlantillaCMaterias($materias){
+		require_once ('RECONSTRUCCION/OBJETOS/Materia.php');
+		$filename = 'RECONSTRUCCION/VISTAS/PLANTILLAS/consultaAcademias.html';
+		$tabla = '';
+		$materia = new Materia;
+		if (file_exists($filename)) {
+			$plantilla = file_get_contents($filename);
+			foreach ($materias as $materia) {
+				$clave=$materia->getClave();
+				$nombre=$materia->getNombre();
+				$academia=$materia->getAcademia();
+				$tabla = $tabla ."<tr><td>$clave</td>"
+								."<td>$nombre</td>"
+								."<td>$academia</td></tr>";
+				//echo $tabla;
+			}
+	
+			$plantilla=str_replace('{{REPITE_MATERIAS}}', $tabla, "$plantilla");
+			$pagina = "$encabezado" + "$plantilla" + "$pie";
+			echo "$plantilla";
+		} else {
+			echo "ERROR NO SE ENCONTRO EL ARCHIVO";
+		}
 ?>
