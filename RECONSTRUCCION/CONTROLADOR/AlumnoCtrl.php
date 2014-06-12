@@ -71,12 +71,10 @@
 	require_once("CtrlEstandar.php");
 	class AlumnoCtrl extends CtrlEstandar{
 		public $model;
-		public $alumno;
 		
 		public function __construct(){//Charge the model Alumno
 			require('Modelo/AlumnoMdl.php');
-			require("../OBJETOS/Alumno.php");
-			$alumno = new Alumno();
+			require("Alumno.php");
 			$this->model = new AlumnoModel();
 		}
 		
@@ -155,6 +153,17 @@
 				$nombre = $verificador->validaNombre($_POST['nombre']);
 			else
 				$nombre = false;
+				
+			if(isset($_POST['apellidoP']))
+				$apellidoP = $verificador->validaNombre($_POST['apellidoP']);
+			else
+				$apellidoP = false;
+				
+			if(isset($_POST['apellidoM']))
+				$apellidoM = $verificador->validaNombre($_POST['apellidoM']);
+			else
+				$apellidoM = false;
+				
 			if(isset($_POST['correo']))
 				$correo = $verificador->validaCorreo($_POST['correo']);
 			else
@@ -184,11 +193,11 @@
 			else
 				$contraseña = false;
 	
-			$status = $verificador->verificaExistencia(array('nombre' => $nombre, 'correo' => $correo, 'carrera' => $carrera, 'codigo' => $codigo, 'contraseña' => $contraseña)); //We verify that the info exists
+			$status = $verificador->verificaExistencia(array('nombre' => $nombre, 'paterno' => $apellidoP, 'materno' => $apellidoM, 'correo' => $correo, 'carrera' => $carrera, 'codigo' => $codigo, 'contraseña' => $contraseña)); //We verify that the info exists
 			if($status){//To enter this block first the info need to be correct
 				$status = $verificador->opcionalesCorrectos(array('url' => $url, 'git' => $git, 'celular' => $celular));
 				if($status){
-					/*$datosAlumno = array('nombre'=>$_POST['nombre'], 'correo'=> $_POST['correo'], 'carrera' => $_POST['carrera'], 'codigo' => $_POST['codigo'], 'contraseña' => $_POST['contraseña']);
+					$datosAlumno = array('nombre'=>$_POST['nombre'], 'correo'=> $_POST['correo'], 'carrera' => $_POST['carrera'], 'codigo' => $_POST['codigo'], 'contraseña' => $_POST['contraseña']);
 					if($url)
 						$datosAlumno['url'] = $_POST['url'];
 					else
@@ -201,11 +210,10 @@
 						$datosAlumno['celular'] = $_POST['celular'];
 					else
 						$datosAlumno['celular'] = false;
-				
-					//$datosAlumno = $this->limpiaSQL($datosAlumno);*/
-					
-					$alumno->setIdAlumno($_POST['codigo']);
-					$alumno->s
+						
+					$alumno.setNombre($_POST['nombre']);
+					$alumno.setC
+
 					$status = $this->model->insertaAlumno($datosAlumno);
 					if($status[0]){//On this part the query of insert in the database is done correctly
 						include('Vista/insercionAlumno.php');

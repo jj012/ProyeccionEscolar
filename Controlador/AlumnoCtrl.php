@@ -210,8 +210,10 @@
 						$datosAlumno['celular'] = $_POST['celular'];
 					else
 						$datosAlumno['celular'] = false;
-				
-					$datosAlumno = $this->limpiaSQL($datosAlumno);
+						
+					$alumno.setNombre($_POST['nombre']);
+					$alumno.setC
+
 					$status = $this->model->insertaAlumno($datosAlumno);
 					if($status[0]){//On this part the query of insert in the database is done correctly
 						include('Vista/insercionAlumno.php');
