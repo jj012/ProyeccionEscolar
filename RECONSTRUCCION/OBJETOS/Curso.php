@@ -1,19 +1,19 @@
 <?php
 
 	class Curso{
-		private $nombreCurso;
+		private $idCurso;
 		private $seccion;
 		private $nrc;
-		private $academia;
-		private $dias;
-		private $horas;
-		private $horario;
-		private $ciclo;
+		private $horario = array(); //guarddar objetos tipo horario
+		private $ciclo; // guardar objeto tipo ciclo
+		private $materia; //guardar objeto materia
+		private $profesor; //guardar objeto profesor
 
-		public function getNombre(){
-			return $nombreCurso;
+		
+		public function getIdCurso(){
+			return $idCurso;
 		}
-
+		
 		public function getSeccion(){
 			return $seccion;
 		}
@@ -22,35 +22,14 @@
 			return $nrc;
 		}
 
-		public function getAcademia(){
-			return $academia;
-		}
-
-		public function getDias(){
-			return $dias;
-		}
-
-		public function getHoras(){
-			return $horas;
-		}
-
-		public function getHorario(){
-			return $horario;
-		}
-
-		public function getCiclo(){
-			return $ciclo;
-		}
-
-		public function setNombre($nom){
-			if(empty($nombre)){
-				echo 'nombre vacio error';
+		public function setIdCurso($idCurso){
+			if(empty($idCurso)){
+				echo 'nrc vacio error';
 			}else{
-				this.$nombre=$nomb;
+				this.$idCurso=$idCurso;
 			}
-			
 		}
-
+		
 		public function setSeccion($seccion){
 			if(empty($seccion)){
 				echo 'seccion vacio error';
@@ -64,46 +43,6 @@
 				echo 'nrc vacio error';
 			}else{
 				this.$nrc=$nrc;
-			}
-		}
-
-		public function setAcademia($academia){
-			if(empty($academia)){
-				echo 'academia vacio error';
-			}else{
-				this.$academia=$academia;
-			}
-		}
-
-		public function setDias($dias){
-			if(empty($dias)){
-				echo 'dias vacio error';
-			}else{
-				this.$dias=$dias;
-			}
-		}
-
-		public function setHoras($horas){
-			if(empty($horas)){
-				echo "horas vacia error";
-			}else{
-				this.$horas=$horas;
-			}
-		}
-
-		public function setHorario($horario){
-			if(empty($horario)){
-				echo "horario vacio error";
-			}else{
-				this.$horario=$horario;
-			}
-		}
-
-		public function setCiclo($ciclo){
-			if(empty($ciclo)){
-				echo "ciclo vacio error";
-			}else{
-				this.$ciclo=$ciclo;
 			}
 		}
 	}
