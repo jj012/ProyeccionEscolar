@@ -8,23 +8,23 @@
 		private $web;
 		
 		public function setIdAlumno($idAlumno){
-			this.$idAlumno=$idAlumno;
+			$this->idAlumno=$idAlumno;
 		}
 		
 		public function setCarrera($carrera){
-			this.$carrera=$carrera;
+			$this->carrera=$carrera;
 		}
 		
 		public function setCelular($celular){
-			this.$celular=$celular;
+			$this->celular=$celular;
 		}
 		
 		public function setGit($github){
-			this.$github=$github;
+			$this->github=$github;
 		}
 		
 		public function setWeb($web){
-			this.$web=$web;
+			$this->web=$web;
 		}
 		
 		public function getIdAlumno(){

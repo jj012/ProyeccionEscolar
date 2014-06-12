@@ -22,19 +22,19 @@
 		}
 		
 		public function setId($id){
-			this.$id=$id;
+			$this->id=$id;
 		}
 		
 		public function setNombre($nombre){
-			this.$nombre=$nombre;
+			$this->nombre=$nombre;
 		}
 		
 		public function setClave($clave){
-			this.$clave=$clave;
+			$this->clave=$clave;
 		}
 		
 		public function setAcademia($nombreAcademia){
-			this.$nombreAcademia=$nombreAcademia;
+			$this->nombreAcademia=$nombreAcademia;
 		}
 	}
 ?>

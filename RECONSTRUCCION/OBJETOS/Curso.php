@@ -26,7 +26,7 @@
 			if(empty($idCurso)){
 				echo 'nrc vacio error';
 			}else{
-				this.$idCurso=$idCurso;
+				$this->idCurso=$idCurso;
 			}
 		}
 		
@@ -34,7 +34,7 @@
 			if(empty($seccion)){
 				echo 'seccion vacio error';
 			}else{
-				this.$seccion=$seccion;
+				$this->seccion=$seccion;
 			}
 		}
 
@@ -42,7 +42,7 @@
 			if(empty($nrc)){
 				echo 'nrc vacio error';
 			}else{
-				this.$nrc=$nrc;
+				$this->nrc=$nrc;
 			}
 		}
 	}

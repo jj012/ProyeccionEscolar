@@ -6,19 +6,19 @@
 		private $fin;
 		
 		public function setId($id){
-			this.$id=$id;
+			$this->id=$id;
 		}
 		
 		public function setCiclo($ciclo){
-			this.$ciclo=$ciclo;
+			$this->ciclo=$ciclo;
 		}
 		
 		public function setInicio($inicio){
-			this.$inicio=$inicio;
+			$this->inicio=$inicio;
 		}
 		
 		public function setFin($fin){
-			this.$fin=$fin;
+			$this->fin=$fin;
 		}
 		
 		public function getId(){

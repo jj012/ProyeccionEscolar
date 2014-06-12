@@ -37,31 +37,31 @@
 		}
 		
 		public function setId($idUsuario){
-			this.$idUsuario=$idUsuario;
+			$this->idUsuario=$idUsuario;
 		}
 		
 		public function setNombre($nombre){
-			this.$nnombre=$nombre;
+			$this->nnombre=$nombre;
 		}
 		
 		public function setApellidoM($apellidom){
-			this.$apellidom=$apellidom;
+			$this->apellidom=$apellidom;
 		}
 		
 		public function setApellidoP($apeliidop){
-			this.$apellidop=$apellidop;
+			$this->apellidop=$apellidop;
 		}
 		
 		public function setCodigo($codigo){
-			this.$codigo=$codigo;
+			$this->codigo=$codigo;
 		}
 		
 		public function setContrasena($contrasena){
-			this.$contrasena=$contrasena;
+			$this->contrasena=$contrasena;
 		}
 		
 		public function setCorreo($correo){
-			this.$correo=$correo;
+			$this->correo=$correo;
 		}
 	}
 ?>
