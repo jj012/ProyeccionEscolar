@@ -89,7 +89,8 @@
 							else
 								$this->alta();
 							
-						break;
+							break;
+							
 						case 'baja':
 							$this->baja();
 						break;
@@ -148,41 +149,41 @@
 	public function alta(){//INSERT
 		if($this->isLogged()){
 			if(isset($_POST['nombre']))
-				$nombre = $this->validaNombre($_POST['nombre']);
+				$nombre = $verificador->validaNombre($_POST['nombre']);
 			else
 				$nombre = false;
 			if(isset($_POST['correo']))
-				$correo = $this->validaCorreo($_POST['correo']);
+				$correo = $verificador->validaCorreo($_POST['correo']);
 			else
 				$correo = false;
 			if(isset($_POST['codigo']))
-				$codigo = $this->validaCodigo($_POST['codigo']);
+				$codigo = $verificador->validaCodigo($_POST['codigo']);
 			else
 				$codigo = false;						
 			if(isset($_POST['carrera']))
-				$carrera = $this->validaCarrera($_POST['carrera']);
+				$carrera = $verificador->validaCarrera($_POST['carrera']);
 			else
 				$carrera = false;
 			if(isset($_POST['url']))
-				$url = $this->validaURL($_POST['url']);
+				$url = $verificador->validaURL($_POST['url']);
 			else
 				$url = false;
 			if(isset($_POST['git']))
-				$git = $this->validaGitHub($_POST['git']);
+				$git = $verificador->validaGitHub($_POST['git']);
 			else
 				$git = false;
 			if(isset($_POST['celular']))
-				$celular = $this->validaURL($_POST['celular']);
+				$celular = $verificador->validaURL($_POST['celular']);
 			else
 				$celular = false;
 			if(isset($_POST['contraseña']))
-				$contraseña = $this->validaPass($_POST['contraseña']);
+				$contraseña = $verificador->validaPass($_POST['contraseña']);
 			else
 				$contraseña = false;
 	
-			$status = $this->verificaExistencia(array('nombre' => $nombre, 'correo' => $correo, 'carrera' => $carrera, 'codigo' => $codigo, 'contraseña' => $contraseña)); //We verify that the info exists
+			$status = $verificador->verificaExistencia(array('nombre' => $nombre, 'correo' => $correo, 'carrera' => $carrera, 'codigo' => $codigo, 'contraseña' => $contraseña)); //We verify that the info exists
 			if($status){//To enter this block first the info need to be correct
-				$status = $this->opcionalesCorrectos(array('url' => $url, 'git' => $git, 'celular' => $celular));
+				$status = $verificador->opcionalesCorrectos(array('url' => $url, 'git' => $git, 'celular' => $celular));
 				if($status){
 					$datosAlumno = array('nombre'=>$_POST['nombre'], 'correo'=> $_POST['correo'], 'carrera' => $_POST['carrera'], 'codigo' => $_POST['codigo'], 'contraseña' => $_POST['contraseña']);
 					if($url)
@@ -275,33 +276,33 @@
 	public function modifica(){
 		if($this->isLogged()){
 			if(isset($_POST['nombre']))
-				$nombre = $this->validaNombre($_POST['nombre']);
+				$nombre = $verificador->validaNombre($_POST['nombre']);
 			else
 				$nombre = false;
 			if(isset($_POST['correo']))
-				$correo = $this->validaCorreo($_POST['correo']);
+				$correo = $verificador->validaCorreo($_POST['correo']);
 			else
 				$correo = false;
 			if(isset($_POST['codigo']))
-				$codigo = $this->validaCodigo($_POST['codigo']);
-			else if($this->esAlumno())
+				$codigo = $verificador->validaCodigo($_POST['codigo']);
+			else if($verificador->esAlumno())
 				$codigo = true;//Only for the student
 			else
 				$codigo = false;						
 			if(isset($_POST['carrera']))
-				$carrera = $this->validaCarrera($_POST['carrera']);
+				$carrera = $verificador->validaCarrera($_POST['carrera']);
 			else
 				$carrera = false;
 			if(isset($_POST['url']))
-				$url = $this->validaURL($_POST['url']);
+				$url = $verificador->validaURL($_POST['url']);
 			else
 				$url = false;
 			if(isset($_POST['git']))
-				$git = $this->validaGitHub($_POST['git']);
+				$git = $verificador->validaGitHub($_POST['git']);
 			else
 				$git = false;
 			if(isset($_POST['celular']))
-				$celular = $this->validaURL($_POST['celular']);
+				$celular = $verificador->validaURL($_POST['celular']);
 			else
 				$celular = false;
 	
@@ -319,7 +320,7 @@
 				
 				if($status){//There is info to update
 					$nuevaInfo = array();
-					if($this->esAlumno())
+					if($verificador->esAlumno())
 						$nuevaInfo['codigo'] = $_SESSION['user'];
 					else
 						$nuevaInfo['codigo'] = $_POST['codigo'];
@@ -375,7 +376,7 @@
 	
 	public function consulta(){
 		if($this->isLogged()){
-			if($this->esAlumno()){
+			if($verificador->esAlumno()){
 				$statusMiCarrera = $this->model->consulta(array('codigo' => $_SESSION['user']));
 				if($statusMiCarrera[0]){
 					include('Vista/datosMiCarrera.php');
@@ -385,9 +386,9 @@
 					errorConsulta($statusMiCarrera[1]);
 				}
 				
-			}else if($this->esMaestro() || $this->esAdmin()){//Search by a code
+			}else if($verificador->esMaestro() || $verificador->esAdmin()){//Search by a code
 				if(isset($_POST['codigo']))
-					$codigo = $this->validaCodigo($_POST['codigo']);
+					$codigo = $verificador->validaCodigo($_POST['codigo']);
 				else
 					$codigo = false;
 				
