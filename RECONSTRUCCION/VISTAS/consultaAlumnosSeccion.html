@@ -1,0 +1,24 @@
+<body>
+	
+	<div>
+		<table>
+			<caption><h1>Listado de Alumnos Seccion {{SECCION}}</h1></caption>
+			<thead>
+				<tr>
+					<th><h4>Num</h4></th>
+					<th><h4>Codigo</h4></th>
+					<th><h4>Nombre</h4></th>
+					<th><h4>Status</h4></th>
+				</tr>
+			</thead>
+			<tbody>
+				{{REPITE_ALUMNOS}}
+				<tr>
+					<td colspan="2"><h4>Total Alumnos</h4></td>
+					<td><h4>{{TOTAL_ALUMNOS}}</h4></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+</body>

@@ -33,9 +33,9 @@
 		session_start();
 
 		if(!isset($_SESSION['user']))
-			require('Vista\login.html');
+			require('RECONSTRUCCION\Vistas\login.html');
 		else {
-			require('Vista\index.html');
+			require('RECONSTRUCCION\Vistas\index.html');
 		}
 
 	 }
@@ -44,50 +44,57 @@
 		if(preg_match("/[A-Za-z]+/",$_GET['usuario'])){ // The string must be alphabetic
 			switch($_GET['usuario']){
 				case 'alumno':
-					require('Controlador/AlumnoCtrl.php');
+					require('RECONSTRUCCION/Controlador/AlumnoCtrl.php');
 					//$ctrlAlumno = new AlumnoCtrl();
 					$controlador = new AlumnoCtrl();
 					break;
 				case 'maestro':
-					require('Controlador/MaestroCtrl.php');
+					require('RECONSTRUCCION/Controlador/MaestroCtrl.php');
 					$controlador = new MaestroCtrl();
 					break;
+				case 'login':
+					require('RECONSTRUCCION/Controlador/LoginCtrl.php');
+					$login = new LoginCtrl();
+					break;
 			}
-	}else {
+			
+		}
+	}else{
 		if (isset($_SESSION['user']) && isset($_SESSION['tipo'])) {
 			switch($_SESSION['tipo']) {
 				case 1 :
-					require_once ('VISTAS/COMUNES/indexAdministrador.html');
+					require_once ('RECONSTRUCCION/VISTAS/COMUNES/indexAdministrador.html');
 					break;
 	
 				case 2 :
-					require_once ('VISTAS/COMUNES/indexMaestro.html');
+					require_once ('RECONSTRUCCION/VISTAS/COMUNES/indexMaestro.html');
 					break;
 	
 				case 3 :
-					require_once ('VISTAS/COMUNES/indexAlumno.html');
+					require_once ('RECONSTRUCCION/VISTAS/COMUNES/indexAlumno.html');
 					break;
 			}
 	
 			if (isset($_GET['ctrl']) && preg_match("/[A-Za-z]+/", $_GET['usuario'])) {
 				$controlador = $_GET['ctrl'] . 'Ctrl';
 	
-				if (file_exists("ctrls/{$controlador}.php")) {
-					require_once ("ctrls/{$controlador}.php");
+				if (file_exists("RECONSTRUCCION/CONTROLADOR/{$controlador}.php")) {
+					require_once ("RECONSTRUCCION/CONTROLADOR/{$controlador}.php");
 					$ctrl = new $controlador();
 	
 				} else {
 					$error = "{$_GET['ctrl']} no es un controlador valido";
-					require_once ('VISTAS/ERRORES/opcionInvalida.html');
+					require_once ('RECONSTRUCCION/VISTAS/ERRORES/opcionInvalida.html');
 				}
 	
 			} else {
 				//ctrl default
-				require_once ('ctrls/alumnosCtrl.php');
+				require_once ('RECONSTRUCCION/CONTROLADOR/alumnosCtrl.php');
 				$ctrl = new alumnosCtrl();
 			}
-		} else {
-			require_once ("VISTAS/FORMULARIOS/login.html");
+		}else {
+			require_once ("RECONSTRUCCION/VISTAS/login.html");
 		}
+		
 	}
 ?>

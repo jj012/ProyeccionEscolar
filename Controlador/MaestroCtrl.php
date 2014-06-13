@@ -200,45 +200,50 @@
 		}
 		
 		private function capturaAsistencia(){
-			if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
-			else $nrc = false;
+			if($this->esMaestro()){
+				if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
+				else $nrc = false;
+						
+				if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
+				else $ciclo = false;
+				
+				if(isset($_POST['codigo'])) $codigo = $verificador->validaCodigo($_POST['codigo']);
+				else $codigo = false;
+						
+				if(isset($_POST['fecha'])) $fecha = $verificador->validaFecha($_POST['fecha']);
+				else $fecha = false;
+				
+				if(isset($_POST['valor'])){
+					if($_POST['valor'] == 1 || $_POST['valor'] == 0)
+						$valor = true;
+					else
+						$valor = -1;
+				}else{
+					$valor = false;
+				}
+				
+				if($nrc && $ciclo && $codigo && $fecha && $valor){
+					$status = true;
+				}else
+					$status = false;
 					
-			if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
-			else $ciclo = false;
-			
-			if(isset($_POST['codigo'])) $codigo = $verificador->validaCodigo($_POST['codigo']);
-			else $codigo = false;
+				if($status){
+					$arreglo = array('nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo'], 'codigo' => $_POST['codigo'], 'valor' =>$_POST['valor'], 'fecha' => $_POST['fecha']);
+					$arreglo = $verificador->limpiaSQL($arreglo);
 					
-			if(isset($_POST['fecha'])) $fecha = $verificador->validaFecha($_POST['fecha']);
-			else $fecha = false;
-			
-			if(isset($_POST['valor'])){
-				if($_POST['valor'] == 1 || $_POST['valor'] == 0)
-					$valor = true;
-				else
-					$valor = -1;
-			}else{
-				$valor = false;
-			}
-			
-			if($nrc && $ciclo && $codigo && $fecha && $valor){
-				$status = true;
-			}else
-				$status = false;
-				
-			if($status){
-				$arreglo = array('nrc' => $_POST['nrc'], 'ciclo' => $_POST['ciclo'], 'codigo' => $_POST['codigo'], 'valor' =>$_POST['valor'], 'fecha' => $_POST['fecha']);
-				$arreglo = $verificador->limpiaSQL($arreglo);
-				
-				$capturarA = $this->model->capturaAsistencia($arreglo);
-				
-				if($capturaA[0]){
-					//View of succesful
+					$capturarA = $this->model->capturaAsistencia($arreglo);
+					
+					if($capturaA[0]){
+						//View of succesful
+					}else{
+						//ERROR
+					}
 				}else{
 					//ERROR
 				}
 			}else{
-				//ERROR
+				include('Vista/erroresLogueo.php');
+				faltaPermisos();
 			}
 		}
 		//ADD A table from evaluacion
@@ -251,45 +256,49 @@
 				curso:
 				rubro:
 			*/
-			
-			if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
-			else $nrc = false;
-					
-			if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
-			else $ciclo = false;
-			
-			if(isset($_POST['columnas'])) $columnas = $verificador->validaColumnas($_POST['columnas']);
-			else 	$columnas = false;
-			
-			if(isset($_POST['actividad'])) 	$actividad = $verificador->validaActividad($_POST['actividad']);
-			else	$actividad = false;
-			
-			if(isset($_POST['numExtra'])) $extra = $verificador->validaColumnas($_POST['numExtra']); //I KNOW, ITS THE SAME BUT THE VAL A NUMBER OF TWO DIGITS
-				$extra = false;
-			
-			if($nrc && $ciclo && $columnas && $actividad && $extra !== -1)
-				$status = true;
-			else
-				$status = false;
+			if($this->esMaestro()){
+				if(isset($_POST['nrc'])) $nrc = $verificador->validaNrc($_POST['nrc']);
+				else $nrc = false;
+						
+				if(isset($_POST['ciclo'])) $ciclo = $verificador->validaCiclo($_POST['ciclo']);
+				else $ciclo = false;
 				
-			if($status){
-				$arreglo = array('ciclo' => $_POST['ciclo'], 'nrc' => $_POST['nrc'], 'columnas' => $_POST['columnas'], 'actividad' => $_POST['actividad']);
-				$arreglo = $verificador->limpiaSQL($arreglo);
-				if($extra)
-					$arreglo['numExtra'] = $_POST['numExtra'];
+				if(isset($_POST['columnas'])) $columnas = $verificador->validaColumnas($_POST['columnas']);
+				else 	$columnas = false;
+				
+				if(isset($_POST['actividad'])) 	$actividad = $verificador->validaActividad($_POST['actividad']);
+				else	$actividad = false;
+				
+				if(isset($_POST['numExtra'])) $extra = $verificador->validaColumnas($_POST['numExtra']); //I KNOW, ITS THE SAME BUT THE VAL A NUMBER OF TWO DIGITS
+					$extra = false;
+				
+				if($nrc && $ciclo && $columnas && $actividad && $extra !== -1)
+					$status = true;
 				else
-					$arreglo['numExtra'] = '1';
+					$status = false;
+					
+				if($status){
+					$arreglo = array('ciclo' => $_POST['ciclo'], 'nrc' => $_POST['nrc'], 'columnas' => $_POST['columnas'], 'actividad' => $_POST['actividad']);
+					$arreglo = $verificador->limpiaSQL($arreglo);
+					if($extra)
+						$arreglo['numExtra'] = $_POST['numExtra'];
+					else
+						$arreglo['numExtra'] = '1';
+					
+					$creaExtra = $this->model->insertaEvaluacionExtra($arreglo);
+					
+					if($creaExtra[0]){
+						//Charge a succesful view
+					}else{
+						//CHARGE THE ERROR WITH $creaExtra[1]
+					}
 				
-				$creaExtra = $this->model->insertaEvaluacionExtra($arreglo);
-				
-				if($creaExtra[0]){
-					//Charge a succesful view
 				}else{
-					//CHARGE THE ERROR WITH $creaExtra[1]
+					//ERROR
 				}
-			
 			}else{
-				//ERROR
+				include('Vista/erroresLogueo.php');
+				faltaPermisos();
 			}
 		}
 		
